@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   CampusCart — Next-Gen Student Exchange & Marketplace Stylesheet
+   Genesis-inspired aesthetics, micro-interactions, and typography
+   ============================================================================= */
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #fcfcfd;
+  color: #090d16;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Sleek Watermark Typography matching Genesis from reference */
+.hero-watermark {
+  font-size: clamp(4rem, 16vw, 15rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  color: rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-watermark-dark {
+  font-size: clamp(4rem, 16vw, 15rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  color: rgba(0, 0, 0, 0.08);
+  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Marquee ticker animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: 200%;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* SVGator-Style Shipping Line Animation */
+@keyframes shippingDash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+.animate-shipping-line {
+  stroke-dasharray: 12 8;
+  animation: shippingDash 2.5s linear infinite;
+}
+
+/* Glassmorphism Floating Pill Nav */
+.floating-pill {
+  background: rgba(22, 24, 29, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Custom minimal scrollbar */
+.custom-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+/* Leaflet Custom Pin & Popup Styles */
+.wb-college-pin-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.wb-custom-popup .leaflet-popup-content-wrapper {
+  background: #0b0f19 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6) !important;
+  padding: 0 !important;
+}
+
+.wb-custom-popup .leaflet-popup-content {
+  margin: 0 !important;
+  line-height: normal !important;
+}
+
+.wb-custom-popup .leaflet-popup-tip {
+  background: #0b0f19 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.wb-custom-popup .leaflet-popup-close-button {
+  color: #94a3b8 !important;
+  top: 8px !important;
+  right: 8px !important;
+  font-size: 16px !important;
+}
+
+.wb-custom-popup .leaflet-popup-close-button:hover {
+  color: #ffffff !important;
+}
+
+.zone-boundary-tooltip {
+  background: rgba(12, 16, 25, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.zone-boundary-tooltip::before {
+  border-top-color: rgba(12, 16, 25, 0.92) !important;
+}
+
+/* Prominent sliding bar for Campus Details panel */
+.campus-sliding-bar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(20, 184, 166, 0.5) rgba(255, 255, 255, 0.04);
+}
+
+.campus-sliding-bar::-webkit-scrollbar {
+  width: 7px;
+}
+
+.campus-sliding-bar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 9999px;
+  margin: 4px 0;
+}
+
+.campus-sliding-bar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #14b8a6, #0d9488);
+  border-radius: 9999px;
+  border: 1.5px solid rgba(12, 16, 23, 0.8);
+}
+
+.campus-sliding-bar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #2dd4bf, #14b8a6);
+}
+
+

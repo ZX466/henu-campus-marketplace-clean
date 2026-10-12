@@ -1,0 +1,26 @@
+{
+  "name": "campuscart",
+  "version": "1.0.0",
+  "description": "CampusCart — Next-Gen Student Marketplace (Genesis-Inspired)",
+  "scripts": {
+    "dev": "concurrently -k -p \"[{name}]\" -n \"FRONTEND,BACKEND\" -c \"cyan.bold,magenta.bold\" \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "backend\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8000 --app-dir backend",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "install:frontend": "npm --prefix frontend install"
+  },
+  "keywords": [
+    "campuscart",
+    "marketplace",
+    "college",
+    "vite",
+    "react",
+    "student-commerce"
+  ],
+  "author": "The nightHawks",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
