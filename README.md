@@ -6,7 +6,7 @@
 
 如果只是先查看网页界面，可以只启动前端。没有 MongoDB 时，页面仍会显示内置演示商品；后端登录接口支持临时本地回退，便于联调登录页面，但注册、发布、收藏、订单和数据持久化仍需要 MongoDB。
 
-启动后访问：<http://localhost:3000>
+启动后访问：<http://localhost:3334>
 
 ## 当前技术版本
 
@@ -93,13 +93,84 @@ py -V:Astral/CPython3.12.15 -m venv backend\.venv
 
 创建完成后，再执行上面的虚拟环境依赖安装命令。不要在桌面目录直接执行 `backend\\.venv` 路径命令；必须先进入仓库根目录。
 
+## 使用 uv 启动（推荐）
+
+[uv](https://docs.astral.sh/uv/) 是更快的 Python 包管理器，可自动管理 Python 版本和虚拟环境。先确认 uv 已安装：
+
+```powershell
+uv --version
+```
+
+没有 uv 时安装：
+
+```powershell
+pip install uv
+```
+
+### uv 版启动步骤
+
+在仓库根目录依次执行：
+
+1. 创建虚拟环境（uv 会自动选择合适的 Python 版本）：
+
+```powershell
+uv venv backend\.venv
+```
+
+2. 安装后端依赖：
+
+```powershell
+uv pip install -r backend\requirements.txt --python backend\.venv\Scripts\python.exe
+```
+
+3. 在仓库根目录新建 `.env`（内容见下方"启动后端 API"）：
+
+```powershell
+New-Item .env
+```
+
+4. 启动后端：
+
+```powershell
+.\backend\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000 --app-dir backend
+```
+
+5. 另开一个终端启动前端：
+
+```powershell
+npm install
+npm run install:frontend
+npm run dev:frontend
+```
+
+6. 浏览器打开 <http://localhost:3334>。
+
+macOS/Linux 的 uv 版：
+
+```bash
+uv venv backend/.venv
+uv pip install -r backend/requirements.txt --python backend/.venv/bin/python
+./backend/.venv/bin/python -m uvicorn app.main:app --reload --port 8000 --app-dir backend
+```
+
+### uv 与普通 Python 版的对应关系
+
+| 步骤 | uv 版 | 普通 Python 版 |
+| --- | --- | --- |
+| 创建虚拟环境 | `uv venv backend\.venv` | `py -3.12 -m venv backend\.venv` |
+| 安装依赖 | `uv pip install -r backend\requirements.txt --python backend\.venv\Scripts\python.exe` | `.\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt` |
+| 启动后端 | 相同：`.\backend\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000 --app-dir backend` | 相同 |
+| 启动前端 | 相同：`npm run dev:frontend` | 相同 |
+
+虚拟环境结构完全一致，两种方式任选其一，后续启动命令没有区别。
+
 ## 只启动前端查看页面
 
 ```powershell
 npm run dev:frontend
 ```
 
-打开 <http://localhost:3000>。端口在 `frontend/vite.config.js` 中固定为 3000。需要换端口时运行：
+打开 <http://localhost:3334>。端口在 `frontend/vite.config.js` 中固定为 3334。需要换端口时运行：
 
 ```powershell
 npm --prefix frontend run dev -- --port 3001
@@ -113,7 +184,7 @@ npm --prefix frontend run dev -- --port 3001
 MONGO_URI=mongodb://localhost:27017
 MONGO_DB_NAME=campuscart_db
 JWT_SECRET_KEY=请替换为本地随机字符串
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:3334
 ```
 
 如果使用 MongoDB Atlas，把 `MONGO_URI` 换成 Atlas 连接字符串，并确认网络访问权限允许当前电脑连接。
@@ -147,7 +218,7 @@ python3.12 -m venv backend/.venv
 npm run dev
 ```
 
-这会同时启动前端 3000 端口和后端 8000 端口。根目录的 `dev:backend` 会自动选择 Windows 的 `backend\.venv\Scripts\python.exe` 或 macOS/Linux 的 `backend/.venv/bin/python`，必须先创建虚拟环境。
+这会同时启动前端 3334 端口和后端 8000 端口。根目录的 `dev:backend` 会自动选择 Windows 的 `backend\.venv\Scripts\python.exe` 或 macOS/Linux 的 `backend/.venv/bin/python`，必须先创建虚拟环境。
 
 ## 前端连接后端
 
@@ -165,7 +236,7 @@ VITE_API_URL=http://localhost:8000
 Invoke-RestMethod http://localhost:8000/api/v1/health
 ```
 
-然后打开 <http://localhost:3000>，依次检查商品列表、校区筛选和发布页面。后端连接正常后，再测试登录、收藏、购物车和订单。
+然后打开 <http://localhost:3334>，依次检查商品列表、校区筛选和发布页面。后端连接正常后，再测试登录、收藏、购物车和订单。
 
 ## 常见问题
 
@@ -323,7 +394,7 @@ npm run dev:frontend
 
 1. 终端一（仓库根目录）：`npm run dev:backend`
 2. 终端二（仓库根目录）：`npm run dev:frontend`
-3. 浏览器打开 <http://localhost:3000>，再进行注册或登录。
+3. 浏览器打开 <http://localhost:3334>，再进行注册或登录。
 4. 若页面能打开但登录失败，先访问 <http://localhost:8000/api/v1/health> 和 <http://localhost:8000/api/v1/health/mongodb>，确认 API 和数据库均正常。
 
 只运行 `npm run dev:frontend` 可以查看演示页面，但不能保证真实登录、发布、收藏和订单同步。

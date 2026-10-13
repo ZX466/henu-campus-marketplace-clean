@@ -10,7 +10,7 @@ help:
 	@echo ================================================================
 	@echo CampusCart Developer CLI Commands (Vite + React)
 	@echo ================================================================
-	@echo   make dev       : Launch Vite HMR dev server (http://localhost:3000)
+	@echo   make dev       : Launch Vite HMR dev server (http://localhost:3334)
 	@echo   make build     : Build production-ready bundle with Vite
 	@echo   make preview   : Preview the production build locally
 	@echo   make install   : Install frontend npm dependencies
