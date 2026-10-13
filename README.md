@@ -4,7 +4,7 @@
 
 ## 先看网页演示
 
-如果只是先查看网页界面，可以只启动前端。没有 MongoDB 时，页面仍会显示内置演示商品；需要登录、发布、订单同步等真实数据功能时，再按后端步骤启动 API 和 MongoDB。
+如果只是先查看网页界面，可以只启动前端。没有 MongoDB 时，页面仍会显示内置演示商品；后端登录接口支持临时本地回退，便于联调登录页面，但注册、发布、收藏、订单和数据持久化仍需要 MongoDB。
 
 启动后访问：<http://localhost:3000>
 
@@ -30,12 +30,19 @@ python --version
 
 ## 先确认当前目录
 
+如果还没有项目文件，先克隆仓库：
+
+```powershell
+git clone https://github.com/hwd-123456/henu-campus-marketplace-clean.git
+cd henu-campus-marketplace-clean
+```
+
 所有 `npm`、`git` 和后端启动命令都要在仓库根目录执行，也就是能同时看到 `package.json`、`frontend` 和 `backend` 的目录。不要在桌面目录直接运行 `npm install`。
 
 Windows PowerShell 示例：
 
 ```powershell
-cd "E:\zxdevelop\project8\henu-campus-marketplace-clean"
+cd .\henu-campus-marketplace-clean
 Test-Path .\package.json
 Get-ChildItem .\frontend\package.json, .\backend\requirements.txt
 ```
@@ -81,7 +88,7 @@ py -V:Astral/CPython3.12.15 -m venv backend\.venv
 也可以直接调用 `where.exe python` 找到的 3.12 `python.exe`：
 
 ```powershell
-& "C:\path\to\python.exe" -m venv backend\.venv
+& "<python.exe 的完整路径>" -m venv backend\.venv
 ```
 
 创建完成后，再执行上面的虚拟环境依赖安装命令。不要在桌面目录直接执行 `backend\\.venv` 路径命令；必须先进入仓库根目录。
@@ -140,7 +147,7 @@ python3.12 -m venv backend/.venv
 npm run dev
 ```
 
-这会同时启动前端 3000 端口和后端 8000 端口。根目录的 `dev:backend` 脚本默认使用 `backend\.venv\Scripts\python.exe`，必须先创建虚拟环境。
+这会同时启动前端 3000 端口和后端 8000 端口。根目录的 `dev:backend` 会自动选择 Windows 的 `backend\.venv\Scripts\python.exe` 或 macOS/Linux 的 `backend/.venv/bin/python`，必须先创建虚拟环境。
 
 ## 前端连接后端
 
@@ -165,6 +172,8 @@ Invoke-RestMethod http://localhost:8000/api/v1/health
 ### 页面能打开但登录或商品同步失败
 
 访问 `http://localhost:8000/api/v1/health/mongodb`。如果 `connected: false`，检查 MongoDB 服务和 `.env` 中的 `MONGO_URI`。
+
+没有 MongoDB 时，登录接口可能返回 `Authenticated (Local Fallback)` 并成功建立临时登录态；重启后端后该登录态和数据不会保留。注册接口以及依赖数据库写入的功能需要先恢复 MongoDB 连接。
 
 ### 找不到后端虚拟环境
 
@@ -220,7 +229,7 @@ npm install
 npm run install:frontend
 ```
 
-项目已经移除了前端对根目录 `file:..` 的无用循环依赖。这个依赖会让较新版本 npm 在安装前端时重复处理根项目，并触发依赖安装脚本安全策略。
+项目已经移除了前端对根目录 `file:..` 的无用循环依赖。前端 `package.json` 已明确允许 Vite 需要的 `esbuild` 安装脚本运行，避免 npm 11 把它拦截。
 
 如果仍然报同样的错误，检查本机是否在用户级或项目级 `.npmrc` 中强制设置了脚本参数：
 
@@ -230,7 +239,73 @@ npm config get ignore-scripts
 npm config list
 ```
 
-不要把 `--allow-scripts` 直接加到项目安装命令后面。先删除个人 `.npmrc` 中不需要的 `allow-scripts` 或 `ignore-scripts` 配置，再重新运行安装。
+不要把 `--allow-scripts` 直接加到项目安装命令后面；项目级安装应由仓库中的 `allowScripts` 配置管理。如果仍被个人 `.npmrc` 覆盖，先检查并删除不需要的 `allow-scripts` 或 `ignore-scripts` 配置，再重新运行安装。
+
+### `npm error Exit handler never called!`
+
+这是 npm 自己在安装结束时没有正常收尾，常见原因是 npm 11 的兼容性问题、网络超时、代理或当前 npm 镜像异常，不是项目源代码报错。npm 社区中也有 Windows、Node 24/npm 11 和网络重试触发此错误的记录。
+
+先关闭正在运行的前端、后端和其他 npm 进程，然后在仓库根目录执行：
+
+```powershell
+node --version
+npm --version
+npm config get registry
+npm cache verify
+```
+
+如果当前 Node.js 是 24.x、npm 是 11.x，优先换用 Node.js 20 LTS（自带 npm 10），再重新打开 PowerShell。若暂时不能更换 Node，也可以尝试只为这次安装切换官方 registry：
+
+```powershell
+npm install --registry=https://registry.npmjs.org
+npm --prefix frontend install --registry=https://registry.npmjs.org
+```
+
+如果仍然失败，清理缓存和未完成的依赖目录后再装。不要删除 `package-lock.json`：
+
+```powershell
+Remove-Item -Recurse -Force .\node_modules, .\frontend\node_modules -ErrorAction SilentlyContinue
+npm cache clean --force
+npm install --registry=https://registry.npmjs.org
+npm --prefix frontend install --registry=https://registry.npmjs.org
+```
+
+如果公司、校园网或代理必须使用指定镜像，应把完整的 npm 调试日志和 `npm config get registry` 的结果一起发给网络管理员；不要把个人代理、证书或账号配置提交到仓库。
+
+### 安装时显示 `10 vulnerabilities`
+
+这是 npm 对依赖树的安全审计提示，不等于安装失败。先运行：
+
+```powershell
+npm audit
+```
+
+可以先使用不破坏主版本的修复：
+
+```powershell
+npm audit fix
+```
+
+如果 `npm audit` 报 `audit endpoint ... NOT_IMPLEMENTED`，通常是当前 npm 镜像没有提供审计接口，不代表项目安装失败。临时切换到 npm 官方审计接口：
+
+```powershell
+npm audit --registry=https://registry.npmjs.org
+```
+
+不要直接使用 `npm audit fix --force`，它可能升级 React、Vite 等主版本并破坏当前项目。若审计仍有高危项，把 `npm audit` 的具体依赖路径发给项目负责人后再单独升级。
+
+### 一键复制的标准安装顺序
+
+从仓库根目录开始，依次执行：
+
+```powershell
+npm install
+npm run install:frontend
+npm run build
+npm run dev
+```
+
+如果只看前端，把最后一行换成 `npm run dev:frontend`。如果 `npm run dev` 提示虚拟环境不存在，先按“第一次安装”创建 `backend/.venv`。
 
 ### 只想看界面，不想安装 MongoDB
 
@@ -252,6 +327,10 @@ npm run dev:frontend
 4. 若页面能打开但登录失败，先访问 <http://localhost:8000/api/v1/health> 和 <http://localhost:8000/api/v1/health/mongodb>，确认 API 和数据库均正常。
 
 只运行 `npm run dev:frontend` 可以查看演示页面，但不能保证真实登录、发布、收藏和订单同步。
+
+### 商品图片加载失败或出现 `ERR_TUNNEL_CONNECTION_FAILED`
+
+演示商品图片使用 Unsplash 等外部图片地址。网络无法访问这些站点时，页面仍可启动和登录，但部分商品图片会显示失败；这不是登录接口或前端构建错误。可以切换网络，或后续将图片替换为项目本地静态资源。
 
 ## 当前功能模块
 

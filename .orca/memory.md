@@ -19,10 +19,13 @@
   - cline / kilo / pi 工作树: 无命名配置文件夹（用户未指定）
 
 ## 待办 / 进行中
-- [ ] 生成 .gitignore 规则（.orca 入库，其他 . 开头 agent 配置文件夹不入库）
-- [ ] 为全部工作树初始化 .codegraph 索引
-- [ ] 各 agent 工作树补齐对应配置文件夹
+- [x] 生成 .gitignore 规则（.orca 入库，其他 . 开头 agent 配置文件夹不入库）— 已提交 main 704a883
+- [x] 为全部 6 个工作树初始化 .codegraph 索引（主 42 文件/330 节点/594 边）
+- [x] 各 agent 工作树补齐对应配置文件夹（codex/.codex、opencode/.opencode 已建）
+- [x] 各 agent 分支提交 .orca 初始状态（cline e6ce430 / codex b177da9 / kilo 087a95c /
+      opencode a266157 / pi 629e844）
 - [ ] 等待用户下达第一批开发任务
+- [ ] 未推送远程（用户未要求；推送时只推 main，代理人分支 ZX666X/* 不推）
 
 ## 项目要点
 - 技术栈: React 18 + Vite 6 + Tailwind（frontend/）；FastAPI + Motor/MongoDB（backend/）
