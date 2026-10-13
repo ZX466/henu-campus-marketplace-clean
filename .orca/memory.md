@@ -19,11 +19,15 @@
   - cline / kilo / pi 工作树: 无命名配置文件夹（用户未指定）
 
 ## 待办 / 进行中
-- [x] 生成 .gitignore 规则（.orca 入库，其他 . 开头 agent 配置文件夹不入库）— 已提交 main 704a883
-- [x] 为全部 6 个工作树初始化 .codegraph 索引（主 42 文件/330 节点/594 边）
-- [x] 各 agent 工作树补齐对应配置文件夹（codex/.codex、opencode/.opencode 已建）
-- [x] 各 agent 分支提交 .orca 初始状态（cline e6ce430 / codex b177da9 / kilo 087a95c /
-      opencode a266157 / pi 629e844）
+- [x] 2026-10-13 规则符合性检查完成，发现并修复 3 处问题：
+  1. 主工作树 .agent 丢失 → 已重建（check-ignore 验证已被忽略）
+  2. 各 agent 工作树 .gitignore 有未提交改动 → 已提交并与 main 字节级一致
+  3. 各 agent 分支落后 main 7-8 个提交（上游 hwd-123456 新增 5 个提交：
+     跨平台后端启动脚本 scripts/start-backend.cjs + README 文档；经 pull 进入本地，
+     与本地基础设施提交形成合并 3913cdd）→ 已将全部 agent 分支 rebase 到 main，
+     冲突文件 memory.md/talking.txt 按策略保留各 agent 专属版本
+- 最终状态: 各 agent 分支领先 main 1 个提交（.orca 初始化）、落后 0；
+  所有工作树 working tree 干净；workflow/registry 全树一致；talking/memory 各树专属正常
 - [ ] 等待用户下达第一批开发任务
 - [ ] 未推送远程（用户未要求；推送时只推 main，代理人分支 ZX666X/* 不推）
 
