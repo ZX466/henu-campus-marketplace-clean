@@ -241,6 +241,37 @@ npm config list
 
 不要把 `--allow-scripts` 直接加到项目安装命令后面；项目级安装应由仓库中的 `allowScripts` 配置管理。如果仍被个人 `.npmrc` 覆盖，先检查并删除不需要的 `allow-scripts` 或 `ignore-scripts` 配置，再重新运行安装。
 
+### `npm error Exit handler never called!`
+
+这是 npm 自己在安装结束时没有正常收尾，常见原因是 npm 11 的兼容性问题、网络超时、代理或当前 npm 镜像异常，不是项目源代码报错。npm 社区中也有 Windows、Node 24/npm 11 和网络重试触发此错误的记录。
+
+先关闭正在运行的前端、后端和其他 npm 进程，然后在仓库根目录执行：
+
+```powershell
+node --version
+npm --version
+npm config get registry
+npm cache verify
+```
+
+如果当前 Node.js 是 24.x、npm 是 11.x，优先换用 Node.js 20 LTS（自带 npm 10），再重新打开 PowerShell。若暂时不能更换 Node，也可以尝试只为这次安装切换官方 registry：
+
+```powershell
+npm install --registry=https://registry.npmjs.org
+npm --prefix frontend install --registry=https://registry.npmjs.org
+```
+
+如果仍然失败，清理缓存和未完成的依赖目录后再装。不要删除 `package-lock.json`：
+
+```powershell
+Remove-Item -Recurse -Force .\node_modules, .\frontend\node_modules -ErrorAction SilentlyContinue
+npm cache clean --force
+npm install --registry=https://registry.npmjs.org
+npm --prefix frontend install --registry=https://registry.npmjs.org
+```
+
+如果公司、校园网或代理必须使用指定镜像，应把完整的 npm 调试日志和 `npm config get registry` 的结果一起发给网络管理员；不要把个人代理、证书或账号配置提交到仓库。
+
 ### 安装时显示 `10 vulnerabilities`
 
 这是 npm 对依赖树的安全审计提示，不等于安装失败。先运行：
