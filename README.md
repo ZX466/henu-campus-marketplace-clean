@@ -28,6 +28,20 @@ npm --version
 python --version
 ```
 
+## 先确认当前目录
+
+所有 `npm`、`git` 和后端启动命令都要在仓库根目录执行，也就是能同时看到 `package.json`、`frontend` 和 `backend` 的目录。不要在桌面目录直接运行 `npm install`。
+
+Windows PowerShell 示例：
+
+```powershell
+cd "E:\zxdevelop\project8\henu-campus-marketplace-clean"
+Test-Path .\package.json
+Get-ChildItem .\frontend\package.json, .\backend\requirements.txt
+```
+
+第一条检查应返回 `True`。如果返回 `False`，先用资源管理器进入实际仓库目录，再重新打开 PowerShell。
+
 ## 第一次安装
 
 在仓库根目录执行：
@@ -35,12 +49,42 @@ python --version
 ```powershell
 npm install
 npm run install:frontend
-py -3.12 -m venv backend\.venv
+```
+
+如果仓库中已经有 `backend\.venv`，直接继续安装后端依赖，不要重复创建虚拟环境：
+
+```powershell
+.\backend\.venv\Scripts\python.exe --version
 .\backend\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 ```
 
-如果电脑中 Python 3.12 的命令不是 `py -3.12`，先运行 `py -0p` 查看已安装版本。
+如果没有 `backend\.venv`，先查看本机 Python 启动器实际登记的版本：
+
+```powershell
+py --list
+where.exe python
+```
+
+只有当 `py --list` 中确实出现 3.12 时，才使用：
+
+```powershell
+py -3.12 -m venv backend\.venv
+```
+
+如果 `py -3.12` 报“无法识别 Python”，说明 Python 是通过其他发行方式安装的。使用 `py --list` 显示的完整标识，例如：
+
+```powershell
+py -V:Astral/CPython3.12.15 -m venv backend\.venv
+```
+
+也可以直接调用 `where.exe python` 找到的 3.12 `python.exe`：
+
+```powershell
+& "C:\path\to\python.exe" -m venv backend\.venv
+```
+
+创建完成后，再执行上面的虚拟环境依赖安装命令。不要在桌面目录直接执行 `backend\\.venv` 路径命令；必须先进入仓库根目录。
 
 ## 只启动前端查看页面
 
@@ -124,10 +168,38 @@ Invoke-RestMethod http://localhost:8000/api/v1/health
 
 ### 找不到后端虚拟环境
 
+先确认自己位于仓库根目录，再按本机实际 Python 启动方式创建环境：
+
+```powershell
+py --list
+where.exe python
+```
+
+如果列表中有 3.12：
+
 ```powershell
 py -3.12 -m venv backend\.venv
+```
+
+如果列表显示的是 Astral/uv 的 CPython：
+
+```powershell
+py -V:Astral/CPython3.12.15 -m venv backend\.venv
+```
+
+然后：
+
+```powershell
 .\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 ```
+
+### `npm` 报 `ENOENT`，提示找不到 `package.json`
+
+这是当前目录错误，不是前端代码错误。先回到仓库根目录，并确认 `Test-Path .\package.json` 返回 `True`，再重新执行安装命令。
+
+### `py -3.12` 报无法识别 Python
+
+这是本机 Python 启动器登记方式不同。按照“第一次安装”中的 `py --list` 和 `where.exe python` 检查结果选择对应命令；已有 `backend\.venv` 时直接复用它即可。
 
 ### 找不到 fastapi
 
@@ -169,6 +241,17 @@ npm run dev:frontend
 ```
 
 此模式适合先查看页面；真实登录、商品写入、收藏和订单仍需后端和 MongoDB。
+
+### 登录前的完整启动顺序
+
+登录不是纯前端功能。需要两个终端都保持运行，并且后端能连接 MongoDB：
+
+1. 终端一（仓库根目录）：`npm run dev:backend`
+2. 终端二（仓库根目录）：`npm run dev:frontend`
+3. 浏览器打开 <http://localhost:3000>，再进行注册或登录。
+4. 若页面能打开但登录失败，先访问 <http://localhost:8000/api/v1/health> 和 <http://localhost:8000/api/v1/health/mongodb>，确认 API 和数据库均正常。
+
+只运行 `npm run dev:frontend` 可以查看演示页面，但不能保证真实登录、发布、收藏和订单同步。
 
 ## 当前功能模块
 
