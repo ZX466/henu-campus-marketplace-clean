@@ -61,16 +61,13 @@ __pycache__/
 *.db
 
 # =============================================================================
-# Multi-Agent Collaboration (rule: .orca is versioned; other agent dot-folders are local-only)
+# Multi-Agent Collaboration (repo-specific rule: NOTHING under .orca or other
+# agent dot-folders is versioned in THIS repo — all local-only)
 # =============================================================================
-# Agent config folders — never commit, local only
+.orca/
 .claude/
 .opencode/
 .codex/
 .agents/
 .codegraph/
-# NOTE: .orca/ is intentionally NOT ignored — it must be versioned (workflow, registry, talking, memory)
-
-
-# Agent registry runtime folder (auto-generated)
-.agents/
+.agent/
