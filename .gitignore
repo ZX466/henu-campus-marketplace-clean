@@ -71,4 +71,6 @@ __pycache__/
 .codegraph/
 # NOTE: .orca/ is intentionally NOT ignored — it must be versioned (workflow, registry, talking, memory)
 
-
+
+# Agent registry runtime folder (auto-generated)
+.agents/
