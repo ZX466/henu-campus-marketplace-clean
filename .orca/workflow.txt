@@ -51,19 +51,25 @@
 
 六、本地文件与 gitignore
   - 除 .orca 外，其他 . 开头的 agent 配置文件夹一律不入 git、不推送仓库：
-    .claude .opencode .codex .agent .codegraph 等。
-  - 本地必须存在：.codegraph 与 .agent（所有工作树都要有）；
+    .claude .opencode .codex .agents .codegraph 等。
+  - 本地必须存在：.codegraph 与 .agents（所有工作树都要有）；
     .claude / .opencode / .codex 只在对应 agent 的工作树；主工作树全都有。
 
-七、记忆机制
+七、远程仓库
+  - 提交/推送目标仓库（origin）: https://github.com/ZX466/henu-campus-marketplace-clean.git
+    （本项目不用 Gitee；ZX466 账号）
+  - 上游参考仓库（upstream，只拉不推）: https://github.com/hwd-123456/henu-campus-marketplace-clean.git
+  - 推送规则：只推 main 及 develop/feature 类分支；代理人分支 ZX666X/* 不推。
+
+八、记忆机制
   - 各工作树 .orca/memory.md 保存该工作树 agent 的记忆。
   - agent 开启新对话时：先读 .orca/workflow.txt，再读 .orca/memory.md，然后继续任务。
 
-八、上下文提醒
+九、上下文提醒
   - 任何 agent 的 context 达到 50% 时，提醒切换新对话（先把状态写入 memory.md 再切换），
     最大程度利用用户的 token。
 
-九、环境与技术栈
+十、环境与技术栈
   - 前端: React 18 + Vite 6 + Tailwind（frontend/）
   - 后端: FastAPI + Motor/MongoDB（backend/）
   - 一键启动: 仓库根目录 `npm run dev`（后端需先建 backend/.venv）
