@@ -67,7 +67,7 @@ __pycache__/
 .claude/
 .opencode/
 .codex/
-.agent/
+.agents/
 .codegraph/
 # NOTE: .orca/ is intentionally NOT ignored — it must be versioned (workflow, registry, talking, memory)
 
