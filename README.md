@@ -140,7 +140,7 @@ python3.12 -m venv backend/.venv
 npm run dev
 ```
 
-这会同时启动前端 3000 端口和后端 8000 端口。根目录的 `dev:backend` 脚本默认使用 `backend\.venv\Scripts\python.exe`，必须先创建虚拟环境。
+这会同时启动前端 3000 端口和后端 8000 端口。根目录的 `dev:backend` 会自动选择 Windows 的 `backend\.venv\Scripts\python.exe` 或 macOS/Linux 的 `backend/.venv/bin/python`，必须先创建虚拟环境。
 
 ## 前端连接后端
 
@@ -252,6 +252,10 @@ npm run dev:frontend
 4. 若页面能打开但登录失败，先访问 <http://localhost:8000/api/v1/health> 和 <http://localhost:8000/api/v1/health/mongodb>，确认 API 和数据库均正常。
 
 只运行 `npm run dev:frontend` 可以查看演示页面，但不能保证真实登录、发布、收藏和订单同步。
+
+### 商品图片加载失败或出现 `ERR_TUNNEL_CONNECTION_FAILED`
+
+演示商品图片使用 Unsplash 等外部图片地址。网络无法访问这些站点时，页面仍可启动和登录，但部分商品图片会显示失败；这不是登录接口或前端构建错误。可以切换网络，或后续将图片替换为项目本地静态资源。
 
 ## 当前功能模块
 

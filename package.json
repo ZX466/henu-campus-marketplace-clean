@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently -k -p \"[{name}]\" -n \"FRONTEND,BACKEND\" -c \"cyan.bold,magenta.bold\" \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "npm --prefix frontend run dev",
-    "dev:backend": "backend\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8000 --app-dir backend",
+    "dev:backend": "node scripts/start-backend.cjs",
     "build": "npm --prefix frontend run build",
     "preview": "npm --prefix frontend run preview",
     "install:frontend": "npm --prefix frontend install"
