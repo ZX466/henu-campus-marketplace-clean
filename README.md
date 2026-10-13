@@ -137,6 +137,29 @@ py -3.12 -m venv backend\.venv
 .\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 ```
 
+### `npm error code EALLOWSCRIPTS`
+
+先从最新仓库重新同步代码，再重新安装前端依赖：
+
+```powershell
+git switch main
+git pull origin main
+npm install
+npm run install:frontend
+```
+
+项目已经移除了前端对根目录 `file:..` 的无用循环依赖。这个依赖会让较新版本 npm 在安装前端时重复处理根项目，并触发依赖安装脚本安全策略。
+
+如果仍然报同样的错误，检查本机是否在用户级或项目级 `.npmrc` 中强制设置了脚本参数：
+
+```powershell
+npm config get allow-scripts
+npm config get ignore-scripts
+npm config list
+```
+
+不要把 `--allow-scripts` 直接加到项目安装命令后面。先删除个人 `.npmrc` 中不需要的 `allow-scripts` 或 `ignore-scripts` 配置，再重新运行安装。
+
 ### 只想看界面，不想安装 MongoDB
 
 ```powershell
