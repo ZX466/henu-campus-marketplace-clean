@@ -38,6 +38,17 @@
 - 克隆地址更新为 ZX466 仓库；端口 3334 无残留
 - 已提交推送 main: 7d96e7a
 
+## EALLOWSCRIPTS 修复（2026-10-14，用户实测报错）
+- 根因: npm 11→12 升级后，npm 12 的 resolve-allow-scripts 把 env 里的 allow_scripts
+  视为 CLI flag，在 project-scoped install 直接拒绝（EALLOWSCRIPTS）；
+  而 `npm run` 会把用户 .npmrc 的 `allow-scripts=@kilocode/cli` 导出为 npm_config_* env
+  传给内层 → `npm run install:frontend` 必失败；直接终端跑则成功
+- 修复: package.json 的 install:frontend 改走 scripts/install-frontend.cjs
+  （delete npm_config_allow_scripts 后 spawnSync npm，win32 需 shell:true 防 EINVAL）
+- 验证: 安装成功、esbuild.exe 存在、vite build 2.01s 通过
+- 注意: 用户级 C:\Users\zx198\.npmrc 有 allow-scripts=@kilocode/cli（kilo CLI 所需，未动）
+- 已推送 main: 315e6e9
+
 ## 待办 / 进行中
 - [x] 2026-10-13 规则符合性检查完成，发现并修复 3 处问题：
   1. 主工作树 .agent 丢失 → 已重建（check-ignore 验证已被忽略）
