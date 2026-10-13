@@ -25,6 +25,13 @@
 - agent 配置文件夹名修正为 .agents（原 .agent 已删，全部 6 个工作树已换；.gitignore 条目同步更新）
 - main 已推送 origin(ZX466): c536d55 + a090732，当前本地与 origin/main 完全同步
 
+## 端口与文档更新（2026-10-13 用户指示）
+- 前端端口 3000 → 3334（四位随机数）：vite.config.js / backend CORS / README / Makefile 全部统一
+- 实测验证：前端 3334 返回 200；后端 health 正常；CORS 预检放行 http://localhost:3334
+- README 新增"使用 uv 启动（推荐）"章节：uv venv + uv pip install 步骤 + uv 与普通 Python 对照表
+- 主工作树已按 README 步骤实际创建 backend\.venv（uv 0.12.3）并安装依赖
+- 已提交推送 main: dd345ff
+
 ## 待办 / 进行中
 - [x] 2026-10-13 规则符合性检查完成，发现并修复 3 处问题：
   1. 主工作树 .agent 丢失 → 已重建（check-ignore 验证已被忽略）
