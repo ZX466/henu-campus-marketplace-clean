@@ -30,12 +30,19 @@ python --version
 
 ## 先确认当前目录
 
+如果还没有项目文件，先克隆仓库：
+
+```powershell
+git clone https://github.com/hwd-123456/henu-campus-marketplace-clean.git
+cd henu-campus-marketplace-clean
+```
+
 所有 `npm`、`git` 和后端启动命令都要在仓库根目录执行，也就是能同时看到 `package.json`、`frontend` 和 `backend` 的目录。不要在桌面目录直接运行 `npm install`。
 
 Windows PowerShell 示例：
 
 ```powershell
-cd "E:\zxdevelop\project8\henu-campus-marketplace-clean"
+cd .\henu-campus-marketplace-clean
 Test-Path .\package.json
 Get-ChildItem .\frontend\package.json, .\backend\requirements.txt
 ```
@@ -81,7 +88,7 @@ py -V:Astral/CPython3.12.15 -m venv backend\.venv
 也可以直接调用 `where.exe python` 找到的 3.12 `python.exe`：
 
 ```powershell
-& "C:\path\to\python.exe" -m venv backend\.venv
+& "<python.exe 的完整路径>" -m venv backend\.venv
 ```
 
 创建完成后，再执行上面的虚拟环境依赖安装命令。不要在桌面目录直接执行 `backend\\.venv` 路径命令；必须先进入仓库根目录。
@@ -222,7 +229,7 @@ npm install
 npm run install:frontend
 ```
 
-项目已经移除了前端对根目录 `file:..` 的无用循环依赖。这个依赖会让较新版本 npm 在安装前端时重复处理根项目，并触发依赖安装脚本安全策略。
+项目已经移除了前端对根目录 `file:..` 的无用循环依赖。前端 `package.json` 已明确允许 Vite 需要的 `esbuild` 安装脚本运行，避免 npm 11 把它拦截。
 
 如果仍然报同样的错误，检查本机是否在用户级或项目级 `.npmrc` 中强制设置了脚本参数：
 
@@ -232,7 +239,36 @@ npm config get ignore-scripts
 npm config list
 ```
 
-不要把 `--allow-scripts` 直接加到项目安装命令后面。先删除个人 `.npmrc` 中不需要的 `allow-scripts` 或 `ignore-scripts` 配置，再重新运行安装。
+不要把 `--allow-scripts` 直接加到项目安装命令后面；项目级安装应由仓库中的 `allowScripts` 配置管理。如果仍被个人 `.npmrc` 覆盖，先检查并删除不需要的 `allow-scripts` 或 `ignore-scripts` 配置，再重新运行安装。
+
+### 安装时显示 `10 vulnerabilities`
+
+这是 npm 对依赖树的安全审计提示，不等于安装失败。先运行：
+
+```powershell
+npm audit
+```
+
+可以先使用不破坏主版本的修复：
+
+```powershell
+npm audit fix
+```
+
+不要直接使用 `npm audit fix --force`，它可能升级 React、Vite 等主版本并破坏当前项目。若审计仍有高危项，把 `npm audit` 的具体依赖路径发给项目负责人后再单独升级。
+
+### 一键复制的标准安装顺序
+
+从仓库根目录开始，依次执行：
+
+```powershell
+npm install
+npm run install:frontend
+npm run build
+npm run dev
+```
+
+如果只看前端，把最后一行换成 `npm run dev:frontend`。如果 `npm run dev` 提示虚拟环境不存在，先按“第一次安装”创建 `backend/.venv`。
 
 ### 只想看界面，不想安装 MongoDB
 
