@@ -87,7 +87,7 @@ python3.12 -m venv backend/.venv
 | 找不到后端虚拟环境 / 找不到 fastapi | 在仓库根目录按上面步骤创建 `backend\.venv` 并装依赖；已有则直接复用 |
 | `py -3.12` 无法识别 | 用 `py --list` 查看本机登记的版本标识（如 `py -V:Astral/CPython3.12.15 -m venv backend\.venv`），或改用 uv 版 |
 | `npm` 报 `ENOENT` 找不到 `package.json` | 当前目录错误：回到仓库根目录再执行 |
-| `npm error code EALLOWSCRIPTS` | 同步最新代码后重新 `npm install`；检查个人 `.npmrc` 是否强制了 `allow-scripts`/`ignore-scripts` |
+| `npm error code EALLOWSCRIPTS` | npm 12 会把用户 `.npmrc` 的 `allow-scripts` 条目经环境变量带入嵌套安装并拒绝。项目已内置修复（`install:frontend` 走 `scripts/install-frontend.cjs` 清理环境变量）；若直接在 `frontend/` 里安装仍报错，检查用户级 `.npmrc` 的 `allow-scripts` 行 |
 | `npm error Exit handler never called!` | npm 11 兼容性问题：优先换 Node 20 LTS（npm 10）；或清理后用官方源重装（不要删 `package-lock.json`） |
 | 安装显示 `10 vulnerabilities` | 审计提示，不是安装失败。可 `npm audit fix`；不要用 `--force`（会破坏主版本） |
 | 商品图片加载失败 | 演示图片用 Unsplash 外链，网络不通属正常，不影响功能 |

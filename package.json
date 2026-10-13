@@ -8,7 +8,7 @@
     "dev:backend": "node scripts/start-backend.cjs",
     "build": "npm --prefix frontend run build",
     "preview": "npm --prefix frontend run preview",
-    "install:frontend": "npm --prefix frontend install"
+    "install:frontend": "node scripts/install-frontend.cjs"
   },
   "keywords": [
     "campuscart",
