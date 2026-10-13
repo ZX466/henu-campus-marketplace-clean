@@ -4,7 +4,7 @@
 
 ## 先看网页演示
 
-如果只是先查看网页界面，可以只启动前端。没有 MongoDB 时，页面仍会显示内置演示商品；需要登录、发布、订单同步等真实数据功能时，再按后端步骤启动 API 和 MongoDB。
+如果只是先查看网页界面，可以只启动前端。没有 MongoDB 时，页面仍会显示内置演示商品；后端登录接口支持临时本地回退，便于联调登录页面，但注册、发布、收藏、订单和数据持久化仍需要 MongoDB。
 
 启动后访问：<http://localhost:3000>
 
@@ -165,6 +165,8 @@ Invoke-RestMethod http://localhost:8000/api/v1/health
 ### 页面能打开但登录或商品同步失败
 
 访问 `http://localhost:8000/api/v1/health/mongodb`。如果 `connected: false`，检查 MongoDB 服务和 `.env` 中的 `MONGO_URI`。
+
+没有 MongoDB 时，登录接口可能返回 `Authenticated (Local Fallback)` 并成功建立临时登录态；重启后端后该登录态和数据不会保留。注册接口以及依赖数据库写入的功能需要先恢复 MongoDB 连接。
 
 ### 找不到后端虚拟环境
 
