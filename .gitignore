@@ -60,4 +60,15 @@ __pycache__/
 *.sqlite3
 *.db
 
+# =============================================================================
+# Multi-Agent Collaboration (rule: .orca is versioned; other agent dot-folders are local-only)
+# =============================================================================
+# Agent config folders — never commit, local only
+.claude/
+.opencode/
+.codex/
+.agent/
+.codegraph/
+# NOTE: .orca/ is intentionally NOT ignored — it must be versioned (workflow, registry, talking, memory)
+
 
