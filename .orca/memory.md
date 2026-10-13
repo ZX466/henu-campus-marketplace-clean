@@ -22,8 +22,8 @@
 - origin = https://github.com/ZX466/henu-campus-marketplace-clean.git（提交目标，不用 Gitee）
 - upstream = https://github.com/hwd-123456/henu-campus-marketplace-clean.git（原 origin 改名，只拉不推）
 - 直连 GitHub 已测试可用；若不通再用 127.0.0.1:7897 代理
-- agent 配置文件夹名修正为 .agents（原 .agent 已删，全部 6 个工作树已换）
-- main 推送状态: 领先 origin/main 5 个本地提交，尚未推送（等用户指示）
+- agent 配置文件夹名修正为 .agents（原 .agent 已删，全部 6 个工作树已换；.gitignore 条目同步更新）
+- main 已推送 origin(ZX466): c536d55 + a090732，当前本地与 origin/main 完全同步
 
 ## 待办 / 进行中
 - [x] 2026-10-13 规则符合性检查完成，发现并修复 3 处问题：
