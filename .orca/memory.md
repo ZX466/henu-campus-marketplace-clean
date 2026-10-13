@@ -18,6 +18,13 @@
   - codex 工作树: .codex；opencode 工作树: .opencode
   - cline / kilo / pi 工作树: 无命名配置文件夹（用户未指定）
 
+## 远程仓库（2026-10-13 用户指示更新）
+- origin = https://github.com/ZX466/henu-campus-marketplace-clean.git（提交目标，不用 Gitee）
+- upstream = https://github.com/hwd-123456/henu-campus-marketplace-clean.git（原 origin 改名，只拉不推）
+- 直连 GitHub 已测试可用；若不通再用 127.0.0.1:7897 代理
+- agent 配置文件夹名修正为 .agents（原 .agent 已删，全部 6 个工作树已换）
+- main 推送状态: 领先 origin/main 5 个本地提交，尚未推送（等用户指示）
+
 ## 待办 / 进行中
 - [x] 2026-10-13 规则符合性检查完成，发现并修复 3 处问题：
   1. 主工作树 .agent 丢失 → 已重建（check-ignore 验证已被忽略）
