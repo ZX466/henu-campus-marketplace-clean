@@ -255,6 +255,12 @@ npm audit
 npm audit fix
 ```
 
+如果 `npm audit` 报 `audit endpoint ... NOT_IMPLEMENTED`，通常是当前 npm 镜像没有提供审计接口，不代表项目安装失败。临时切换到 npm 官方审计接口：
+
+```powershell
+npm audit --registry=https://registry.npmjs.org
+```
+
 不要直接使用 `npm audit fix --force`，它可能升级 React、Vite 等主版本并破坏当前项目。若审计仍有高危项，把 `npm audit` 的具体依赖路径发给项目负责人后再单独升级。
 
 ### 一键复制的标准安装顺序
