@@ -626,3 +626,60 @@ export async function markAllNotificationsRead() {
     };
   }
 }
+
+/* =========================================================================
+   CONVERSATIONS & MESSAGES
+   ========================================================================= */
+
+export async function fetchConversations() {
+  try {
+    const data = await request("/api/v1/conversations");
+    return { success: true, conversations: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, conversations: [], error: error.message };
+  }
+}
+
+export async function createConversation(targetType, targetId, peerId) {
+  try {
+    const payload = { target_type: targetType, target_id: String(targetId) };
+    if (peerId) payload.peer_id = String(peerId);
+    const data = await request("/api/v1/conversations", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    return { success: true, conversation: data };
+  } catch (error) {
+    return { success: false, conversation: null, error: error.message };
+  }
+}
+
+export async function fetchConversationMessages(conversationId) {
+  try {
+    const data = await request(`/api/v1/conversations/${conversationId}/messages`);
+    return { success: true, messages: data?.items || [], hasMore: Boolean(data?.has_more) };
+  } catch (error) {
+    return { success: false, messages: [], error: error.message };
+  }
+}
+
+export async function sendConversationMessage(conversationId, content) {
+  try {
+    const data = await request(`/api/v1/conversations/${conversationId}/messages`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
+    });
+    return { success: true, message: data };
+  } catch (error) {
+    return { success: false, message: null, error: error.message };
+  }
+}
+
+export async function markConversationRead(conversationId) {
+  try {
+    const data = await request(`/api/v1/conversations/${conversationId}/read`, { method: "POST" });
+    return { success: true, ...data };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
