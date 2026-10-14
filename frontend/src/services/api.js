@@ -683,3 +683,33 @@ export async function markConversationRead(conversationId) {
     return { success: false, error: error.message };
   }
 }
+
+/* =========================================================================
+   BOOK LISTS & BOOK WISH PARSER
+   ========================================================================= */
+
+export async function fetchBooklists(filters = {}) {
+  try {
+    const params = new URLSearchParams();
+    ["major", "course", "campus"].forEach((key) => {
+      if (filters[key]) params.set(key, filters[key]);
+    });
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const data = await request(`/api/v1/booklists${query}`);
+    return { success: true, items: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, items: [], error: error.message };
+  }
+}
+
+export async function parseBookWish(text) {
+  try {
+    const data = await request("/api/v1/wishes/parse", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    });
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, data: null, error: error.message };
+  }
+}
