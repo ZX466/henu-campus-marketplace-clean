@@ -912,11 +912,7 @@ function App() {
             path="/services"
             element={
               <ServicesSection
-                onBook={(title) =>
-                  showToast(
-                    `Requested session for "${title}"! Check your college email for details.`,
-                  )
-                }
+                onNotify={(message) => showToast(message)}
               />
             }
           />
