@@ -20,10 +20,10 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
       const TOTAL_DURATION = 24.0; // 24 seconds continuous loop
 
       const chapters = [
-        { start: 0, title: "01 / Identity Verification", tag: "GATEWAY", sub: "@campus.edu Cryptographic Handshake" },
-        { start: 6, title: "02 / Semester Gear Radar", tag: "RADAR", sub: "Algorithmic Pricing & Campus Scanning" },
-        { start: 12, title: "03 / Peer Skill Gigs", tag: "SKILLS", sub: "Senior Tutoring & Code Review Terminal" },
-        { start: 18, title: "04 / Zero-Fraud QR Handover", tag: "HANDOVER", sub: "Library Safe Desk CCTV Verification" }
+        { start: 0, title: "01 / 身份认证", tag: "入口", sub: "@henu.edu.cn 加密握手认证" },
+        { start: 6, title: "02 / 学期装备雷达", tag: "雷达", sub: "算法定价与校园扫描" },
+        { start: 12, title: "03 / 同学技能零活", tag: "技能", sub: "学长辅导与代码评审终端" },
+        { start: 18, title: "04 / 零欺诈二维码交接", tag: "交接", sub: "图书馆安全交接点验证" }
       ];
 
       const activeChapterIdx = useMemo(() => {
@@ -380,11 +380,11 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.beginPath(); ctx.roundRect(b1x - 140, b1y + 16, 280, 84, 12); ctx.fill();
             ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5; ctx.stroke();
             ctx.font = '700 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
-            ctx.fillText('Casio fx-991EX Scientific Calc', b1x - 124, b1y + 40);
+            ctx.fillText('卡西欧 fx-991EX 科学计算器', b1x - 124, b1y + 40);
             ctx.font = '700 13px monospace'; ctx.fillStyle = '#10b981';
-            ctx.fillText('₹720  (60% OFF RETAIL)', b1x - 124, b1y + 64);
+            ctx.fillText('¥72  (低于零售价 60%)', b1x - 124, b1y + 64);
             ctx.font = '500 11px sans-serif'; ctx.fillStyle = '#94a3b8';
-            ctx.fillText('Hostel 4 • Handover in 4 Mins', b1x - 124, b1y + 86);
+            ctx.fillText('4 号宿舍 • 4 分钟内交接', b1x - 124, b1y + 86);
 
             // Blip 2: Mini Drafter
             const b2x = 940;
@@ -398,11 +398,11 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.beginPath(); ctx.roundRect(b2x - 140, b2y + 16, 280, 84, 12); ctx.fill();
             ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 1.5; ctx.stroke();
             ctx.font = '700 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
-            ctx.fillText('Mini Drafter & T-Square Kit', b2x - 124, b2y + 40);
+            ctx.fillText('迷你绘图仪与丁字尺套装', b2x - 124, b2y + 40);
             ctx.font = '700 13px monospace'; ctx.fillStyle = '#c084fc';
-            ctx.fillText('₹450  (RENT: ₹120/SEM)', b2x - 124, b2y + 64);
+            ctx.fillText('¥45  (租用：每学期 ¥12)', b2x - 124, b2y + 64);
             ctx.font = '500 11px sans-serif'; ctx.fillStyle = '#94a3b8';
-            ctx.fillText('Mech Block • Verified Working', b2x - 124, b2y + 86);
+            ctx.fillText('机械学院 • 已验功能正常', b2x - 124, b2y + 86);
 
             // Blip 3: Lab Coat
             const b3x = 520;
@@ -410,7 +410,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.fillStyle = '#10b981';
             ctx.beginPath(); ctx.arc(b3x, b3y, 5, 0, Math.PI * 2); ctx.fill();
             ctx.font = '600 12px monospace'; ctx.fillStyle = '#6ee7b7';
-            ctx.fillText('Chemistry Lab Coat & Specs • ₹120', b3x + 12, b3y + 4);
+            ctx.fillText('化学实验服与护目镜 • ¥12', b3x + 12, b3y + 4);
           }
 
           // ================================================================
@@ -438,14 +438,14 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             });
 
             ctx.font = '600 12px monospace'; ctx.fillStyle = '#94a3b8';
-            ctx.fillText('peer_tutoring_daemon — bash — 80x24', termX + 90, termY + 26);
+            ctx.fillText('学长辅导服务 — bash — 80x24', termX + 90, termY + 26);
 
             // Terminal Text & Code Output
             ctx.font = '500 14px monospace'; ctx.fillStyle = '#38bdf8';
-            ctx.fillText('> campus-buddy --query "DSA Tree DP & Graph Algorithms Mock Interview"', termX + 32, termY + 84);
+            ctx.fillText('> 校园伙伴 --query "数据结构 树形动态规划与图算法模拟面试"', termX + 32, termY + 84);
 
             ctx.fillStyle = '#a855f7';
-            ctx.fillText('[RADAR MATCH] 1 Senior Peer Mentor Available on Campus Right Now', termX + 32, termY + 116);
+            ctx.fillText('[雷达匹配] 当前校园内有 1 位学长导师可提供帮助', termX + 32, termY + 116);
 
             // Senior Mentor Showcase Card
             const mX = termX + 32;
@@ -459,25 +459,25 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
 
             // Senior Badge
             ctx.font = '800 20px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
-            ctx.fillText('Priyanshu Kumar', mX + 24, mY + 42);
+            ctx.fillText('张学长', mX + 24, mY + 42);
 
             ctx.fillStyle = '#10b981';
             ctx.beginPath(); ctx.roundRect(mX + 210, mY + 24, 180, 24, 12); ctx.fill();
             ctx.font = '700 11px monospace'; ctx.fillStyle = '#060911';
-            ctx.fillText('PLACED @ MICROSOFT (SDE)', mX + 222, mY + 40);
+            ctx.fillText('已入职 微软（软件工程师）', mX + 222, mY + 40);
 
             ctx.font = '500 13px "Plus Jakarta Sans", sans-serif'; ctx.fillStyle = '#cbd5e1';
-            ctx.fillText('Academic Verification: CGPA 9.8 • Grade S in Advanced Data Structures (CS301)', mX + 24, mY + 80);
-            ctx.fillText('Mentorship Topics: LeetCode Hard Patterns, Graph DP, System Design, Resume Roasts', mX + 24, mY + 106);
+            ctx.fillText('学业认证：绩点 3.9/4.0 • 高级数据结构（CS301）S 级', mX + 24, mY + 80);
+            ctx.fillText('辅导方向：LeetCode 难题套路、图论动态规划、系统设计、简历打磨', mX + 24, mY + 106);
 
             // Booking Pill
             ctx.fillStyle = '#a855f7';
             ctx.beginPath(); ctx.roundRect(mX + 24, mY + 140, 220, 36, 18); ctx.fill();
             ctx.font = '700 12px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
-            ctx.fillText('BOOK 1-ON-1 SESSION (₹199)', mX + 38, mY + 163);
+            ctx.fillText('预约一对一辅导（¥20）', mX + 38, mY + 163);
 
             ctx.font = '600 12px monospace'; ctx.fillStyle = '#34d399';
-            ctx.fillText('✓ Library Discussion Room 3B • CCTV Safe Desk Handshake', mX + 260, mY + 163);
+            ctx.fillText('✓ 图书馆研讨室 3B • 监控安全交接点', mX + 260, mY + 163);
 
             // Blinking cursor
             if (Math.floor(t * 2) % 2 === 0) {
@@ -573,10 +573,10 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.beginPath(); ctx.roundRect(sX - 90, sY - 50, 180, 100, 16); ctx.fill();
             ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.5; ctx.stroke();
             ctx.font = '700 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
-            ctx.fillText('SELLER (Hostel 3)', sX - 70, sY - 20);
+            ctx.fillText('卖家（3 号宿舍）', sX - 70, sY - 20);
             ctx.font = '500 12px monospace'; ctx.fillStyle = '#38bdf8';
-            ctx.fillText('Tokens Generated ✓', sX - 70, sY + 6);
-            ctx.fillText('Roll: 2024CS0892', sX - 70, sY + 28);
+            ctx.fillText('已生成凭证 ✓', sX - 70, sY + 6);
+            ctx.fillText('学号：2024CS0892', sX - 70, sY + 28);
 
             // Right Peer: Student Buyer
             const bX = 1060; const bY = 410;
@@ -584,10 +584,10 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.beginPath(); ctx.roundRect(bX - 90, bY - 50, 180, 100, 16); ctx.fill();
             ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 1.5; ctx.stroke();
             ctx.font = '700 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
-            ctx.fillText('BUYER (Hostel 5)', bX - 70, sY - 20);
+            ctx.fillText('买家（5 号宿舍）', bX - 70, sY - 20);
             ctx.font = '500 12px monospace'; ctx.fillStyle = '#c084fc';
-            ctx.fillText('QR Scanned & Paid ✓', bX - 70, sY + 6);
-            ctx.fillText('Roll: 2025ME0411', bX - 70, sY + 28);
+            ctx.fillText('已扫码并付款 ✓', bX - 70, sY + 6);
+            ctx.fillText('学号：2025ME0411', bX - 70, sY + 28);
 
             // Connection Beziers to QR Center
             ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)'; ctx.lineWidth = 2;
@@ -601,7 +601,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.beginPath(); ctx.roundRect(qx - 220, qy + qrCardH / 2 + 20, 440, 44, 22); ctx.fill();
             ctx.font = '800 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#060911';
             ctx.textAlign = 'center';
-            ctx.fillText('✓ ZERO-COMMISSION HANDOVER VERIFIED & ESCROW RELEASED', qx, qy + qrCardH / 2 + 47);
+            ctx.fillText('✓ 零佣金交接已验证，担保资金已释放', qx, qy + qrCardH / 2 + 47);
             ctx.textAlign = 'left';
           }
 
@@ -609,7 +609,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
           ctx.font = '700 11px monospace';
           ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
           ctx.textAlign = 'right';
-          ctx.fillText('CAMPUSCART GENERATED MOTION REEL (1080P 60FPS)', W - 48, 64);
+          ctx.fillText('河大同享生成动态短片（1080P 60FPS）', W - 48, 64);
           ctx.textAlign = 'left';
 
           animFrameRef.current = requestAnimationFrame(render);
@@ -650,7 +650,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             {/* Top Overlay Badge */}
             <div className="absolute top-6 left-6 flex items-center gap-2 bg-neutral-950/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 text-xs font-mono text-white pointer-events-none">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span className="font-bold">CampusCart Dynamic Showcase • Native Generated Reel</span>
+              <span className="font-bold">河大同享动态展示 • 原生生成短片</span>
             </div>
 
             {/* Center Pause Indicator (Shows when paused) */}
@@ -672,7 +672,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             <div 
               onClick={handleScrubberClick}
               className="relative h-2.5 w-full bg-neutral-800/90 rounded-full cursor-pointer overflow-hidden group/scrub"
-              title="Click or drag to scrub"
+              title="点击或拖动进度"
             >
               {/* Active Progress Fill */}
               <div 
@@ -694,7 +694,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                 <button 
                   onClick={togglePlay}
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
-                  title={isPlaying ? "Pause" : "Play"}
+                  title={isPlaying ? "暂停" : "播放"}
                 >
                   {isPlaying ? (
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -717,7 +717,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                 <button 
                   onClick={toggleMute}
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer flex items-center gap-1"
-                  title={isMuted ? "Unmute Ambient Sound" : "Mute Sound"}
+                  title={isMuted ? "开启环境音" : "静音"}
                 >
                   {isMuted ? (
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -731,7 +731,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     </svg>
                   )}
-                  <span className="text-[10px] text-neutral-400 hidden sm:inline">{isMuted ? 'Muted' : 'Audio On'}</span>
+                  <span className="text-[10px] text-neutral-400 hidden sm:inline">{isMuted ? '已静音' : '声音开启'}</span>
                 </button>
               </div>
 
@@ -757,7 +757,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                 <button 
                   onClick={() => setPlaybackSpeed(s => s === 1 ? 1.5 : (s === 1.5 ? 2 : 1))}
                   className="px-2.5 py-1 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 font-mono text-[11px] transition cursor-pointer"
-                  title="Playback Speed"
+                  title="播放速度"
                 >
                   {playbackSpeed}x
                 </button>
@@ -766,20 +766,20 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                 <button 
                   onClick={exportVideoReel}
                   className="px-3 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-[11px] transition flex items-center gap-1.5 cursor-pointer"
-                  title="Download Video File (.webm)"
+                  title="下载视频文件 (.webm)"
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                   </svg>
-                  <span>{recordingStatus || 'Download Reel'}</span>
+                  <span>{recordingStatus || '下载短片'}</span>
                 </button>
 
                 <button 
                   onClick={toggleFullscreen}
                   className="p-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 transition cursor-pointer"
-                  title="Toggle Fullscreen"
+                  title="切换全屏"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>

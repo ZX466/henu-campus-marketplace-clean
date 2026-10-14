@@ -1,44 +1,44 @@
 import React, { useMemo, useState } from "react";
 
 const STATUS_STEPS = [
-  "Order Placed",
-  "Pending Pickup",
-  "Ready for Pickup",
-  "Completed",
+  "已下单",
+  "待自提",
+  "可自提",
+  "已完成",
 ];
 
 const STATUS_STYLES = {
-  "Order Placed": "bg-blue-100 text-blue-700",
-  "Pending Pickup": "bg-amber-100 text-amber-800",
-  "Ready for Pickup": "bg-indigo-100 text-indigo-700",
-  Completed: "bg-emerald-100 text-emerald-700",
-  Cancelled: "bg-red-100 text-red-700",
+  "已下单": "bg-blue-100 text-blue-700",
+  "待自提": "bg-amber-100 text-amber-800",
+  "可自提": "bg-indigo-100 text-indigo-700",
+  "已完成": "bg-emerald-100 text-emerald-700",
+  "已取消": "bg-red-100 text-red-700",
 };
 
 function normalizeStatus(status) {
   const value = String(status || "").trim().toLowerCase();
 
   if (value === "pending" || value === "pending pickup") {
-    return "Pending Pickup";
+    return "待自提";
   }
 
   if (value === "ready" || value === "ready for pickup") {
-    return "Ready for Pickup";
+    return "可自提";
   }
 
   if (value === "completed" || value === "complete") {
-    return "Completed";
+    return "已完成";
   }
 
   if (value === "cancelled" || value === "canceled") {
-    return "Cancelled";
+    return "已取消";
   }
 
   if (value === "order placed") {
-    return "Order Placed";
+    return "已下单";
   }
 
-  return "Pending Pickup";
+  return "待自提";
 }
 
 function getStatusIndex(status) {
@@ -94,7 +94,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
 
   const handleCancelOrder = (orderId) => {
     const confirmed = window.confirm(
-      "Are you sure you want to cancel this order?"
+      "确定要取消这笔订单吗？"
     );
 
     if (!confirmed) return;
@@ -108,15 +108,15 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
     <section className="mx-auto max-w-6xl px-6 pb-24 pt-32 sm:px-12">
       <div className="mb-8">
         <p className="text-xs font-bold uppercase tracking-[0.25em] text-neutral-400">
-          CampusCart Account
+          河大同享 · 我的账户
         </p>
 
         <h1 className="mt-2 font-display text-3xl font-bold text-neutral-950 sm:text-4xl">
-          Order History
+          订单记录
         </h1>
 
         <p className="mt-2 text-sm text-neutral-500">
-          Track your orders, view purchased items, and check pickup details.
+          查看订单进度、已购商品和自提信息。
         </p>
       </div>
 
@@ -127,7 +127,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
               htmlFor="order-search"
               className="mb-2 block text-xs font-bold uppercase tracking-wider text-neutral-500"
             >
-              Search Orders
+              搜索订单
             </label>
 
             <input
@@ -135,7 +135,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search order ID or item name..."
+              placeholder="搜索订单号或商品名称…"
               className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
             />
           </div>
@@ -145,7 +145,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
               htmlFor="order-status"
               className="mb-2 block text-xs font-bold uppercase tracking-wider text-neutral-500"
             >
-              Filter by Status
+              按状态筛选
             </label>
 
             <select
@@ -154,12 +154,12 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
               onChange={(event) => setStatusFilter(event.target.value)}
               className="w-full cursor-pointer rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-medium text-neutral-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
             >
-              <option value="All">All Orders</option>
-              <option value="Order Placed">Order Placed</option>
-              <option value="Pending Pickup">Pending Pickup</option>
-              <option value="Ready for Pickup">Ready for Pickup</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
+              <option value="All">全部订单</option>
+              <option value="已下单">已下单</option>
+              <option value="待自提">待自提</option>
+              <option value="可自提">可自提</option>
+              <option value="已完成">已完成</option>
+              <option value="已取消">已取消</option>
             </select>
           </div>
         </div>
@@ -170,18 +170,18 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
           <div className="mb-4 text-5xl">📦</div>
 
           <h2 className="font-display text-xl font-bold text-neutral-900">
-            No orders yet
+            还没有订单
           </h2>
 
           <p className="mt-2 text-sm text-neutral-500">
-            Your confirmed orders will appear here.
+            确认后的订单会显示在这里。
           </p>
 
           <button
             onClick={onBack}
             className="mt-6 rounded-xl bg-neutral-950 px-6 py-3 text-xs font-bold text-white transition hover:bg-neutral-800"
           >
-            Explore Marketplace
+            去逛集市
           </button>
         </div>
       ) : filteredOrders.length === 0 ? (
@@ -189,11 +189,11 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
           <div className="mb-3 text-4xl">🔎</div>
 
           <h2 className="font-display text-xl font-bold text-neutral-900">
-            No matching orders
+            没有匹配的订单
           </h2>
 
           <p className="mt-2 text-sm text-neutral-500">
-            Try another search term or change the status filter.
+            换个关键词，或调整状态筛选条件。
           </p>
 
           <button
@@ -203,7 +203,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
             }}
             className="mt-5 rounded-xl bg-neutral-950 px-5 py-3 text-xs font-bold text-white transition hover:bg-neutral-800"
           >
-            Clear Filters
+            清除筛选
           </button>
         </div>
       ) : (
@@ -211,7 +211,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
           {filteredOrders.map((order) => {
             const status = normalizeStatus(order.status);
             const isExpanded = expandedOrder === order.id;
-            const isCancelled = status === "Cancelled";
+            const isCancelled = status === "已取消";
             const currentStep = getStatusIndex(status);
 
             return (
@@ -222,17 +222,17 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
                 <div className="flex flex-col gap-4 border-b border-neutral-200 bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                      Order ID
+                      订单编号
                     </p>
 
                     <h2 className="mt-1 font-mono text-lg font-bold text-neutral-900">
-                      {order.id || "Unknown Order"}
+                      {order.id || "未知订单"}
                     </h2>
 
                     <p className="mt-1 text-xs text-neutral-500">
                       {order.createdAt
                         ? new Date(order.createdAt).toLocaleString()
-                        : "Date unavailable"}
+                        : "时间不可用"}
                     </p>
                   </div>
 
@@ -250,7 +250,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
                   {!isCancelled && (
                     <div>
                       <h3 className="mb-4 text-sm font-bold text-neutral-900">
-                        Order Progress
+                        订单进度
                       </h3>
 
                       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -298,27 +298,27 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="rounded-2xl border border-neutral-200 p-4">
                       <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                        Total Amount
+                        订单金额
                       </p>
 
                       <p className="mt-1 text-xl font-bold text-neutral-950">
-                        ₹{Number(order.total || 0).toFixed(2)}
+                        ¥{Number(order.total || 0).toFixed(2)}
                       </p>
                     </div>
 
                     <div className="rounded-2xl border border-neutral-200 p-4">
                       <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                        Pickup Location
+                        自提地点
                       </p>
 
                       <p className="mt-1 text-sm font-bold text-neutral-900">
-                        {order.pickupLocation || "Campus Safe Desk"}
+                        {order.pickupLocation || "校内安全交接点"}
                       </p>
                     </div>
 
                     <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-4">
                       <p className="text-xs font-semibold uppercase tracking-wider text-indigo-500">
-                        Pickup Token
+                        自提凭证
                       </p>
 
                       <div className="mt-1 flex items-center justify-between gap-2">
@@ -334,8 +334,8 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
                             className="rounded-lg bg-white px-3 py-2 text-xs font-bold text-indigo-700 transition hover:bg-indigo-100"
                           >
                             {copiedToken === order.pickupToken
-                              ? "Copied"
-                              : "Copy"}
+                              ? "已复制"
+                              : "复制"}
                           </button>
                         )}
                       </div>
@@ -349,15 +349,15 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
                       }
                       className="rounded-xl border border-neutral-200 px-4 py-3 text-xs font-bold text-neutral-800 transition hover:bg-neutral-50"
                     >
-                      {isExpanded ? "Hide Items" : "View Items"}
+                      {isExpanded ? "收起商品" : "查看商品"}
                     </button>
 
-                    {status === "Pending Pickup" && !isCancelled && (
+                    {status === "待自提" && !isCancelled && (
                       <button
                         onClick={() => handleCancelOrder(order.id)}
                         className="rounded-xl border border-red-200 px-4 py-3 text-xs font-bold text-red-600 transition hover:bg-red-50"
                       >
-                        Cancel Order
+                        取消订单
                       </button>
                     )}
                   </div>
@@ -365,7 +365,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
                   {isExpanded && (
                     <div className="border-t border-neutral-200 pt-5">
                       <h3 className="mb-3 text-sm font-bold text-neutral-900">
-                        Purchased Items
+                        已购商品
                       </h3>
 
                       <div className="space-y-3">
@@ -378,7 +378,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
                               {item.image ? (
                                 <img
                                   src={item.image}
-                                  alt={item.title || "Purchased item"}
+                                  alt={item.title || "已购商品"}
                                   className="h-16 w-16 rounded-xl object-cover"
                                 />
                               ) : (
@@ -389,16 +389,16 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
 
                               <div className="min-w-0 flex-1">
                                 <h4 className="text-sm font-bold text-neutral-900">
-                                  {item.title || "Unnamed item"}
+                                  {item.title || "未命名商品"}
                                 </h4>
 
                                 <p className="mt-1 text-xs text-neutral-500">
-                                  Quantity: {item.qty || 1}
+                                  数量：{item.qty || 1}
                                 </p>
                               </div>
 
                               <p className="text-sm font-bold text-indigo-600">
-                                ₹
+                                ¥
                                 {(
                                   Number(item.price || 0) *
                                   Number(item.qty || 1)
@@ -408,7 +408,7 @@ function OrderHistory({ orders = [], onBack, onCancelOrder }) {
                           ))
                         ) : (
                           <p className="text-sm text-neutral-500">
-                            No item details available.
+                            暂无商品详情。
                           </p>
                         )}
                       </div>

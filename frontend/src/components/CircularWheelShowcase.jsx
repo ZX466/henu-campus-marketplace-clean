@@ -40,45 +40,45 @@ function CircularWheelShowcase({ onSelectCategory }) {
         },
         {
           name: "Butterfly",
-          desc: "Campus micro-mobility, cycle sharing tokens, and sustainable transit gear for navigating large university perimeters.",
-          category: "Mobility & Transit",
-          stat: "64 Cycles & Gear"
+          desc: "校园微出行、共享单车权益和可持续通勤装备，助你轻松穿行于校园各处。",
+          category: "出行与通勤",
+          stat: "64 件车辆与装备"
         },
         {
           name: "aiaiaiai",
-          desc: "Modular sound equipment, studio monitor headphones, and acoustic dampeners for student media labs and campus creators.",
-          category: "Audio & Media",
-          stat: "38 Audio Tools"
+          desc: "模块化音频设备、监听耳机和吸音材料，服务学生媒体实验室和校园创作者。",
+          category: "影音与媒体",
+          stat: "38 件音频工具"
         },
         {
           name: "Sophia",
-          desc: "AI research papers, machine learning compute time sharing, and computational notebooks verified by peer researchers.",
-          category: "AI & Computing",
-          stat: "115 Model Weights"
+          desc: "AI 研究论文、机器学习算力共享和经过同学验证的计算笔记。",
+          category: "AI 与计算",
+          stat: "115 份模型权重"
         },
         {
           name: "Human.IN",
-          desc: "Student community initiatives, verified hostel welfare networks, and mutual aid groups across university hostels.",
-          category: "Campus Community",
-          stat: "520 Students"
+          desc: "学生社区活动、认证宿舍互助网络和覆盖各宿舍区的互助小组。",
+          category: "校园社区",
+          stat: "520 名学生"
         },
         {
           name: "&Fold",
-          desc: "Compact modular hostel furniture, foldable drafting tables, and space-saving living essentials for dorm life.",
-          category: "Hostel Essentials",
-          stat: "72 Furniture Pieces"
+          desc: "紧凑的模块化宿舍家具、可折叠书桌和节省空间的宿舍生活用品。",
+          category: "宿舍用品",
+          stat: "72 件家具"
         },
         {
           name: "Harbor",
-          desc: "Safe storage lockers, campus library drop boxes, and secure overnight holding stations for peer deliveries.",
-          category: "Safe Logistics",
-          stat: "14 Safe Desks"
+          desc: "安全储物柜、图书馆寄存箱和用于同学间交接的安全存放点。",
+          category: "安全物流",
+          stat: "14 个安全交接点"
         },
         {
           name: "Strober",
-          desc: "High-precision lab sensors, oscilloscopes, and optical measurement devices available for semester-long academic leases.",
-          category: "Lab Instrumentation",
-          stat: "58 Precision Tools"
+          desc: "高精度实验传感器、示波器和光学测量设备，可按学期租用。",
+          category: "实验仪器",
+          stat: "58 件精密工具"
         }
       ];
 
@@ -142,10 +142,10 @@ function CircularWheelShowcase({ onSelectCategory }) {
               <div>
                 <span className="text-xs font-mono text-neutral-400 uppercase tracking-widest flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                  / 00:10 SCROLL-DRIVEN COLLECTIVES
+                  / 00:10 滚动驱动集群
                 </span>
                 <h2 className="font-display text-2xl sm:text-3xl font-bold text-neutral-950 mt-1">
-                  Ecosystem Circles & Verified Labs
+                  生态圈与认证实验室
                 </h2>
               </div>
               
@@ -156,13 +156,13 @@ function CircularWheelShowcase({ onSelectCategory }) {
                     <rect x="5" y="2" width="14" height="20" rx="7"></rect>
                     <line x1="12" y1="6" x2="12" y2="10"></line>
                   </svg>
-                  <span>Scroll page to rotate</span>
+                  <span>滚动页面旋转</span>
                 </div>
 
                 <div className="flex items-center gap-1.5">
                   <button 
                     onClick={() => scrollToItem(Math.max(0, activeIndex - 1))}
-                    aria-label="Previous collective"
+                    aria-label="上一个"
                     className="w-9 h-9 rounded-full border border-neutral-300 hover:border-neutral-900 flex items-center justify-center text-neutral-700 hover:text-black transition cursor-pointer"
                   >
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -174,7 +174,7 @@ function CircularWheelShowcase({ onSelectCategory }) {
                   </span>
                   <button 
                     onClick={() => scrollToItem(Math.min(count - 1, activeIndex + 1))}
-                    aria-label="Next collective"
+                    aria-label="下一个"
                     className="w-9 h-9 rounded-full border border-neutral-300 hover:border-neutral-900 flex items-center justify-center text-neutral-700 hover:text-black transition cursor-pointer"
                   >
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -269,11 +269,11 @@ function CircularWheelShowcase({ onSelectCategory }) {
                       }}
                       className="px-6 py-3.5 bg-neutral-950 hover:bg-neutral-800 text-white rounded-full font-display text-xs font-bold tracking-wider uppercase transition shadow-md hover:-translate-y-0.5 cursor-pointer"
                     >
-                      Explore {activeItem.name} Hub →
+                      探索 {activeItem.name} 专区 →
                     </button>
                     <span className="text-xs text-neutral-400 flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                      Verified In-Campus Exchange
+                      已认证校内交易
                     </span>
                   </div>
 
@@ -284,14 +284,14 @@ function CircularWheelShowcase({ onSelectCategory }) {
 
             {/* Bottom Scroll Progress Bar */}
             <div className="max-w-7xl mx-auto w-full pt-4 border-t border-neutral-200/60 flex items-center justify-between text-xs text-neutral-400 font-mono">
-              <span>Scroll Progress: {Math.round((continuousIndex / (count - 1)) * 100)}%</span>
+              <span>滚动进度：{Math.round((continuousIndex / (count - 1)) * 100)}%</span>
               <div className="w-48 bg-neutral-200 h-1.5 rounded-full overflow-hidden">
                 <div 
                   className="bg-neutral-900 h-full rounded-full transition-all duration-75"
                   style={{ width: `${(continuousIndex / (count - 1)) * 100}%` }}
                 ></div>
               </div>
-              <span className="uppercase tracking-wider">CampusCart Genesis Engine</span>
+              <span className="uppercase tracking-wider">河大同享核心引擎</span>
             </div>
 
           </div>

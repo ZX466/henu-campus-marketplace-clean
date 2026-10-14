@@ -83,7 +83,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
   const [isBlinking, setIsBlinking] = useState(false);
   const [pupilOffset, setPupilOffset] = useState({ x: 0, y: 0 });
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [bubbleText, setBubbleText] = useState("Hi student! Drag me or tap to talk! 🤖");
+  const [bubbleText, setBubbleText] = useState("同学你好！拖拽我或点我聊天！🤖");
   const [showQuickBubble, setShowQuickBubble] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
@@ -98,8 +98,8 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
     {
       id: "init-1",
       sender: "bot",
-      text: `Hello ${currentUser?.name ? currentUser.name.split(" ")[0] : "Friend"}! 👋 I'm **CampusBot**, your college companion. Ask me anything about textbooks, campus deals, or navigation!`,
-      time: "Just now",
+      text: `你好 ${currentUser?.name ? currentUser.name.split(" ")[0] : "同学"}！👋 我是**校园小助手**，你的校园伙伴。关于教材、校园好物或校内导航都可以问我！`,
+      time: "刚刚",
     },
   ]);
   const [userInput, setUserInput] = useState("");
@@ -384,23 +384,23 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
       let botReply = "";
       const lower = query.toLowerCase();
 
-      if (lower.includes("book") || lower.includes("notes") || lower.includes("study")) {
-        botReply = "📚 I found textbook listings in the marketplace! Check Engineering Mathematics, DSA by Cormen, or upload your own notes in the Sell tab.";
+      if (lower.includes("book") || lower.includes("notes") || lower.includes("study") || lower.includes("书") || lower.includes("教材") || lower.includes("笔记") || lower.includes("学习")) {
+        botReply = "📚 我在交易大厅里找到了教材商品！可以看看高等数学、专业课教材，或者在「发布闲置」里上传自己的笔记。";
         setEmotion("happy");
-      } else if (lower.includes("price") || lower.includes("deal") || lower.includes("cheap")) {
-        botReply = "🏷️ Verified student sellers on CampusCart offer 40%–70% off retail prices, plus peer pickup with zero delivery fees!";
+      } else if (lower.includes("price") || lower.includes("deal") || lower.includes("cheap") || lower.includes("价格") || lower.includes("便宜") || lower.includes("优惠") || lower.includes("折扣")) {
+        botReply = "🏷️ 河大同享上的认证学生卖家通常比原价便宜 40%–70%，还能校内当面自提、零运费！";
         setEmotion("excited");
-      } else if (lower.includes("safe") || lower.includes("trust") || lower.includes("qr")) {
-        botReply = "🛡️ CampusCart uses the QR Handshake Protocol! Only release your verification code when you physically meet and inspect the product.";
+      } else if (lower.includes("safe") || lower.includes("trust") || lower.includes("qr") || lower.includes("安全") || lower.includes("信任") || lower.includes("二维码") || lower.includes("交接")) {
+        botReply = "🛡️ 平台使用二维码交接协议！只有当面见面并验货后，才向对方出示验证码。";
         setEmotion("happy");
-      } else if (lower.includes("hi") || lower.includes("hello") || lower.includes("hey")) {
-        botReply = `Hey there! 🤖 Hope classes are going great. Need help finding campus equipment, hostel gear, or calculators?`;
+      } else if (lower.includes("hi") || lower.includes("hello") || lower.includes("hey") || lower.includes("你好") || lower.includes("嗨")) {
+        botReply = `你好呀！🤖 希望课程顺利。需要帮忙找校园装备、宿舍用品或计算器吗？`;
         setEmotion("happy");
-      } else if (lower.includes("love") || lower.includes("cute") || lower.includes("bot")) {
-        botReply = "Aww, thank you! Beep boop! 💖 Always glad to help.";
+      } else if (lower.includes("love") || lower.includes("cute") || lower.includes("bot") || lower.includes("可爱") || lower.includes("喜欢") || lower.includes("小助手")) {
+        botReply = "谢谢你的喜欢！滴嘟滴嘟！💖 随时乐意帮忙。";
         setEmotion("love");
       } else {
-        botReply = `🤖 I'm indexing the campus catalog for "${query}". You can browse live items on the Marketplace or filter by your college hub!`;
+        botReply = `🤖 我正在为你检索「${query}」相关的校园信息。你可以去交易大厅浏览商品，或按校区筛选！`;
         setEmotion("normal");
       }
 
@@ -562,7 +562,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
         transition: isDragging ? "none" : "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
       }}
       className="group select-none"
-      title="CampusBot — Your AI Companion (Drag me anywhere!)"
+      title="校园小助手 — 你的 AI 伙伴（可拖拽到任意位置）"
     >
       {/* ── Quick Hover Speech Bubble ── */}
       {showQuickBubble && !isChatOpen && !isDragging && (
@@ -813,10 +813,10 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               </div>
               <div>
                 <h4 className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
-                  CampusBot
+                  校园小助手
                   <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
                 </h4>
-                <p className="text-[10px] text-white/50">Collegiate AI Peer Companion</p>
+                <p className="text-[10px] text-white/50">校园 AI 伙伴</p>
               </div>
             </div>
 
@@ -826,7 +826,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
                 type="button"
                 onClick={() => setSoundEnabled((prev) => !prev)}
                 className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 text-xs transition"
-                title={soundEnabled ? "Mute robot chimes" : "Enable robot chimes"}
+                title={soundEnabled ? "关闭提示音" : "开启提示音"}
               >
                 {soundEnabled ? "🔔" : "🔕"}
               </button>
@@ -836,7 +836,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
                 type="button"
                 onClick={handleDockCorner}
                 className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 text-xs transition"
-                title="Dock to bottom-right corner"
+                title="停靠到右下角"
               >
                 📌
               </button>
@@ -879,7 +879,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
             {isThinking && (
               <div className="flex items-center gap-2 text-white/60 text-xs px-3 py-2 bg-white/5 rounded-2xl w-fit">
                 <span className="animate-spin inline-block">⚙️</span>
-                <span>CampusBot is thinking…</span>
+                <span>校园小助手正在思考…</span>
               </div>
             )}
           </div>
@@ -887,10 +887,10 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
           {/* Quick Suggestion Prompts */}
           <div className="px-4 py-2 border-t border-white/5 flex gap-1.5 overflow-x-auto text-[11px] whitespace-nowrap no-scrollbar">
             {[
-              "📚 Find Textbooks",
-              "💻 Laptop Deals",
-              "🛡️ Safety Protocol",
-              "📍 College Hubs",
+              "📚 找教材",
+              "💻 数码好物",
+              "🛡️ 安全协议",
+              "📍 校区地图",
             ].map((chip) => (
               <button
                 key={chip}
@@ -915,7 +915,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               type="text"
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
-              placeholder="Ask CampusBot anything..."
+              placeholder="问问校园小助手…"
               className="flex-1 bg-white/10 border border-white/15 focus:border-white/40 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-white/40 focus:outline-none transition"
             />
             <button
@@ -923,14 +923,14 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               disabled={!userInput.trim() || isThinking}
               className="px-3.5 py-2.5 rounded-xl bg-white text-neutral-950 font-bold text-xs hover:bg-white/90 disabled:opacity-40 transition flex items-center justify-center cursor-pointer shadow-md"
             >
-              <span>Send</span>
+              <span>发送</span>
             </button>
           </form>
 
           {/* Micro Footer Notice */}
           <div className="px-4 py-1.5 bg-black/30 text-center text-[10px] text-white/40 flex items-center justify-between">
-            <span>✨ Drag bot anywhere across page</span>
-            <span className="text-emerald-400">AI Hook Ready</span>
+            <span>✨ 可以把小助手拖到页面任意位置</span>
+            <span className="text-emerald-400">AI 已就绪</span>
           </div>
         </div>
       )}
