@@ -60,4 +60,14 @@ __pycache__/
 *.sqlite3
 *.db
 
-
+# =============================================================================
+# Multi-Agent Collaboration (repo-specific rule: NOTHING under .orca or other
+# agent dot-folders is versioned in THIS repo — all local-only)
+# =============================================================================
+.orca/
+.claude/
+.opencode/
+.codex/
+.agents/
+.codegraph/
+.agent/

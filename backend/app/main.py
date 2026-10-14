@@ -71,8 +71,8 @@ app.add_middleware(
         # Local development
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
+        "http://localhost:3334",
+        "http://127.0.0.1:3334",
         # Vercel production frontend (no trailing slash!)
         "https://campuscart-iota-one.vercel.app",
     ],
