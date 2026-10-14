@@ -70,7 +70,7 @@ export default function ConversationView({ initialConversationId = null }) {
     <section className="mx-auto max-w-7xl px-5 pb-20 pt-32 sm:px-10">
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-600">Campus messages</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-600">校园私信</p>
           <h1 className="mt-2 text-4xl font-black text-slate-950">站内沟通</h1>
           <p className="mt-3 text-sm text-slate-500">围绕商品或跑腿任务与同学沟通，消息会保存在后端。</p>
         </div>

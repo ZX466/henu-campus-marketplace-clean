@@ -119,13 +119,13 @@ export const CAMPUS_DATA = {
   services: [
     { id: "run-1", title: "校内代取快递", tagline: "跑腿服务", image: "https://images.unsplash.com/photo-1586528116493-da8b3a9b1d8c?w=800&auto=format&fit=crop&q=80", description: "金明、明伦校区内代取快递、代送资料，任务发布后由同校同学接单。", instructor: "可填写报酬 · 当日完成" },
     { id: "run-2", title: "图书馆占座与资料打印", tagline: "校园互助", image: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&auto=format&fit=crop&q=80", description: "发布临时帮忙需求，在线沟通地点、时间和报酬，完成后确认任务。", instructor: "支持金明 / 明伦校区" },
-    { id: "run-3", title: "专业书单智能推荐", tagline: "CampusCart AI", image: "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?w=800&auto=format&fit=crop&q=80", description: "输入专业、年级和课程，系统根据校园历史商品和人工书单推荐适合的教材。", instructor: "随机推荐 + 专业书单" }
+    { id: "run-3", title: "专业书单智能推荐", tagline: "河大同享 AI", image: "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?w=800&auto=format&fit=crop&q=80", description: "输入专业、年级和课程，系统根据校园历史商品和人工书单推荐适合的教材。", instructor: "随机推荐 + 专业书单" }
   ],
   course: {
     title: "河南大学校园交易与跑腿指南",
     subtitle: "了解如何发布商品、沟通交易、选择安全交接点，并使用书籍推荐和跑腿服务。",
     heroImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1400&auto=format&fit=crop&q=80",
-    instructor: { name: "CampusCart 项目组", role: "金明与明伦校区运营团队", bio: "平台第一版围绕书籍交易展开，同时支持数码、宿舍用品、出行工具和跑腿任务。", image: "https://i.pravatar.cc/500?img=12", backpackImage: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80" },
+    instructor: { name: "河大同享项目组", role: "金明与明伦校区运营团队", bio: "平台第一版围绕书籍交易展开，同时支持数码、宿舍用品、出行工具和跑腿任务。", image: "https://i.pravatar.cc/500?img=12", backpackImage: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80" },
     faqs: []
   },
   about: { headline: "让闲置物品在校园里继续发挥价值", subheadline: "河南大学金明、明伦校区二手交易与互助平台", copy: "从教材和专业书开始，连接同校买家、卖家和跑腿同学。", capImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000&auto=format&fit=crop&q=80" },

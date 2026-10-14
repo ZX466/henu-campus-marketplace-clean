@@ -231,10 +231,10 @@ export async function fetchProductsFromBackend() {
 export async function createProductOnBackend(productData) {
   try {
     const payload = {
-      title: productData?.title || "Campus Listing",
+      title: productData?.title || "校园商品",
 
       category:
-        productData?.category || "Notes & Material",
+        productData?.category || "资料与教材",
 
       stream:
         productData?.stream || "engineering",
@@ -253,7 +253,7 @@ export async function createProductOnBackend(productData) {
         productData?.mode || "BUY",
 
       condition:
-        productData?.condition || "Like New",
+        productData?.condition || "几乎全新",
 
       stock:
         Math.max(
@@ -263,11 +263,11 @@ export async function createProductOnBackend(productData) {
 
       campus:
         productData?.campus ||
-        "Jadavpur University",
+        "河南大学",
 
       pickupLocation:
         productData?.pickupLocation ||
-        "Central Library Foyer",
+        "图书馆门口",
 
       image:
         productData?.image ||

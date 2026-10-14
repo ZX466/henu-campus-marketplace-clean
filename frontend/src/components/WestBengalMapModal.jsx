@@ -224,7 +224,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
         <div style="font-family: sans-serif; color: #fff; background: #0f172a; padding: 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.15); min-width: 220px;">
           <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
             <span style="font-size:10px; font-weight:700; text-transform:uppercase; padding:2px 6px; border-radius:6px; background:${primaryColor}22; color:${primaryColor}; border:1px solid ${primaryColor}55;">
-              ${isMedical ? '🩺 Medical College' : '⚙️ Engineering Hub'}
+              ${isMedical ? '🩺 医学类校区' : '⚙️ 工程类校区'}
             </span>
           </div>
           <div style="font-weight:700; font-size:13px; color:#fff; margin-bottom:3px; line-height:1.2;">
@@ -234,10 +234,10 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
             📍 ${college.city}, ${college.district} • PIN ${college.pincode}
           </div>
           <div style="font-size:11px; color:#38bdf8; background:rgba(56,189,248,0.1); padding:4px 8px; border-radius:6px; margin-bottom:8px; border:1px solid rgba(56,189,248,0.2);">
-            ⚡ Senior Handover: <b>${college.avgMeetupTime}</b>
+            ⚡ 同学见面：<b>${college.avgMeetupTime}</b>
           </div>
           <button id="popup-select-${college.id}" style="width:100%; cursor:pointer; background:${primaryColor}; color:#fff; font-weight:700; font-size:11px; padding:6px 10px; border-radius:8px; border:none;">
-            🎯 Select As Active Campus Hub
+            🎯 设为当前校区交接点
           </button>
         </div>
       `;
@@ -363,7 +363,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 hover:text-white flex items-center justify-center transition border border-white/10 cursor-pointer flex-shrink-0"
-            title="Close Map (Esc)"
+            title="关闭地图 (Esc)"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -395,7 +395,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
                 <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-[9px] px-1 rounded font-bold uppercase">
                   双方协商
                 </span>
-                <span className="text-neutral-400 text-[10px]">10-30 Mins</span>
+                <span className="text-neutral-400 text-[10px]">10–30 分钟</span>
               </div>
             </div>
           </div>
@@ -422,7 +422,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
                 <span className="bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono text-[9px] px-1 rounded font-bold uppercase">
                   校内同学接单
                 </span>
-                <span className="text-neutral-400 text-[10px]">24-48 Hours</span>
+                <span className="text-neutral-400 text-[10px]">24–48 小时</span>
               </div>
             </div>
           </div>
@@ -472,7 +472,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search medical / engineering college or city..."
+              placeholder="搜索校区或城市…"
               className="w-full bg-neutral-900/90 border border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-teal-400 transition"
             />
             {searchQuery && (
@@ -492,7 +492,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
         <div className="px-5 py-2 flex flex-wrap items-center justify-between gap-2 border-b border-white/5 bg-[#090d14] flex-shrink-0">
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
             <span className="text-[10px] font-mono text-neutral-400 uppercase font-bold mr-1 flex-shrink-0">
-              SELECT ZONE:
+              选择校区：
             </span>
             {WB_ZONES.map((zone) => {
               const isSelected = selectedZone === zone.id;
@@ -552,14 +552,14 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
                 <button
                   onClick={handleZoomIn}
                   className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white hover:bg-teal-500/25 hover:text-teal-300 active:scale-95 transition text-base font-bold cursor-pointer border-b border-white/10"
-                  title="Zoom In (+)"
+                  title="放大 (+)"
                 >
                   +
                 </button>
                 <button
                   onClick={handleZoomOut}
                   className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white hover:bg-teal-500/25 hover:text-teal-300 active:scale-95 transition text-base font-bold cursor-pointer"
-                  title="Zoom Out (-)"
+                  title="缩小 (-)"
                 >
                   &minus;
                 </button>
@@ -568,13 +568,13 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
               <button
                 onClick={handleResetWestBengalView}
                 className="bg-[#0e131d]/90 hover:bg-neutral-800 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/20 text-neutral-300 hover:text-white text-[10.5px] font-semibold shadow-md flex items-center gap-1 transition cursor-pointer active:scale-95"
-                title="Fit All West Bengal"
+                title="缩放到全部校区"
               >
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-teal-400">
                   <circle cx="12" cy="12" r="10"></circle>
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
-                <span>Fit WB</span>
+                <span>缩放全部</span>
               </button>
             </div>
 
@@ -587,7 +587,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
                     mapStyle === 'dark' ? 'bg-teal-500/30 text-teal-300 border border-teal-500/40' : 'text-neutral-400 hover:text-white'
                   }`}
                 >
-                  🌙 Dark Radar
+                  🌙 深色雷达
                 </button>
                 <button
                   onClick={() => setMapStyle('street')}
@@ -595,13 +595,13 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
                     mapStyle === 'street' ? 'bg-amber-500/30 text-amber-300 border border-amber-500/40' : 'text-neutral-400 hover:text-white'
                   }`}
                 >
-                  🗺️ Street View
+                  🗺️ 街景模式
                 </button>
               </div>
 
               <div className="bg-[#0e131d]/90 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/20 text-teal-400 text-[10.5px] font-mono font-bold shadow-md hidden sm:flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
-                <span>{filteredColleges.length} Campuses</span>
+                <span>{filteredColleges.length} 个校区</span>
               </div>
             </div>
 
@@ -609,14 +609,14 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
             <div className="absolute bottom-3 left-3 z-30 bg-[#0e131d]/90 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/20 shadow-md flex items-center gap-2.5 text-[10px]">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500 border border-white shadow-sm"></span>
-                <span className="text-neutral-200 font-semibold">Medical College</span>
+                <span className="text-neutral-200 font-semibold">医学类校区</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-teal-500 border border-white shadow-sm"></span>
-                <span className="text-neutral-200 font-semibold">Engineering Hub</span>
+                <span className="text-neutral-200 font-semibold">工程类校区</span>
               </div>
               <div className="hidden sm:flex items-center gap-1 pl-1.5 border-l border-white/10 text-neutral-400 text-[9.5px]">
-                <span>Click pin to inspect</span>
+                <span>点击标记查看详情</span>
               </div>
             </div>
 
@@ -636,7 +636,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
                 </span>
               </div>
               <span className="text-[10px] font-mono text-neutral-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
-                {filteredColleges.length} in view
+                视野内 {filteredColleges.length} 个
               </span>
             </div>
 
@@ -671,15 +671,15 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
                   {/* Key Metrics */}
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-neutral-900/90 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-neutral-400 block font-mono uppercase">SENIOR MEETUP</span>
+                      <span className="text-[9px] text-neutral-400 block font-mono uppercase">同学见面</span>
                       <span className="text-xs font-bold text-emerald-400 flex items-center gap-1 mt-0.5">
                         ⚡ {activeCollege.avgMeetupTime}
                       </span>
                     </div>
                     <div className="bg-neutral-900/90 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-neutral-400 block font-mono uppercase">STUDENT BODY</span>
+                      <span className="text-[9px] text-neutral-400 block font-mono uppercase">在校学生</span>
                       <span className="text-xs font-bold text-teal-400 flex items-center gap-1 mt-0.5">
-                        👥 {activeCollege.activeStudents.toLocaleString()}+ Verified
+                        👥 {activeCollege.activeStudents.toLocaleString()}+ 已认证
                       </span>
                     </div>
                   </div>
@@ -757,7 +757,7 @@ export default function WestBengalMapModal({ isOpen, onClose, onSelectCollege })
                         <div className="flex items-center gap-1.5 flex-shrink-0">
                           {isSelected && (
                             <span className="text-[9px] font-mono font-bold uppercase bg-teal-500/20 text-teal-300 border border-teal-500/30 px-1.5 py-0.5 rounded">
-                              ACTIVE
+                              已选
                             </span>
                           )}
                           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-neutral-500">
