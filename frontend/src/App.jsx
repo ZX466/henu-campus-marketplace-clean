@@ -22,6 +22,7 @@ import WestBengalMapModal from "./components/WestBengalMapModal";
 import SellerDashboard from "./components/SellerDashboard.jsx";
 import CampusBot from "./components/CampusBot.jsx";
 import NotificationBell from "./components/NotificationBell.jsx";
+import ConversationView from "./components/ConversationView.jsx";
 import CAMPUS_DATA from "./data/mockData";
 import {
   fetchProductsFromBackend,
@@ -46,6 +47,7 @@ import {
   fetchNotifications,
   markNotificationRead,
   markAllNotificationsRead,
+  createConversation,
 } from "./services/api";
 
 function App() {
@@ -74,6 +76,7 @@ function App() {
   const [regCampus, setRegCampus] = useState("河南大学金明校区");
   const [regLoading, setRegLoading] = useState(false);
   const [activeChat, setActiveChat] = useState(null);
+  const [conversationToOpen, setConversationToOpen] = useState(null);
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [qrModalItem, setQrModalItem] = useState(null);
   const [toastMsg, setToastMsg] = useState(null);
@@ -431,7 +434,22 @@ function App() {
     confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
     showToast(`🎉 Order ${result.data.id} created!`);
   };
-  const startChat = (seller, item) => {
+  const startChat = async (seller, item) => {
+    if (!isLoggedIn) {
+      setIsLoginOpen(true);
+      showToast("请先登录后再发起站内沟通。");
+      return;
+    }
+    if (item?.id) {
+      const result = await createConversation("product", item.id, seller?.id || seller?._id);
+      if (result.success && result.conversation?.id) {
+        setConversationToOpen(result.conversation.id);
+        navigate("/conversations");
+        return;
+      }
+      showToast(result.error || "无法创建会话，请确认后端和数据库已启动。");
+    }
+    // Keep the existing local preview available when the selected item is only a demo card.
     setActiveChat({
       seller,
       item,
@@ -536,6 +554,12 @@ function App() {
                 }`}
               >
                 WISHLIST
+              </button>
+              <button
+                onClick={() => navigateTo("/conversations")}
+                className={`px-3 py-1 sm:px-3.5 sm:py-1 rounded-full transition-all ${location.pathname === "/conversations" ? "bg-white text-black font-bold shadow" : "text-neutral-300 hover:text-white"}`}
+              >
+                私信
               </button>
             </div>
           ) : (
@@ -905,6 +929,10 @@ function App() {
                 }
               />
             }
+          />
+          <Route
+            path="/conversations"
+            element={<ConversationView initialConversationId={conversationToOpen} />}
           />
           <Route
             path="/cart"
