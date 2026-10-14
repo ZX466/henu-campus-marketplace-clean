@@ -18,7 +18,7 @@ import CourseSection from "./components/CourseView";
 import CartFullView from "./components/CartView";
 import WishlistView from "./components/WishListView.jsx";
 import OrderHistory from "./components/OrderHistory";
-import WestBengalMapModal from "./components/WestBengalMapModal";
+import CampusMapModal from "./components/CampusMapModal";
 import SellerDashboard from "./components/SellerDashboard.jsx";
 import CampusBot from "./components/CampusBot.jsx";
 import NotificationBell from "./components/NotificationBell.jsx";
@@ -187,16 +187,16 @@ function App() {
     const next = [...wishlistItems, { ...product, neededByMe: false }];
     setWishlistItems(next);
     const result = await saveWishlist(next);
-    if (!result.success) { setWishlistItems(wishlistItems); showToast(`Could not save wishlist: ${result.error}`); return; }
-    showToast("Item added to your wishlist.");
+    if (!result.success) { setWishlistItems(wishlistItems); showToast(`心愿单保存失败：${result.error}`); return; }
+    showToast("已加入心愿单。");
   };
 
   const removeFromWishlist = async (productId) => {
     const next = wishlistItems.filter((product) => product.id !== productId);
     setWishlistItems(next);
     const result = await saveWishlist(next);
-    if (!result.success) { setWishlistItems(wishlistItems); showToast(`Could not update wishlist: ${result.error}`); return; }
-    showToast("Item removed from your wishlist.");
+    if (!result.success) { setWishlistItems(wishlistItems); showToast(`心愿单更新失败：${result.error}`); return; }
+    showToast("已从心愿单移除。");
   };
 
   const toggleNeededByMe = async (productId) => {
@@ -216,7 +216,7 @@ function App() {
       );
 
       if (!result?.success || !result?.user) {
-        showToast(result?.error || "Login failed.");
+        showToast(result?.error || "登录失败。");
         return;
       }
 
@@ -242,18 +242,18 @@ function App() {
       showToast(
         `🎉 Authenticated as ${
           user.roll || user.email
-        }! Welcome to CampusCart.`
+        }！欢迎来到河大同享。`
       );
     } catch (error) {
       console.error("Login error:", error);
-      showToast(error.message || "Login failed.");
+      showToast(error.message || "登录失败。");
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     if (regPassword !== regConfirmPassword) {
-      showToast("❌ Passwords do not match.");
+      showToast("❌ 两次输入的密码不一致。");
       return;
     }
     if (!regEmail.toLowerCase().endsWith("@henu.edu.cn")) {
@@ -272,7 +272,7 @@ function App() {
       });
 
       if (!result?.success || !result?.user) {
-        showToast(result?.error || "Registration failed.");
+        showToast(result?.error || "注册失败。");
         setRegLoading(false);
         return;
       }
@@ -289,9 +289,9 @@ function App() {
         window.confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
       }
       navigate("/home");
-      showToast(`🎉 Welcome to CampusCart, ${user.name || user.roll}! Account created.`);
+      showToast(`🎉 欢迎加入河大同享，${user.name || user.roll}！账号已创建。`);
     } catch (error) {
-      showToast(error.message || "Registration failed.");
+      showToast(error.message || "注册失败。");
     } finally {
       setRegLoading(false);
     }
@@ -320,7 +320,7 @@ function App() {
     setNotifications([]);
     setMongoProducts([]);
     navigate("/");
-    showToast("👋 Signed out.");
+    showToast("👋 已退出登录。");
   };
 
   const navigateTo = (target) => {
@@ -349,16 +349,16 @@ function App() {
     const existingItem = cart.find((item) => item.id === product.id);
     const currentQuantity = existingItem?.qty || 0;
     const availableToAdd = stock - currentQuantity;
-    if (stock <= 0 || availableToAdd <= 0) { showToast(`"${product.title}" is out of stock.`); return; }
+    if (stock <= 0 || availableToAdd <= 0) { showToast(`「${product.title}」已售罄。`); return; }
     const finalQuantityToAdd = Math.min(quantityToAdd, availableToAdd);
-    const sellerName = typeof product.seller === "object" ? product.seller?.name || "Campus Seller" : product.seller || "Campus Seller";
+    const sellerName = typeof product.seller === "object" ? product.seller?.name || "在校学生" : product.seller || "在校学生";
     const next = existingItem
       ? cart.map((item) => item.id === product.id ? { ...item, qty: item.qty + finalQuantityToAdd } : item)
-      : [...cart, { id: product.id, title: product.title, price: Number(product.price) || 0, qty: finalQuantityToAdd, image: product.image, seller: sellerName, pickupLocation: product.pickupLocation || "Campus Safe Desk" }];
+      : [...cart, { id: product.id, title: product.title, price: Number(product.price) || 0, qty: finalQuantityToAdd, image: product.image, seller: sellerName, pickupLocation: product.pickupLocation || "校园服务台" }];
     setCart(next);
     const result = await saveCart(next);
-    if (!result.success) { setCart(cart); showToast(`Could not save cart: ${result.error}`); return; }
-    showToast(`Added ${finalQuantityToAdd} × "${product.title}" to cart!`);
+    if (!result.success) { setCart(cart); showToast(`购物车保存失败：${result.error}`); return; }
+    showToast(`已将 ${finalQuantityToAdd} 件「${product.title}」加入购物车！`);
   };
 
   const refreshProducts = async () => {
@@ -369,39 +369,39 @@ function App() {
   };
 
   const handlePublishProduct = async (newProduct) => {
-    showToast("Publishing listing...");
+    showToast("正在发布商品...");
     const result = await createProductOnBackend(newProduct);
     if (!result.success) { showToast(`❌ ${result.error}`); return; }
     await refreshProducts();
     navigate("/marketplace");
-    showToast("🟢 Listing saved to MongoDB.");
+    showToast("🟢 商品已保存。");
   };
 
   const handleEditProduct = async (updatedProduct) => {
     const result = await updateProductOnBackend(updatedProduct.id, updatedProduct);
     if (!result.success) { showToast(`❌ ${result.error}`); return; }
     await refreshProducts();
-    showToast("🟢 Listing updated in MongoDB.");
+    showToast("🟢 商品已更新。");
   };
 
   const handleDeleteProduct = async (productId) => {
     const result = await deleteProductOnBackend(productId);
     if (!result.success) { showToast(`❌ ${result.error}`); return; }
     await refreshProducts();
-    showToast("🗑️ Listing deleted from MongoDB.");
+    showToast("🗑️ 商品已删除。");
   };
 
   const persistCart = async (next) => {
     setCart(next);
     const result = await saveCart(next);
-    if (!result.success) { setCart(cart); showToast(`Could not save cart: ${result.error}`); }
+    if (!result.success) { setCart(cart); showToast(`购物车保存失败：${result.error}`); }
   };
 
   const increaseCartQuantity = (id) => {
     const item = cart.find((entry) => entry.id === id);
     const product = allProducts.find((entry) => entry.id === id);
     if (!item || !product) return;
-    if (item.qty >= getProductStock(product)) { showToast(`Only ${getProductStock(product)} × "${item.title}" available.`); return; }
+    if (item.qty >= getProductStock(product)) { showToast(`「${item.title}」仅剩 ${getProductStock(product)} 件。`); return; }
     persistCart(cart.map((entry) => entry.id === id ? { ...entry, qty: entry.qty + 1 } : entry));
   };
 
@@ -415,13 +415,13 @@ function App() {
     const refreshed = await fetchOrders();
     if (refreshed.success) setOrders(refreshed.orders);
     await refreshProducts();
-    showToast("Order cancelled and inventory restored.");
+    showToast("订单已取消，库存已恢复。");
   };
 
   const handlePublishListing = handlePublishProduct;
 
   const handleCheckout = async () => {
-    if (cart.length === 0) { showToast("Your cart is empty."); return; }
+    if (cart.length === 0) { showToast("购物车是空的。"); return; }
     const result = await checkoutOnBackend(cart);
     if (!result.success) { showToast(`❌ ${result.error}`); await refreshProducts(); return; }
     setCart([]);
@@ -429,7 +429,7 @@ function App() {
     setOrders((previous) => [result.data, ...previous]);
     await refreshProducts();
     confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
-    showToast(`🎉 Order ${result.data.id} created!`);
+    showToast(`🎉 订单 ${result.data.id} 已创建！`);
   };
   const startChat = (seller, item) => {
     setActiveChat({
@@ -438,7 +438,7 @@ function App() {
       messages: [
         {
           sender: "seller",
-          text: `Hey! Thanks for inquiring about ${item.title}. Can you meet at the campus safe desk today?`,
+          text: `你好！感谢咨询「${item.title}」。今天方便在校园服务台当面交易吗？`,
         },
       ],
     });
@@ -487,13 +487,13 @@ function App() {
                 onClick={() => navigateTo("/home")}
                 className={`px-3 py-1 sm:px-3.5 sm:py-1 rounded-full transition-all ${location.pathname === "/home" ? "bg-white text-black font-bold shadow" : "text-neutral-300 hover:text-white"}`}
               >
-                HOME
+                首页
               </button>
               <button
                 onClick={() => navigateTo("/marketplace")}
                 className={`px-3 py-1 sm:px-3.5 sm:py-1 rounded-full transition-all ${location.pathname === "/marketplace" ? "bg-white text-black font-bold shadow" : "text-neutral-300 hover:text-white"}`}
               >
-                MARKETPLACE
+                二手市场
               </button>
               <button
                 onClick={() => navigateTo("/sell")}
@@ -503,7 +503,7 @@ function App() {
                     : "text-neutral-300 hover:text-white"
                 }`}
               >
-                SELL ITEM
+                发布商品
               </button>
               <button
                 onClick={() => navigateTo("/services")}
@@ -525,7 +525,7 @@ function App() {
                     : "text-neutral-300 hover:text-white"
                 }`}
               >
-                ORDERS
+                我的订单
               </button>
               <button
                 onClick={() => navigateTo("/wishlist")}
@@ -535,17 +535,17 @@ function App() {
                     : "text-neutral-300 hover:text-white"
                 }`}
               >
-                WISHLIST
+                心愿单
               </button>
             </div>
           ) : (
             <div className="hidden sm:flex items-center gap-2 bg-white/10 px-3.5 py-1 rounded-full text-xs font-semibold flex-shrink-0">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span className="text-white font-bold tracking-wider">
-                OVERVIEW & TOUR
+                平台总览
               </span>
               <span className="text-[10px] text-neutral-400 font-mono pl-1 border-l border-white/20">
-                PRE-LOGIN GATEWAY
+                登录前预览
               </span>
             </div>
           )}
@@ -590,7 +590,7 @@ function App() {
                 <button
                   onClick={() => navigateTo("cart")}
                   className="relative text-xs text-neutral-300 hover:text-white flex items-center gap-1 font-semibold transition px-2 py-1 rounded-full hover:bg-white/10"
-                  title="Cart"
+                  title="购物车"
                 >
                   <svg
                     width="20"
@@ -620,13 +620,13 @@ function App() {
                 <div className="hidden lg:flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full text-xs text-neutral-300 border border-white/10 flex-shrink-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                   <span className="font-mono text-[11px] text-white font-bold">
-                    {currentUser?.roll || "2024CS1089"}
+                {currentUser?.roll || "2023012345"}
                   </span>
                 </div>
                 <button
                   onClick={handleLogout}
                   className="text-xs bg-white/10 hover:bg-white/20 text-neutral-200 hover:text-white px-3 py-1.5 rounded-full font-medium transition flex items-center gap-1.5 cursor-pointer border border-white/15 flex-shrink-0 whitespace-nowrap"
-                  title="Sign Out"
+                  title="退出登录"
                 >
                   <svg
                     width="12"
@@ -642,7 +642,7 @@ function App() {
                     <polyline points="16 17 21 12 16 7"></polyline>
                     <line x1="21" y1="12" x2="9" y2="12"></line>
                   </svg>
-                  <span>Sign Out</span>
+                  <span>退出登录</span>
                 </button>
               </div>
             ) : (
@@ -663,7 +663,7 @@ function App() {
                   <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>Sign in with College ID</span>
+                <span>校园账号登录</span>
               </button>
             )}
 
@@ -671,7 +671,7 @@ function App() {
             <button
               onClick={() => setNavMenuOpen(!navMenuOpen)}
               className="text-neutral-300 hover:text-white p-1 rounded-full hover:bg-white/10 transition cursor-pointer"
-              title="Menu"
+              title="菜单"
             >
               <svg
                 width="18"
@@ -700,9 +700,8 @@ function App() {
               }}
               className="hover:text-neutral-400"
             >
-              OVERVIEW / ABOUT
-            </button>
-          )}
+              总览 / 关于
+            </button>          )}
           {isLoggedIn ? (
             <>
               <button
@@ -711,8 +710,8 @@ function App() {
                   setNavMenuOpen(false);
                 }}
                 className="hover:text-neutral-400"
-              >
-                HOME
+                           >
+                首页
               </button>
               <button
                 onClick={() => {
@@ -721,53 +720,53 @@ function App() {
                 }}
                 className="hover:text-neutral-400"
               >
-                STUDENT MARKETPLACE
+                二手市场
               </button>
-              <button
+                <button
                 onClick={() => {
                   navigateTo("/services");
                   setNavMenuOpen(false);
                 }}
                 className="hover:text-neutral-400"
-              >
-                PEER SKILLS & GIGS
-              </button>
-              <button
+                >
+                跑腿互助
+                </button>
+                <button
                 onClick={() => {
                   navigateTo("/courses");
                   setNavMenuOpen(false);
                 }}
                 className="hover:text-neutral-400"
-              >
-                ACADEMIC COURSES
-              </button>
-              <button
+                >
+                专业书单
+                </button>
+                <button
                 onClick={() => {
                   navigateTo("/cart");
                   setNavMenuOpen(false);
                 }}
                 className="hover:text-neutral-400"
-              >
-                MY CART ({cart.length})
-              </button>
-              <button
+                >
+                购物车 ({cart.length})
+                </button>
+                <button
                 onClick={() => {
                   navigateTo("/orders");
                   setNavMenuOpen(false);
                 }}
                 className="hover:text-neutral-400"
-              >
-                ORDER HISTORY
-              </button>
-              <button
+                >
+                订单记录
+                </button>
+                <button
                 onClick={() => {
                   handleLogout();
                   setNavMenuOpen(false);
                 }}
                 className="mt-4 px-6 py-2 bg-red-500/20 text-red-300 border border-red-500/30 rounded-full text-base"
-              >
-                SIGN OUT
-              </button>
+                >
+                退出登录
+                </button>
             </>
           ) : (
             <button
@@ -777,14 +776,14 @@ function App() {
               }}
               className="mt-4 px-6 py-2 bg-white text-black rounded-full text-base"
             >
-              STUDENT SIGN IN
+              学生登录
             </button>
           )}
           <button
             onClick={() => setNavMenuOpen(false)}
             className="text-sm font-sans text-neutral-400 mt-6 tracking-widest uppercase"
           >
-            ✕ Close Menu
+            ✕ 关闭菜单
           </button>
         </div>
       )}
@@ -890,7 +889,7 @@ function App() {
               <ServicesSection
                 onBook={(title) =>
                   showToast(
-                    `Requested session for "${title}"! Check your college email for details.`,
+                    `已提交「${title}」服务请求！详情请留意校园邮箱通知。`,
                   )
                 }
               />
@@ -901,7 +900,7 @@ function App() {
             element={
               <CourseSection
                 onEnroll={() =>
-                  showToast("Enrolled in Academic Course! TA has been alerted.")
+                  showToast("已加入专业书单！")
                 }
               />
             }
@@ -942,7 +941,7 @@ function App() {
               CLEAN EDITORIAL FOOTER WITH FROSTED WATERMARK (Video Timestamp 00:13 - 00:18)
              ========================================================================= */}
       <footer className="bg-neutral-950 text-white relative overflow-hidden pt-20 pb-12 px-6 sm:px-12 border-t border-neutral-900">
-        {/* Massive Watermark from Video: "Genesis" -> "CampusCart" */}
+        {/* 页脚大字水印：河大同享 */}
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-center pointer-events-none opacity-10">
           <span className="font-display font-black text-[14vw] tracking-tighter uppercase whitespace-nowrap">
             河大同享
@@ -970,7 +969,7 @@ function App() {
 
           <div>
             <h4 className="text-xs uppercase font-bold tracking-wider text-neutral-400 mb-4">
-              Marketplace
+              商品分类
             </h4>
             <ul className="space-y-2 text-sm text-neutral-300">
               <li>
@@ -978,7 +977,7 @@ function App() {
                   onClick={() => navigateTo("marketplace")}
                   className="hover:text-white"
                 >
-                  Engineering Drafters
+                  工程制图工具
                 </button>
               </li>
               <li>
@@ -986,7 +985,7 @@ function App() {
                   onClick={() => navigateTo("marketplace")}
                   className="hover:text-white"
                 >
-                  Casio Calculators
+                  计算器
                 </button>
               </li>
               <li>
@@ -994,7 +993,7 @@ function App() {
                   onClick={() => navigateTo("marketplace")}
                   className="hover:text-white"
                 >
-                  Lab Manuals & Notes
+                  实验手册与笔记
                 </button>
               </li>
               <li>
@@ -1002,7 +1001,7 @@ function App() {
                   onClick={() => navigateTo("marketplace")}
                   className="hover:text-white"
                 >
-                  Hostel Living Essentials
+                  宿舍生活用品
                 </button>
               </li>
               <li>
@@ -1010,7 +1009,7 @@ function App() {
                   onClick={() => navigateTo("marketplace")}
                   className="hover:text-white"
                 >
-                  Campus Cycles
+                  校园自行车
                 </button>
               </li>
             </ul>
@@ -1018,32 +1017,32 @@ function App() {
 
           <div>
             <h4 className="text-xs uppercase font-bold tracking-wider text-neutral-400 mb-4">
-              Verification & Safety
+              交易与安全
             </h4>
             <ul className="space-y-2 text-sm text-neutral-300">
               <li>
                 <a href="#" className="hover:text-white">
-                  Library Safe Desk
+                  图书馆服务台
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-white">
-                  Canteen Meetup Zone
+                  食堂见面区
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-white">
-                  Hostel Entrance Desks
+                  宿舍楼值班台
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-white">
-                  Graph Trust Score
+                  信用评分
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-white">
-                  QR Handshake Protocol
+                  二维码核验
                 </a>
               </li>
             </ul>
@@ -1054,13 +1053,13 @@ function App() {
           <div>© 2026 河大同享 · 河南大学校园二手交易与互助平台</div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-neutral-300">
-              Privacy Policy
+              隐私政策
             </a>
             <a href="#" className="hover:text-neutral-300">
-              Student Code of Conduct
+              学生行为规范
             </a>
             <a href="#" className="hover:text-neutral-300">
-              Campus Security Helpline
+              校园安全热线
             </a>
           </div>
         </div>
@@ -1093,10 +1092,10 @@ function App() {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">
-                  {authTab === "login" ? "Welcome Back" : "Join CampusCart"}
+                  {authTab === "login" ? "欢迎回来" : "加入河大同享"}
                 </h3>
                 <p className="text-sm text-white/50 mb-6">
-                  {authTab === "login" ? "Sign in with your college credentials" : "Create your student marketplace account"}
+                  {authTab === "login" ? "使用河南大学校园邮箱登录" : "注册河大同享校园交易账号"}
                 </p>
               </div>
 
@@ -1108,7 +1107,7 @@ function App() {
                       style={authTab === tab
                         ? { background:"rgba(255,255,255,0.15)",color:"#fff",boxShadow:"0 2px 12px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.2)",border:"1px solid rgba(255,255,255,0.15)" }
                         : { color:"rgba(255,255,255,0.45)",border:"1px solid transparent" }}>
-                      {tab === "login" ? "Sign In" : "Register"}
+                      {tab === "login" ? "登录" : "注册"}
                     </button>
                   ))}
                 </div>
@@ -1120,7 +1119,7 @@ function App() {
                   <form onSubmit={(e) => { e.preventDefault(); handleLogin(loginEmail); }} className="space-y-4">
                     {[
                       { label:"河南大学邮箱", type:"email", val:loginEmail, set:setLoginEmail, ph:"学号@henu.edu.cn" },
-                      { label:"Password", type:"password", val:loginPassword, set:setLoginPassword, ph:"••••••••" },
+                      { label:"密码", type:"password", val:loginPassword, set:setLoginPassword, ph:"••••••••" },
                     ].map(({ label, type, val, set, ph }) => (
                       <div key={label}>
                         <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">{label}</label>
@@ -1136,11 +1135,11 @@ function App() {
                       style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0.1) 100%)",border:"1px solid rgba(255,255,255,0.25)",boxShadow:"0 4px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.25)" }}
                       onMouseEnter={(e) => { e.currentTarget.style.background="linear-gradient(135deg,rgba(255,255,255,0.3) 0%,rgba(255,255,255,0.16) 100%)"; }}
                       onMouseLeave={(e) => { e.currentTarget.style.background="linear-gradient(135deg,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0.1) 100%)"; }}>
-                      Sign In →
+                      登录 →
                     </button>
                   </form>
                   <p className="text-center text-xs text-white/35 mt-5">
-                    New here?{" "}<button onClick={() => setAuthTab("register")} className="text-white/75 font-semibold hover:text-white transition">Create an account</button>
+                    还没有账号？{" "}<button onClick={() => setAuthTab("register")} className="text-white/75 font-semibold hover:text-white transition">立即注册</button>
                   </p>
                 </div>
               )}
@@ -1152,8 +1151,8 @@ function App() {
 
                     {/* Simple text/email fields */}
                     {[
-                      { label:"Full Name",    req:true,  type:"text",     val:regName,     set:setRegName,     ph:"e.g. Aarav Patel" },
-                      { label:"Roll Number",  req:true,  type:"text",     val:regRoll,     set:setRegRoll,     ph:"e.g. 2024CS1089" },
+                      { label:"姓名",    req:true,  type:"text",     val:regName,     set:setRegName,     ph:"例如：李明" },
+                      { label:"学号",  req:true,  type:"text",     val:regRoll,     set:setRegRoll,     ph:"例如：2023012345" },
                     ].map(({ label, req, type, val, set, ph }) => (
                       <div key={label}>
                         <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">{label} {req && <span className="text-red-400">*</span>}</label>
@@ -1180,16 +1179,16 @@ function App() {
                       <p className="text-[11px] text-white/35 mt-1.5 ml-1">请填写河南大学邮箱地址</p>
                     </div>
 
-                    {/* Department dropdown */}
+                    {/* 学院下拉（河南大学院系） */}
                     <div>
-                      <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">Department <span className="text-red-400">*</span></label>
+                      <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">学院 <span className="text-red-400">*</span></label>
                       <select required value={regDepartment} onChange={(e) => setRegDepartment(e.target.value)}
                         className="w-full px-4 py-3.5 rounded-2xl text-sm focus:outline-none transition appearance-none"
                         style={{ background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.14)",color:regDepartment?"#fff":"rgba(255,255,255,0.3)" }}
                         onFocus={(e) => { e.target.style.border="1px solid rgba(255,255,255,0.35)"; e.target.style.background="rgba(18,18,30,0.97)"; }}
                         onBlur={(e) => { e.target.style.border="1px solid rgba(255,255,255,0.14)"; e.target.style.background="rgba(255,255,255,0.08)"; }}>
-                        <option value="" style={{ background:"#12121e" }}>Select department…</option>
-                        {["Computer Science & Engineering","Electrical Engineering","Mechanical Engineering","Civil Engineering","Electronics & Telecommunication","Information Technology","Chemical Engineering","Mathematics","Physics","Architecture","Other"].map(d=>(
+                        <option value="" style={{ background:"#12121e" }}>请选择学院…</option>
+                        {["计算机与信息工程学院","软件学院","人工智能学院","数学与统计学院","物理与电子学院","化学化工学院","生命科学学院","材料学院","土木建筑学院","经济学院","商学院","法学院","文学院","历史文化学院","教育学部","新闻与传播学院","外国语学院","音乐学院","美术学院","体育学院","药学院","护理与健康学院","国际教育学院","其他"].map(d=>(
                           <option key={d} value={d} style={{ background:"#12121e" }}>{d}</option>
                         ))}
                       </select>
@@ -1197,7 +1196,7 @@ function App() {
 
                     {/* Campus */}
                     <div>
-                      <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">Campus</label>
+                      <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">校区</label>
                       <input type="text" value={regCampus} onChange={(e) => setRegCampus(e.target.value)} placeholder="河南大学金明校区 / 明伦校区"
                         className="w-full px-4 py-3.5 rounded-2xl text-sm text-white placeholder-white/30 focus:outline-none transition"
                         style={{ background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.14)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.06)" }}
@@ -1208,8 +1207,8 @@ function App() {
 
                     {/* Password */}
                     <div>
-                      <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">Password <span className="text-red-400">*</span></label>
-                      <input type="password" required minLength={6} value={regPassword} onChange={(e) => setRegPassword(e.target.value)} placeholder="Min. 6 characters"
+                      <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">密码 <span className="text-red-400">*</span></label>
+                      <input type="password" required minLength={6} value={regPassword} onChange={(e) => setRegPassword(e.target.value)} placeholder="至少 6 位字符"
                         className="w-full px-4 py-3.5 rounded-2xl text-sm text-white placeholder-white/30 focus:outline-none transition"
                         style={{ background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.14)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.06)" }}
                         onFocus={(e) => { e.target.style.border="1px solid rgba(255,255,255,0.35)"; e.target.style.background="rgba(255,255,255,0.12)"; }}
@@ -1219,15 +1218,15 @@ function App() {
 
                     {/* Confirm Password */}
                     <div>
-                      <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">Confirm Password <span className="text-red-400">*</span></label>
-                      <input type="password" required value={regConfirmPassword} onChange={(e) => setRegConfirmPassword(e.target.value)} placeholder="Re-enter password"
+                      <label className="block text-xs font-semibold text-white/60 uppercase tracking-widest mb-2">确认密码 <span className="text-red-400">*</span></label>
+                      <input type="password" required value={regConfirmPassword} onChange={(e) => setRegConfirmPassword(e.target.value)} placeholder="再次输入密码"
                         className="w-full px-4 py-3.5 rounded-2xl text-sm text-white placeholder-white/30 focus:outline-none transition"
                         style={{ background:"rgba(255,255,255,0.08)",border:regConfirmPassword&&regPassword!==regConfirmPassword?"1px solid rgba(248,113,113,0.6)":"1px solid rgba(255,255,255,0.14)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.06)" }}
                         onFocus={(e) => { e.target.style.background="rgba(255,255,255,0.12)"; }}
                         onBlur={(e) => { e.target.style.background="rgba(255,255,255,0.08)"; }}
                       />
                       {regConfirmPassword && regPassword !== regConfirmPassword && (
-                        <p className="text-[11px] text-red-400 mt-1.5 ml-1">Passwords do not match</p>
+                        <p className="text-[11px] text-red-400 mt-1.5 ml-1">两次输入的密码不一致</p>
                       )}
                     </div>
 
@@ -1237,13 +1236,13 @@ function App() {
                       {regLoading ? (
                         <span className="flex items-center justify-center gap-2">
                           <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
-                          Creating Account…
+                          正在创建账号…
                         </span>
-                      ) : "Create Account →"}
+                      ) : "创建账号 →"}
                     </button>
                   </form>
                   <p className="text-center text-xs text-white/35 mt-5">
-                    Already registered?{" "}<button onClick={() => setAuthTab("login")} className="text-white/75 font-semibold hover:text-white transition">Sign in</button>
+                    已有账号？{" "}<button onClick={() => setAuthTab("login")} className="text-white/75 font-semibold hover:text-white transition">去登录</button>
                   </p>
                 </div>
               )}
@@ -1279,7 +1278,7 @@ function App() {
                   {selectedSeller.department}
                 </p>
                 <span className="inline-block mt-1 text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                  Verified Student
+                  已认证学生
                 </span>
               </div>
             </div>
@@ -1287,7 +1286,7 @@ function App() {
             <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 mb-4 space-y-2 text-xs">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-neutral-700">
-                  Mutual Graph Trust Score
+                  同学互信评分
                 </span>
                 <span className="font-black text-emerald-600 text-sm">
                   {selectedSeller.trustScore} / 100
@@ -1300,8 +1299,7 @@ function App() {
                 ></div>
               </div>
               <p className="text-[11px] text-neutral-400">
-                Calculated from 0 report flags, 28 verified handovers, and
-                in-person ratings.
+                基于举报记录、当面交接次数与同学评价综合计算。
               </p>
             </div>
 
@@ -1312,7 +1310,7 @@ function App() {
               }}
               className="w-full py-3 bg-neutral-900 text-white font-bold rounded-xl text-xs hover:bg-neutral-800 transition"
             >
-              Send Direct Campus Message
+              发送站内消息
             </button>
           </div>
         </div>
@@ -1349,7 +1347,7 @@ function App() {
 
           <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs custom-scroll bg-neutral-100/50">
             <div className="text-center text-[10px] text-neutral-400 py-1">
-              🔒 In-Campus Verified Peer Chat
+              🔒 校内认证同学对话
             </div>
             {activeChat.messages.map((m, idx) => (
               <div
@@ -1385,7 +1383,7 @@ function App() {
                           ...prev.messages,
                           {
                             sender: "seller",
-                            text: "Deal! I will bring it to the Library Safe Desk at 4 PM.",
+                            text: "成交！我下午 4 点会把物品带到图书馆服务台。",
                           },
                         ],
                       }
@@ -1398,14 +1396,14 @@ function App() {
             <input
               name="chatMsg"
               type="text"
-              placeholder="Type message or counter offer..."
+              placeholder="输入消息或出价..."
               className="flex-1 px-3 py-2 text-xs bg-neutral-50 rounded-xl border border-neutral-200 focus:outline-none focus:ring-1 focus:ring-black"
             />
             <button
               type="submit"
               className="px-4 py-2 bg-neutral-950 text-white font-bold rounded-xl text-xs hover:bg-neutral-800"
             >
-              Send
+              发送
             </button>
           </form>
         </div>
@@ -1424,28 +1422,28 @@ function App() {
               &times;
             </button>
             <span className="text-[10px] uppercase font-bold tracking-widest bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">
-              Safe Pickup Token
+              安全交接凭证
             </span>
             <h3 className="font-display text-xl font-bold text-neutral-900">
-              Order #{qrModalItem.id}
+              订单 #{qrModalItem.id}
             </h3>
             <p>
-              Show this QR code at{" "}
+              请在{" "}
               <strong>
-                {qrModalItem.pickupLocation || "Campus Safe Desk"}
+                {qrModalItem.pickupLocation || "校园服务台"}
               </strong>
-              .
+              出示此二维码。
             </p>
             <div className="p-4 bg-neutral-50 rounded-2xl border border-neutral-200 inline-block">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CAMPUSCART-PICKUP-${qrModalItem.id}`}
-                alt="Pickup QR Code"
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=HENUTONGXIANG-PICKUP-${qrModalItem.id}`}
+                alt="取货二维码"
                 className="w-36 h-36 mx-auto rounded-lg"
               />
             </div>
 
             <div className="text-[11px] font-mono text-neutral-400">
-              HASH #CP-{Math.floor(1000 + Math.random() * 9000)}
+              凭证 #CP-{Math.floor(1000 + Math.random() * 9000)}
             </div>
 
             <button
@@ -1453,24 +1451,24 @@ function App() {
                 confetti({ particleCount: 80, spread: 60 });
                 setQrModalItem(null);
                 showToast(
-                  "🎉 QR Handover Verified! Both buyer & seller trust score increased.",
+                  "🎉 二维码核验完成！买卖双方信用评分已提升。",
                 );
               }}
               className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition"
             >
-              Simulate QR Handshake Completed
+              模拟完成二维码核验
             </button>
           </div>
         </div>
       )}
 
       {/* 河南大学校区地图 */}
-      <WestBengalMapModal
+      <CampusMapModal
         isOpen={isMapOpen}
         onClose={() => setIsMapOpen(false)}
-        onSelectCollege={(college) => {
+        onSelectCampus={(college) => {
           setSelectedCampusHub(college);
-          showToast(`📍 Active Campus Hub set to: ${college.name}`);
+          showToast(`📍 当前校区已设为：${college.name}`);
         }}
       />
 
