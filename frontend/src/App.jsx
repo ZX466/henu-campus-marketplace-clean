@@ -22,6 +22,7 @@ import CampusMapModal from "./components/CampusMapModal";
 import SellerDashboard from "./components/SellerDashboard.jsx";
 import CampusBot from "./components/CampusBot.jsx";
 import NotificationBell from "./components/NotificationBell.jsx";
+import ConversationView from "./components/ConversationView.jsx";
 import CAMPUS_DATA from "./data/mockData";
 import {
   fetchProductsFromBackend,
@@ -46,6 +47,7 @@ import {
   fetchNotifications,
   markNotificationRead,
   markAllNotificationsRead,
+  createConversation,
 } from "./services/api";
 
 function App() {
@@ -74,6 +76,7 @@ function App() {
   const [regCampus, setRegCampus] = useState("河南大学金明校区");
   const [regLoading, setRegLoading] = useState(false);
   const [activeChat, setActiveChat] = useState(null);
+  const [conversationToOpen, setConversationToOpen] = useState(null);
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [qrModalItem, setQrModalItem] = useState(null);
   const [toastMsg, setToastMsg] = useState(null);
@@ -431,7 +434,22 @@ function App() {
     confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
     showToast(`🎉 订单 ${result.data.id} 已创建！`);
   };
-  const startChat = (seller, item) => {
+  const startChat = async (seller, item) => {
+    if (!isLoggedIn) {
+      setIsLoginOpen(true);
+      showToast("请先登录后再发起站内沟通。");
+      return;
+    }
+    if (item?.id) {
+      const result = await createConversation("product", item.id, seller?.id || seller?._id);
+      if (result.success && result.conversation?.id) {
+        setConversationToOpen(result.conversation.id);
+        navigate("/conversations");
+        return;
+      }
+      showToast(result.error || "无法创建会话，请确认后端和数据库已启动。");
+    }
+    // Keep the existing local preview available when the selected item is only a demo card.
     setActiveChat({
       seller,
       item,
@@ -536,6 +554,12 @@ function App() {
                 }`}
               >
                 心愿单
+              </button>
+              <button
+                onClick={() => navigateTo("/conversations")}
+                className={`px-3 py-1 sm:px-3.5 sm:py-1 rounded-full transition-all ${location.pathname === "/conversations" ? "bg-white text-black font-bold shadow" : "text-neutral-300 hover:text-white"}`}
+              >
+                私信
               </button>
             </div>
           ) : (
@@ -887,11 +911,7 @@ function App() {
             path="/services"
             element={
               <ServicesSection
-                onBook={(title) =>
-                  showToast(
-                    `已提交「${title}」服务请求！详情请留意校园邮箱通知。`,
-                  )
-                }
+                onNotify={(message) => showToast(message)}
               />
             }
           />
@@ -904,6 +924,10 @@ function App() {
                 }
               />
             }
+          />
+          <Route
+            path="/conversations"
+            element={<ConversationView initialConversationId={conversationToOpen} />}
           />
           <Route
             path="/cart"
@@ -1082,7 +1106,7 @@ function App() {
             <div className="relative rounded-3xl overflow-hidden" style={{ background:"rgba(255,255,255,0.08)",backdropFilter:"blur(40px)",WebkitBackdropFilter:"blur(40px)",border:"1px solid rgba(255,255,255,0.18)",boxShadow:"0 32px 64px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.2)",zIndex:1 }}>
 
               {/* Close */}
-              <button onClick={() => { setIsLoginOpen(false); setAuthTab("login"); }} aria-label="Close" className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition text-xl leading-none">×</button>
+              <button onClick={() => { setIsLoginOpen(false); setAuthTab("login"); }} aria-label="关闭" className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition text-xl leading-none">×</button>
 
               {/* Header */}
               <div className="pt-10 pb-0 px-8 text-center">
@@ -1305,7 +1329,7 @@ function App() {
 
             <button
               onClick={() => {
-                startChat(selectedSeller, { title: "Seller Inquiry" });
+                startChat(selectedSeller, { title: "卖家咨询" });
                 setSelectedSeller(null);
               }}
               className="w-full py-3 bg-neutral-900 text-white font-bold rounded-xl text-xs hover:bg-neutral-800 transition"
@@ -1333,7 +1357,7 @@ function App() {
                   {activeChat.seller.name}
                 </h4>
                 <p className="text-[10px] text-neutral-500 truncate max-w-[180px]">
-                  Re: {activeChat.item.title}
+                  关于：{activeChat.item.title}
                 </p>
               </div>
             </div>

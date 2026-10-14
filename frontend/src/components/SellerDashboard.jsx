@@ -10,6 +10,7 @@ function SellerDashboard({
   onMarkAllRead,
 }) {
   const [editingProduct, setEditingProduct] = useState(null);
+  const MODE_LABELS = { BUY: "出售", RENT: "租用", EXCHANGE: "交换" };
 
   // Only show products belonging to the currently logged-in seller.
   const myProducts = useMemo(() => {
@@ -48,11 +49,11 @@ function SellerDashboard({
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-              Seller Dashboard
+              卖家工作台
             </h1>
 
             <p className="mt-2 text-sm text-neutral-500">
-              Manage your CampusCart listings, inventory, and sales notifications.
+              管理你在河大同享上发布的商品、库存和销售通知。
             </p>
           </div>
 
@@ -60,7 +61,7 @@ function SellerDashboard({
             <div className="flex items-center gap-2">
               <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1.5 rounded-full border border-emerald-200 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                {notifications.length} Total Sales Alerts
+                {notifications.length} 条销售提醒
               </span>
             </div>
           )}
@@ -72,7 +73,7 @@ function SellerDashboard({
           {/* Total Listings */}
           <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
             <p className="text-sm font-medium text-neutral-500">
-              Total Listings
+              商品总数
             </p>
 
             <p className="mt-2 text-3xl font-black text-neutral-900">
@@ -83,7 +84,7 @@ function SellerDashboard({
           {/* Total Stock */}
           <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
             <p className="text-sm font-medium text-neutral-500">
-              Total Stock
+              库存总数
             </p>
 
             <p className="mt-2 text-3xl font-black text-neutral-900">
@@ -94,7 +95,7 @@ function SellerDashboard({
           {/* Out of Stock */}
           <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
             <p className="text-sm font-medium text-neutral-500">
-              Out of Stock
+              已售罄
             </p>
 
             <p className="mt-2 text-3xl font-black text-red-600">
@@ -105,14 +106,14 @@ function SellerDashboard({
           {/* Sold Alerts */}
           <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
             <p className="text-sm font-medium text-neutral-500">
-              Pending Pickups
+              待自提
             </p>
 
             <p className="mt-2 text-3xl font-black text-amber-600 flex items-center gap-2">
               {unreadSoldNotifs.length}
               {unreadSoldNotifs.length > 0 && (
                 <span className="text-xs font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
-                  Action required
+                  需要处理
                 </span>
               )}
             </p>
@@ -126,11 +127,11 @@ function SellerDashboard({
               <div className="flex items-center gap-2">
                 <span className="text-lg">🎉</span>
                 <h2 className="text-base font-bold text-neutral-900">
-                  Recent Sales &amp; Item Purchases
+                  最近售出与买家订单
                 </h2>
                 {unreadSoldNotifs.length > 0 && (
                   <span className="bg-red-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
-                    {unreadSoldNotifs.length} unread
+                    {unreadSoldNotifs.length} 条未读
                   </span>
                 )}
               </div>
@@ -141,7 +142,7 @@ function SellerDashboard({
                   onClick={onMarkAllRead}
                   className="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition"
                 >
-                  Mark all as read
+                  全部标为已读
                 </button>
               )}
             </div>
@@ -166,7 +167,7 @@ function SellerDashboard({
                       </h3>
                       {!notif.read && (
                         <span className="text-[10px] bg-amber-200 text-amber-900 font-extrabold px-2 py-0.5 rounded-full">
-                          NEW SALE
+                          新成交
                         </span>
                       )}
                     </div>
@@ -178,7 +179,7 @@ function SellerDashboard({
                     <div className="flex items-center gap-3 mt-2 text-[11px] text-neutral-400">
                       {notif.pickup_token && (
                         <span className="font-mono bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded font-bold">
-                          Safe Handshake Token: {notif.pickup_token}
+                          安全交接凭证：{notif.pickup_token}
                         </span>
                       )}
                       <span>
@@ -189,7 +190,7 @@ function SellerDashboard({
                               hour: "2-digit",
                               minute: "2-digit",
                             })
-                          : "Recently"}
+                          : "刚刚"}
                       </span>
                     </div>
                   </div>
@@ -204,18 +205,18 @@ function SellerDashboard({
 
           <div className="border-b border-neutral-200 px-5 py-4">
             <h2 className="text-lg font-bold text-neutral-900">
-              My Listings
+              我的商品
             </h2>
           </div>
 
           {myProducts.length === 0 ? (
             <div className="px-5 py-16 text-center">
               <p className="text-lg font-semibold text-neutral-700">
-                You haven't listed any products yet.
+                你还没有发布任何商品。
               </p>
 
               <p className="mt-2 text-sm text-neutral-500">
-                Your products will appear here once you start selling.
+                开始发布后，你的商品会显示在这里。
               </p>
             </div>
           ) : (
@@ -252,20 +253,20 @@ function SellerDashboard({
                         </h3>
 
                         <p className="mt-1 text-sm text-neutral-500">
-                          ₹
+                          ¥
                           {Number(
                             product.price || 0
-                          ).toLocaleString("en-IN")}
+                          ).toLocaleString("zh-CN")}
                         </p>
 
                         <div className="mt-2 flex flex-wrap gap-2 text-xs">
 
                           <span className="rounded-full bg-neutral-100 px-2.5 py-1 font-semibold text-neutral-600">
-                            {product.category || "Other"}
+                            {product.category || "其他"}
                           </span>
 
                           <span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-blue-700">
-                            {product.mode || "BUY"}
+                            {MODE_LABELS[product.mode] || "出售"}
                           </span>
 
                         </div>
@@ -285,8 +286,8 @@ function SellerDashboard({
                         }`}
                       >
                         {stock === 0
-                          ? "Out of Stock"
-                          : `${stock} in stock`}
+                          ? "已售罄"
+                          : `库存 ${stock}`}
                       </span>
 
                       <button
@@ -296,7 +297,7 @@ function SellerDashboard({
                         }
                         className="rounded-xl border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
                       >
-                        Edit
+                        编辑
                       </button>
 
                       <button
@@ -306,7 +307,7 @@ function SellerDashboard({
                         }
                         className="rounded-xl bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100"
                       >
-                        Delete
+                        删除
                       </button>
 
                     </div>
@@ -431,11 +432,11 @@ function EditProductModal({
 
           <div>
             <h2 className="text-xl font-black text-neutral-900">
-              Edit Listing
+              编辑商品
             </h2>
 
             <p className="mt-1 text-xs text-neutral-500">
-              Update your product information and inventory.
+              更新商品信息和库存。
             </p>
           </div>
 
@@ -443,7 +444,7 @@ function EditProductModal({
             type="button"
             onClick={onClose}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-lg text-neutral-600 transition hover:bg-neutral-200"
-            aria-label="Close edit modal"
+            aria-label="关闭编辑窗口"
           >
             ×
           </button>
@@ -459,7 +460,7 @@ function EditProductModal({
           {/* Product Title */}
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-              Product Title
+              商品名称
             </label>
 
             <input
@@ -479,7 +480,7 @@ function EditProductModal({
           {/* Description */}
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-              Description
+              商品描述
             </label>
 
             <textarea
@@ -501,7 +502,7 @@ function EditProductModal({
 
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                Price (₹)
+                价格（元）
               </label>
 
               <input
@@ -522,7 +523,7 @@ function EditProductModal({
 
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                Stock
+                库存
               </label>
 
               <input
@@ -548,7 +549,7 @@ function EditProductModal({
 
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                Category
+                分类
               </label>
 
               <input
@@ -566,7 +567,7 @@ function EditProductModal({
 
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                Condition
+                成色
               </label>
 
               <input
@@ -587,13 +588,13 @@ function EditProductModal({
           {/* Listing Mode */}
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-              Listing Mode
+              交易方式
             </label>
 
             <div className="grid grid-cols-3 gap-2">
 
-              {["BUY", "RENT", "EXCHANGE"].map(
-                (mode) => (
+              {[["BUY", "出售"], ["RENT", "租用"], ["EXCHANGE", "交换"]].map(
+                ([mode, label]) => (
                   <button
                     key={mode}
                     type="button"
@@ -606,7 +607,7 @@ function EditProductModal({
                         : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
                     }`}
                   >
-                    {mode}
+                    {label}
                   </button>
                 )
               )}
@@ -618,7 +619,7 @@ function EditProductModal({
           {form.mode === "RENT" && (
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                Rental Rate
+                租金（元/天）
               </label>
 
               <input
@@ -630,7 +631,7 @@ function EditProductModal({
                     event.target.value
                   )
                 }
-                placeholder="e.g. ₹50/day"
+                placeholder="例如：每天 ¥5"
                 className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
               />
             </div>
@@ -640,7 +641,7 @@ function EditProductModal({
           {form.mode === "EXCHANGE" && (
             <div>
               <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                What do you want in exchange?
+                你想交换什么？
               </label>
 
               <input
@@ -652,7 +653,7 @@ function EditProductModal({
                     event.target.value
                   )
                 }
-                placeholder="e.g. Engineering textbook"
+                placeholder="例如：工程类教材"
                 className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
               />
             </div>
@@ -661,7 +662,7 @@ function EditProductModal({
           {/* Pickup Location */}
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-              Pickup Location
+              自提地点
             </label>
 
             <input
@@ -686,14 +687,14 @@ function EditProductModal({
               onClick={onClose}
               className="rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
             >
-              Cancel
+              取消
             </button>
 
             <button
               type="submit"
               className="rounded-xl bg-neutral-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-neutral-800"
             >
-              Save Changes
+              保存修改
             </button>
 
           </div>

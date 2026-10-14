@@ -17,15 +17,15 @@ function CartFullView({
     <section className="max-w-5xl mx-auto px-6 sm:px-12 pt-32 pb-24 space-y-8">
       <div>
         <p className="text-xs font-bold uppercase tracking-[0.25em] text-neutral-400">
-          CampusCart Checkout
+          河大同享 · 结算
         </p>
 
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-neutral-950 mt-2">
-          Student Shopping Bag
+          学生购物袋
         </h1>
 
         <p className="text-sm text-neutral-500 mt-2">
-          Review your items before confirming your campus pickup order.
+          确认校内自提订单前，先检查一下商品信息。
         </p>
       </div>
 
@@ -34,18 +34,18 @@ function CartFullView({
           <div className="text-4xl">🛍️</div>
 
           <h2 className="font-display text-xl font-bold text-neutral-900">
-            Your cart is empty
+            购物车是空的
           </h2>
 
           <p className="text-neutral-500 text-sm">
-            Add something from the marketplace to continue.
+            去集市挑一件心仪的商品吧。
           </p>
 
           <button
             onClick={onContinue}
             className="px-6 py-3 bg-neutral-950 text-white font-bold rounded-xl text-xs hover:bg-neutral-800"
           >
-            Explore Marketplace
+            去逛集市
           </button>
         </div>
       ) : (
@@ -54,11 +54,11 @@ function CartFullView({
             <div className="rounded-3xl border border-neutral-200 bg-white overflow-hidden">
               <div className="px-5 py-4 border-b border-neutral-200">
                 <h2 className="font-display font-bold text-lg text-neutral-900">
-                  Cart Items
+                  购物车商品
                 </h2>
 
                 <p className="text-xs text-neutral-500 mt-1">
-                  {cart.length} item{cart.length !== 1 ? "s" : ""} in your bag
+                  购物袋中共有 {cart.length} 件商品
                 </p>
               </div>
 
@@ -82,7 +82,7 @@ function CartFullView({
 
         <div className="mt-2 flex flex-wrap items-center gap-3">
   <span className="text-xl font-extrabold text-indigo-600">
-    ₹{Number(item.price || 0).toFixed(2)}
+    ¥{Number(item.price || 0).toFixed(2)}
   </span>
 
   <div className="flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 p-1">
@@ -90,7 +90,7 @@ function CartFullView({
       type="button"
       onClick={() => onDecrease(item.id)}
       className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-lg font-bold text-indigo-700 transition hover:bg-indigo-100"
-      aria-label={`Decrease quantity of ${item.title}`}
+      aria-label={`减少「${item.title}」的数量`}
     >
       −
     </button>
@@ -103,14 +103,14 @@ function CartFullView({
       type="button"
       onClick={() => onIncrease(item.id)}
       className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white transition hover:bg-indigo-700"
-      aria-label={`Increase quantity of ${item.title}`}
+      aria-label={`增加「${item.title}」的数量`}
     >
       +
     </button>
   </div>
 
   <span className="text-xs text-slate-500">
-    ₹{(Number(item.price || 0) * item.qty).toFixed(2)} total
+    合计 ¥{(Number(item.price || 0) * item.qty).toFixed(2)}
   </span>
 </div>
       </div>
@@ -121,13 +121,13 @@ function CartFullView({
 
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Seller
+              卖家
             </p>
 
             <p className="text-sm font-medium text-slate-700">
               {typeof item.seller === "object"
-                ? item.seller?.name || "Campus Seller"
-                : item.seller || "Campus Seller"}
+                ? item.seller?.name || "校内卖家"
+                : item.seller || "校内卖家"}
             </p>
           </div>
         </div>
@@ -137,13 +137,13 @@ function CartFullView({
 
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Pickup Location
+              自提地点
             </p>
 
             <p className="text-sm font-medium text-slate-700">
               {typeof item.pickupLocation === "object"
-                ? item.pickupLocation?.name || "Campus Safe Desk"
-                : item.pickupLocation || "Campus Safe Desk"}
+                ? item.pickupLocation?.name || "校内安全交接点"
+                : item.pickupLocation || "校内安全交接点"}
             </p>
           </div>
         </div>
@@ -153,7 +153,7 @@ function CartFullView({
         onClick={() => onRemove(item.id)}
         className="w-full rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100"
       >
-        Remove from Cart
+        从购物车移除
       </button>
     </div>
   </div>
@@ -167,12 +167,12 @@ function CartFullView({
 
                 <div>
                   <h3 className="font-bold text-sm text-neutral-900">
-                    Campus Pickup
+                    校园自提
                   </h3>
 
                   <p className="text-xs text-neutral-500 mt-1">
-                    After confirmation, your order will receive a pickup token.
-                    Coordinate with the seller at the selected campus location.
+                    订单确认后会生成一个自提凭证。
+                    请与卖家在校内选定的地点当面交接。
                   </p>
                 </div>
               </div>
@@ -182,32 +182,32 @@ function CartFullView({
           <aside className="h-fit rounded-3xl border border-neutral-200 bg-white p-6 space-y-6 lg:sticky lg:top-28">
             <div>
               <h2 className="font-display text-xl font-bold text-neutral-900">
-                Order Summary
+                订单摘要
               </h2>
 
               <p className="text-xs text-neutral-500 mt-1">
-                Secure in-campus exchange
+                安全的校内当面交易
               </p>
             </div>
 
             <div className="space-y-3 text-sm">
               <div className="flex justify-between gap-4">
-                <span className="text-neutral-500">Subtotal</span>
+                <span className="text-neutral-500">商品小计</span>
                 <span className="font-semibold">
-                  ₹{total.toFixed(2)}
+                  ¥{total.toFixed(2)}
                 </span>
               </div>
 
               <div className="flex justify-between gap-4">
-                <span className="text-neutral-500">Campus pickup fee</span>
+                <span className="text-neutral-500">校内自提费</span>
                 <span className="font-semibold text-emerald-600">
-                  Free
+                  免费
                 </span>
               </div>
 
               <div className="border-t border-neutral-200 pt-4 flex justify-between gap-4 text-lg font-display font-bold">
-                <span>Total</span>
-                <span>₹{total.toFixed(2)}</span>
+                <span>总计</span>
+                <span>¥{total.toFixed(2)}</span>
               </div>
             </div>
 
@@ -215,18 +215,18 @@ function CartFullView({
               onClick={onCheckout}
               className="w-full py-3.5 bg-neutral-950 text-white font-bold rounded-xl text-xs hover:bg-neutral-800 shadow-md"
             >
-              Confirm Order & Generate QR
+              确认订单并生成二维码
             </button>
 
             <button
               onClick={onContinue}
               className="w-full py-3 bg-neutral-100 text-neutral-800 font-bold rounded-xl text-xs hover:bg-neutral-200"
             >
-              Back to Marketplace
+              返回集市
             </button>
 
             <p className="text-[11px] leading-relaxed text-neutral-400 text-center">
-              This prototype stores your order locally in the browser.
+              此演示版本会把订单保存在浏览器本地。
             </p>
           </aside>
         </div>

@@ -231,10 +231,10 @@ export async function fetchProductsFromBackend() {
 export async function createProductOnBackend(productData) {
   try {
     const payload = {
-      title: productData?.title || "Campus Listing",
+      title: productData?.title || "校园商品",
 
       category:
-        productData?.category || "Notes & Material",
+        productData?.category || "资料与教材",
 
       stream:
         productData?.stream || "engineering",
@@ -253,7 +253,7 @@ export async function createProductOnBackend(productData) {
         productData?.mode || "BUY",
 
       condition:
-        productData?.condition || "Like New",
+        productData?.condition || "几乎全新",
 
       stock:
         Math.max(
@@ -263,11 +263,11 @@ export async function createProductOnBackend(productData) {
 
       campus:
         productData?.campus ||
-        "Jadavpur University",
+        "河南大学",
 
       pickupLocation:
         productData?.pickupLocation ||
-        "Central Library Foyer",
+        "图书馆门口",
 
       image:
         productData?.image ||
@@ -624,5 +624,92 @@ export async function markAllNotificationsRead() {
       success: false,
       error: error.message,
     };
+  }
+}
+
+/* =========================================================================
+   CONVERSATIONS & MESSAGES
+   ========================================================================= */
+
+export async function fetchConversations() {
+  try {
+    const data = await request("/api/v1/conversations");
+    return { success: true, conversations: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, conversations: [], error: error.message };
+  }
+}
+
+export async function createConversation(targetType, targetId, peerId) {
+  try {
+    const payload = { target_type: targetType, target_id: String(targetId) };
+    if (peerId) payload.peer_id = String(peerId);
+    const data = await request("/api/v1/conversations", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    return { success: true, conversation: data };
+  } catch (error) {
+    return { success: false, conversation: null, error: error.message };
+  }
+}
+
+export async function fetchConversationMessages(conversationId) {
+  try {
+    const data = await request(`/api/v1/conversations/${conversationId}/messages`);
+    return { success: true, messages: data?.items || [], hasMore: Boolean(data?.has_more) };
+  } catch (error) {
+    return { success: false, messages: [], error: error.message };
+  }
+}
+
+export async function sendConversationMessage(conversationId, content) {
+  try {
+    const data = await request(`/api/v1/conversations/${conversationId}/messages`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
+    });
+    return { success: true, message: data };
+  } catch (error) {
+    return { success: false, message: null, error: error.message };
+  }
+}
+
+export async function markConversationRead(conversationId) {
+  try {
+    const data = await request(`/api/v1/conversations/${conversationId}/read`, { method: "POST" });
+    return { success: true, ...data };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+/* =========================================================================
+   BOOK LISTS & BOOK WISH PARSER
+   ========================================================================= */
+
+export async function fetchBooklists(filters = {}) {
+  try {
+    const params = new URLSearchParams();
+    ["major", "course", "campus"].forEach((key) => {
+      if (filters[key]) params.set(key, filters[key]);
+    });
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const data = await request(`/api/v1/booklists${query}`);
+    return { success: true, items: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, items: [], error: error.message };
+  }
+}
+
+export async function parseBookWish(text) {
+  try {
+    const data = await request("/api/v1/wishes/parse", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    });
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, data: null, error: error.message };
   }
 }

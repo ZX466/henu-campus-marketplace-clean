@@ -6,7 +6,7 @@ const INITIAL_FORM = {
   mode: 'BUY',
   price: '',
   stock: 1,
-  condition: 'Like New',
+  condition: '几乎全新',
   description: '',
   pickupLocation: '',
   image: '',
@@ -116,7 +116,7 @@ function SellItemView({ onBack, onPublish, currentUser }) {
    
 
 if (!currentUser) {
-  setError("You must be logged in to publish a listing.");
+  setError("请先登录后再发布商品。");
   return;
 }
 
@@ -152,7 +152,7 @@ if (!currentUser) {
           currentUser.name ||
           currentUser.fullName ||
           currentUser.email ||
-          'Student Seller',
+          '校内卖家',
 
         email: currentUser.email || '',
 
@@ -162,7 +162,7 @@ if (!currentUser) {
 
         trustScore: currentUser.trustScore ?? 100,
         verified: currentUser.verified ?? false,
-        department: currentUser.department || 'Student Seller',
+        department: currentUser.department || '校内卖家',
         reviews: 0,
         rating: 0,
       },
@@ -183,7 +183,7 @@ if (!currentUser) {
       }
     } catch {
       setError(
-        'Unable to publish the listing. Please try again.'
+        '发布失败，请稍后重试。'
       );
     } finally {
       setIsPublishing(false);
@@ -198,7 +198,7 @@ if (!currentUser) {
         className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-neutral-500 transition hover:text-neutral-950"
       >
         <span aria-hidden="true">←</span>
-        Back to Marketplace
+        返回集市
       </button>
 
       <div className="mb-8">
@@ -342,7 +342,7 @@ if (!currentUser) {
               onChange={(event) =>
                 updateField('stock', event.target.value)
               }
-              placeholder="Enter available quantity"
+              placeholder="填写可售数量"
               className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
               required
             />
@@ -354,7 +354,7 @@ if (!currentUser) {
               htmlFor="item-condition"
               className="mb-2 block text-sm font-bold text-neutral-800"
             >
-              Condition *
+              成色 *
             </label>
 
             <select
@@ -365,11 +365,11 @@ if (!currentUser) {
               }
               className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
             >
-              <option>Brand New</option>
-              <option>Like New</option>
-              <option>Good</option>
-              <option>Fair</option>
-              <option>Needs Repair</option>
+              <option>全新</option>
+              <option>几乎全新</option>
+              <option>成色良好</option>
+              <option>一般</option>
+              <option>需要维修</option>
             </select>
           </div>
 
@@ -380,7 +380,7 @@ if (!currentUser) {
                 htmlFor="rental-rate"
                 className="mb-2 block text-sm font-bold text-neutral-800"
               >
-                Rental rate *
+                租金（元/天）*
               </label>
 
               <input
@@ -389,7 +389,7 @@ if (!currentUser) {
                 onChange={(event) =>
                   updateField('rentalRate', event.target.value)
                 }
-                placeholder="Example: ₹50 per day"
+                placeholder="例如：每天 ¥5"
                 className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
                 required
               />
@@ -403,7 +403,7 @@ if (!currentUser) {
                 htmlFor="exchange-wish"
                 className="mb-2 block text-sm font-bold text-neutral-800"
               >
-                What do you want in exchange? *
+                你想交换什么？*
               </label>
 
               <input
@@ -412,7 +412,7 @@ if (!currentUser) {
                 onChange={(event) =>
                   updateField('exchangeWish', event.target.value)
                 }
-                placeholder="Example: Looking for a scientific calculator"
+                placeholder="例如：想换一个科学计算器"
                 className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
                 required
               />
@@ -425,7 +425,7 @@ if (!currentUser) {
               htmlFor="item-description"
               className="mb-2 block text-sm font-bold text-neutral-800"
             >
-              Description *
+              商品描述 *
             </label>
 
             <textarea
@@ -434,7 +434,7 @@ if (!currentUser) {
               onChange={(event) =>
                 updateField('description', event.target.value)
               }
-              placeholder="Describe the item's condition, defects, accessories, and other details..."
+              placeholder="描述商品的成色、瑕疵、配件和其他细节…"
               rows={5}
               className="w-full resize-y rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
               required
@@ -447,7 +447,7 @@ if (!currentUser) {
               htmlFor="pickup-location"
               className="mb-2 block text-sm font-bold text-neutral-800"
             >
-              Pickup location *
+              自提地点 *
             </label>
 
             <input
@@ -456,7 +456,7 @@ if (!currentUser) {
               onChange={(event) =>
                 updateField('pickupLocation', event.target.value)
               }
-              placeholder="Example: Main Library Entrance"
+              placeholder="例如：图书馆正门"
               className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
               required
             />
@@ -468,7 +468,7 @@ if (!currentUser) {
               htmlFor="item-image"
               className="mb-2 block text-sm font-bold text-neutral-800"
             >
-              Upload item image
+              上传商品图片
             </label>
 
             <input
@@ -480,7 +480,7 @@ if (!currentUser) {
             />
 
             <p className="mt-2 text-xs text-neutral-400">
-              Supported image files only. Maximum size: 5 MB.
+              仅支持图片文件，大小不超过 5 MB。
             </p>
           </div>
 
@@ -488,7 +488,7 @@ if (!currentUser) {
           <div className="md:col-span-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-bold text-neutral-800">
-                Image preview
+                图片预览
               </span>
 
               {imagePreview && (
@@ -497,7 +497,7 @@ if (!currentUser) {
                   onClick={removeImage}
                   className="text-xs font-bold text-red-600 hover:underline"
                 >
-                  Remove image
+                  移除图片
                 </button>
               )}
             </div>
@@ -506,12 +506,12 @@ if (!currentUser) {
               {imagePreview ? (
                 <img
                   src={imagePreview}
-                  alt="Preview of uploaded item"
+                  alt="上传商品的预览"
                   className="h-full w-full object-cover"
                 />
               ) : (
                 <p className="px-5 text-center text-sm font-semibold text-neutral-400">
-                  Your uploaded image will appear here.
+                  你上传的图片会显示在这里。
                 </p>
               )}
             </div>
@@ -519,8 +519,8 @@ if (!currentUser) {
         </div>
 
         <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-800">
-          <strong>Prototype notice:</strong> The image is currently stored as
-          a browser data URL. Later, we will upload images to backend storage.
+          <strong>演示说明：</strong> 图片目前以浏览器本地数据保存，
+          后续会改为上传到后端存储。
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -529,7 +529,7 @@ if (!currentUser) {
             onClick={onBack}
             className="flex-1 rounded-xl border border-neutral-200 px-5 py-3 font-bold text-neutral-700 transition hover:bg-neutral-100"
           >
-            Cancel
+            取消
           </button>
 
           <button
@@ -537,7 +537,7 @@ if (!currentUser) {
             disabled={isPublishing}
             className="flex-1 rounded-xl bg-neutral-950 px-5 py-3 font-bold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isPublishing ? 'Publishing...' : 'Publish Listing'}
+            {isPublishing ? '正在发布…' : '发布商品'}
           </button>
         </div>
       </form>

@@ -68,7 +68,7 @@ export default function OverviewGatewayView({ isLoggedIn, onOpenLogin, onExplore
       <section className="bg-white px-6 py-20 sm:px-12">
         <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.1fr_.9fr]">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">CampusCart AI</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">河大同享 AI</p>
             <h2 className="mt-3 font-display text-3xl font-black sm:text-5xl">不知道买什么书？<br />让智能推荐先给你一份书单。</h2>
             <p className="mt-5 max-w-xl leading-7 text-slate-500">输入专业、年级和课程，平台根据人工维护的河南大学专业书单和校园商品进行推荐。第一版采用随机推荐，后续逐步加入收藏和浏览偏好。</p>
             <button onClick={onExplore} className="mt-7 inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-bold text-white hover:bg-slate-800">试试书籍专区 <Bot size={17} /></button>

@@ -23,27 +23,27 @@ function WishlistView({
         onClick={onBack}
         className="mb-8 text-sm font-bold text-neutral-500 hover:text-neutral-950 transition"
       >
-        ← Back to Marketplace
+        ← 返回集市
       </button>
 
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 border-b border-neutral-200 pb-6">
         <div>
           <p className="text-xs uppercase tracking-widest text-neutral-400 font-bold">
-            Your Saved Items
+            我的收藏
           </p>
 
           <h1 className="mt-2 text-4xl sm:text-5xl font-black font-display text-neutral-950">
-            My Wishlist
+            我的心愿单
           </h1>
 
           <p className="mt-3 text-sm text-neutral-500">
-            Save useful items and track things you need from your campus.
+            收藏校园里想买或需要的物品，方便随时查看。
           </p>
         </div>
 
         <div className="text-sm text-neutral-500">
           <strong className="text-neutral-950">{wishlistItems.length}</strong>{' '}
-          saved items
+          件已收藏
         </div>
       </div>
 
@@ -56,7 +56,7 @@ function WishlistView({
               : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
           }`}
         >
-          All Saved Items
+          全部收藏
         </button>
 
         <button
@@ -67,7 +67,7 @@ function WishlistView({
               : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
           }`}
         >
-          Needed by Me
+          我正在求购
         </button>
       </div>
 
@@ -77,21 +77,21 @@ function WishlistView({
 
           <h2 className="mt-4 text-xl font-bold text-neutral-950">
             {activeTab === 'NEEDED'
-              ? 'No needed items yet'
-              : 'Your wishlist is empty'}
+              ? '还没有标记为求购的商品'
+              : '你的心愿单还是空的'}
           </h2>
 
           <p className="mt-2 text-sm text-neutral-500">
             {activeTab === 'NEEDED'
-              ? 'Mark saved products as Needed by Me to see them here.'
-              : 'Open the marketplace and save products you may want later.'}
+              ? '把收藏的商品标记为“我正在求购”后，就会显示在这里。'
+              : '去集市逛逛，把想买的商品收藏起来吧。'}
           </p>
 
           <button
             onClick={onBack}
             className="mt-6 rounded-xl bg-neutral-950 text-white px-5 py-3 text-sm font-bold hover:bg-neutral-800 transition"
           >
-            Explore Marketplace
+            去逛集市
           </button>
         </div>
       ) : (
@@ -126,7 +126,7 @@ function WishlistView({
                   <button
                     onClick={() => onRemove(product.id)}
                     className="text-red-500 text-xl"
-                    aria-label="Remove from wishlist"
+                    aria-label="从心愿单移除"
                   >
                     ♥
                   </button>
@@ -151,7 +151,7 @@ function WishlistView({
 
                   {product.neededByMe && (
                     <span className="rounded-full bg-amber-100 text-amber-800 px-3 py-1 text-xs font-bold">
-                      Needed by Me
+                  我正在求购
                     </span>
                   )}
                 </div>
@@ -165,8 +165,8 @@ function WishlistView({
                   }`}
                 >
                   {product.neededByMe
-                    ? 'Remove from Needed by Me'
-                    : 'Mark as Needed by Me'}
+                    ? '取消求购标记'
+                    : '标记为我正在求购'}
                 </button>
               </div>
             </article>

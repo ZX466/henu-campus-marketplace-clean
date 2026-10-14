@@ -27,7 +27,7 @@ export default function NotificationBell({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className="relative text-xs text-neutral-300 hover:text-white flex items-center justify-center font-semibold transition p-2 rounded-full hover:bg-white/10 border border-white/10 hover:border-white/30 cursor-pointer"
-        title="Seller & Order Notifications"
+        title="卖家与订单通知"
       >
         <svg
           width="18"
@@ -66,11 +66,11 @@ export default function NotificationBell({
             <div className="flex items-center gap-2">
               <span className="text-base">🔔</span>
               <h3 className="text-xs font-bold text-white tracking-wide uppercase">
-                Seller Sales &amp; Alerts
+                卖家销售与提醒
               </h3>
               {unreadCount > 0 && (
                 <span className="bg-amber-400/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-400/30">
-                  {unreadCount} new
+                  {unreadCount} 条新消息
                 </span>
               )}
             </div>
@@ -81,7 +81,7 @@ export default function NotificationBell({
                 onClick={() => onMarkAllRead && onMarkAllRead()}
                 className="text-[11px] text-neutral-400 hover:text-white transition font-medium"
               >
-                Mark all read
+                全部标为已读
               </button>
             )}
           </div>
@@ -97,10 +97,10 @@ export default function NotificationBell({
                   📭
                 </div>
                 <p className="text-xs font-semibold text-neutral-400">
-                  No sales notifications yet
+                  还没有销售通知
                 </p>
                 <p className="text-[10px] text-neutral-500 mt-1">
-                  When a student buys one of your listings, you'll be alerted here instantly!
+                  当有同学买下你的商品时，你会在这里第一时间收到提醒！
                 </p>
               </div>
             ) : (
@@ -141,7 +141,7 @@ export default function NotificationBell({
                       <div className="flex items-center justify-between mt-2 pt-1 border-t border-white/5 text-[10px] text-neutral-500">
                         {n.pickup_token && (
                           <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-neutral-300 font-bold">
-                            Token: {n.pickup_token}
+                            凭证：{n.pickup_token}
                           </span>
                         )}
                         <span>
@@ -152,7 +152,7 @@ export default function NotificationBell({
                                 hour: "2-digit",
                                 minute: "2-digit",
                               })
-                            : "Recently"}
+                            : "刚刚"}
                         </span>
                       </div>
                     </div>
@@ -164,7 +164,7 @@ export default function NotificationBell({
 
           {/* Footer */}
           <div className="px-4 py-2 border-t border-white/10 bg-black/40 text-center text-[10px] text-neutral-500">
-            Secure QR Handshake verification protects both Buyer and Seller
+            安全的二维码交接验证，保护买家与卖家双方
           </div>
         </div>
       )}
