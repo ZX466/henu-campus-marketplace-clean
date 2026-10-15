@@ -1,19 +1,21 @@
-// 河南大学金明、明伦校区位置与安全交接点演示数据。
-// 经纬度用于校园地图展示；具体交接点由交易双方在聊天中确认。
-export const WB_MAP_CONFIG = {
+// 河南大学校园地图数据：金明校区与明伦校区位置和建议交接点。
+// 经纬度用于校园地图展示；具体交接点由交易双方在站内沟通确认。
+export const CAMPUS_MAP_CONFIG = {
   center: [34.811, 114.323],
   defaultZoom: 13,
   minZoom: 11,
   maxZoom: 19
 };
 
-export const WB_STREAMS = [
+// 校区分类标签：全部 / 书籍专区 / 二手物品
+export const CAMPUS_STREAMS = [
   { id: "all", label: "全部校区", icon: "school" },
   { id: "book", label: "书籍专区", icon: "book" },
   { id: "goods", label: "二手物品", icon: "package" }
 ];
 
-export const WB_ZONES = [
+// 校区范围（仅河南大学金明校区与明伦校区）
+export const CAMPUS_ZONES = [
   {
     id: "all",
     name: "河南大学校园",
@@ -43,7 +45,8 @@ export const WB_ZONES = [
   }
 ];
 
-export const WB_COLLEGES = [
+// 校区列表（仅金明校区与明伦校区）
+export const HENU_CAMPUSES = [
   {
     id: "jinming",
     name: "河南大学金明校区",
@@ -86,6 +89,7 @@ export const WB_COLLEGES = [
   }
 ];
 
+// 交接方式说明
 export const DELIVERY_MODES = {
   IN_CAMPUS: {
     id: "in-campus",

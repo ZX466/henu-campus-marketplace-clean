@@ -15,8 +15,8 @@
 }
 
 /* =============================================================================
-   CampusCart — Next-Gen Student Exchange & Marketplace Stylesheet
-   Genesis-inspired aesthetics, micro-interactions, and typography
+   河大同享 — 河南大学校园二手交易与互助平台样式表
+   校园风格视觉、微交互与排版
    ============================================================================= */
 
 body {
@@ -30,7 +30,7 @@ body {
   font-family: 'Space Grotesk', sans-serif;
 }
 
-/* Sleek Watermark Typography matching Genesis from reference */
+/* 大字水印排版（河大同享页脚水印） */
 .hero-watermark {
   font-size: clamp(4rem, 16vw, 15rem);
   font-weight: 900;
@@ -98,13 +98,13 @@ body {
   border-radius: 9999px;
 }
 
-/* Leaflet Custom Pin & Popup Styles */
-.wb-college-pin-wrapper {
+/* Leaflet 校园地图自定义图钉与弹窗样式 */
+.campus-pin-wrapper {
   background: transparent !important;
   border: none !important;
 }
 
-.wb-custom-popup .leaflet-popup-content-wrapper {
+.campus-map-popup .leaflet-popup-content-wrapper {
   background: #0b0f19 !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-radius: 16px !important;
@@ -112,24 +112,24 @@ body {
   padding: 0 !important;
 }
 
-.wb-custom-popup .leaflet-popup-content {
+.campus-map-popup .leaflet-popup-content {
   margin: 0 !important;
   line-height: normal !important;
 }
 
-.wb-custom-popup .leaflet-popup-tip {
+.campus-map-popup .leaflet-popup-tip {
   background: #0b0f19 !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
-.wb-custom-popup .leaflet-popup-close-button {
+.campus-map-popup .leaflet-popup-close-button {
   color: #94a3b8 !important;
   top: 8px !important;
   right: 8px !important;
   font-size: 16px !important;
 }
 
-.wb-custom-popup .leaflet-popup-close-button:hover {
+.campus-map-popup .leaflet-popup-close-button:hover {
   color: #ffffff !important;
 }
 
