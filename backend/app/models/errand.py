@@ -10,6 +10,8 @@ class ErrandCreate(BaseModel):
     origin: str = Field(..., min_length=1, examples=["金明校区北门"])
     destination: str = Field(..., min_length=1, examples=["生活服务中心"])
     reward: float = Field(..., ge=0, examples=[3])
+    deadline: Optional[str] = Field(default=None, examples=["2026-10-15T18:00"])
+    note: Optional[str] = Field(default=None, max_length=500)
 
 
 class ErrandAction(BaseModel):

@@ -912,6 +912,8 @@ function App() {
             element={
               <ServicesSection
                 onNotify={(message) => showToast(message)}
+                isLoggedIn={isLoggedIn}
+                onRequireLogin={() => setIsLoginOpen(true)}
               />
             }
           />

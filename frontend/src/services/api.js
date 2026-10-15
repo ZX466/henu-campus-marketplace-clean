@@ -685,6 +685,59 @@ export async function markConversationRead(conversationId) {
 }
 
 /* =========================================================================
+   ERRANDS
+   ========================================================================= */
+
+export async function fetchErrands(filters = {}) {
+  try {
+    const params = new URLSearchParams();
+    if (filters.campus && filters.campus !== "全部校区") params.set("campus", filters.campus);
+    if (filters.status) params.set("status", filters.status);
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const data = await request(`/api/v1/errands${query}`);
+    return { success: true, tasks: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, tasks: [], error: error.message };
+  }
+}
+
+export async function createErrand(payload) {
+  try {
+    const data = await request("/api/v1/errands", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    return { success: true, task: data };
+  } catch (error) {
+    return { success: false, task: null, error: error.message };
+  }
+}
+
+export async function claimErrand(taskId, note) {
+  try {
+    const data = await request(`/api/v1/errands/${taskId}/claim`, {
+      method: "POST",
+      body: JSON.stringify(note ? { note } : {}),
+    });
+    return { success: true, task: data };
+  } catch (error) {
+    return { success: false, task: null, error: error.message };
+  }
+}
+
+export async function completeErrand(taskId, note) {
+  try {
+    const data = await request(`/api/v1/errands/${taskId}/complete`, {
+      method: "POST",
+      body: JSON.stringify(note ? { note } : {}),
+    });
+    return { success: true, task: data };
+  } catch (error) {
+    return { success: false, task: null, error: error.message };
+  }
+}
+
+/* =========================================================================
    BOOK LISTS & BOOK WISH PARSER
    ========================================================================= */
 

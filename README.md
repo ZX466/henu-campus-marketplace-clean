@@ -16,7 +16,7 @@
 
 ```powershell
 # 1. 克隆并进入仓库根目录（所有命令都在根目录执行）
-git clone https://github.com/ZX466/henu-campus-marketplace-clean.git
+git clone https://github.com/hwd-123456/henu-campus-marketplace-clean.git
 cd henu-campus-marketplace-clean
 
 # 2. 安装前端依赖
