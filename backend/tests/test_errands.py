@@ -4,6 +4,7 @@ Covers the state machine: open -> claimed -> completed,
 auth requirements, and the unified field contract.
 """
 import pytest
+import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
 from app.core.auth import create_session_token
@@ -14,7 +15,7 @@ from app.main import app
 pytestmark = pytest.mark.asyncio
 
 
-@pytest.fixture(autouse=True)
+@pytest_asyncio.fixture(autouse=True)
 async def clean_errands():
     """Clear errands before each test (teardown runs on a closed loop with
     pytest-asyncio's function-scoped event loops, so we clean up-front)."""
@@ -34,7 +35,7 @@ def other_token():
     return create_session_token("user-002", "user002@henu.edu.cn", "Other User")
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:

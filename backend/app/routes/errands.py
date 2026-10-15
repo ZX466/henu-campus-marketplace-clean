@@ -21,6 +21,7 @@ def _serialize(doc: dict) -> dict:
         "origin": doc.get("origin"),
         "destination": doc.get("destination"),
         "reward": doc.get("reward"),
+        "deadline": doc.get("deadline"),
         "status": doc.get("status"),
         "note": doc.get("note"),
         "created_at": doc.get("created_at"),
@@ -53,7 +54,6 @@ async def create_errand(payload: ErrandCreate, current=Depends(get_current_user)
         "claimer_id": None,
         **payload.model_dump(),
         "status": "open",
-        "note": None,
         "created_at": now,
         "updated_at": now,
     }

@@ -28,6 +28,7 @@ open ──claim(接单)──> claimed ──complete(完成)──> completed
 | `origin` | string | 取件地 |
 | `destination` | string | 送达地 |
 | `reward` | number | 报酬（元），≥ 0 |
+| `deadline` | string \| null | 可选截止时间，建议使用 ISO 8601 |
 | `status` | string | `open` / `claimed` / `completed` |
 | `note` | string \| null | 接单/完成时的可选备注 |
 | `created_at` | string (ISO) | 服务端时间 |
@@ -50,6 +51,7 @@ Query 参数：`campus`（可选）、`status`（可选）。按 `created_at` �
     "origin": "金明校区北门",
     "destination": "生活服务中心",
     "reward": 3,
+    "deadline": "2026-10-15T18:00",
     "status": "open",
     "note": null,
     "created_at": "2026-10-14T12:00:00",
@@ -68,9 +70,13 @@ Query 参数：`campus`（可选）、`status`（可选）。按 `created_at` �
   "title": "代取快递",
   "origin": "金明校区北门",
   "destination": "生活服务中心",
-  "reward": 3
+  "reward": 3,
+  "deadline": "2026-10-15T18:00",
+  "note": "请放到驿站前台"
 }
 ```
+
+`deadline` 和 `note` 均为可选字段；未提供时传 `null`。
 
 响应 `201`：完整 Errand 对象（见上，`status="open"`，`claimer_id=null`）。
 
