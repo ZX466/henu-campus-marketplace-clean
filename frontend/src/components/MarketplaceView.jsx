@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { ArrowLeft, Heart, MapPin, MessageCircle, Package, Search, ShieldCheck, ShoppingCart } from "lucide-react";
 
 export default function MarketplaceFullView({
-  products = [], onAddToCart, onOpenSeller, onStartChat, onOpenQr, onSellItem,
+  products = [], productsLoading = false, dbStatus = "connecting", onRetryLoad, onAddToCart, onOpenSeller, onStartChat, onOpenQr, onSellItem,
   onAddToWishlist, onRemoveFromWishlist, wishlistItems = [], initialProduct = null
 }) {
   const [query, setQuery] = useState("");
@@ -85,10 +85,43 @@ export default function MarketplaceFullView({
 
     <div className="mt-8 flex items-center justify-between gap-4">
       <p className="text-sm text-[var(--muted)]">找到 <strong className="font-display tnum text-base text-[var(--fg)]">{filtered.length}</strong> 件商品</p>
+      {dbStatus === "offline" ? (
+        <span className="rounded-full bg-warn-50 px-3 py-1 text-xs font-bold text-warn-600 ring-1 ring-warn-200">
+          后端未连接 · 显示本地演示数据
+        </span>
+      ) : dbStatus === "connected" ? (
+        <span className="rounded-full bg-success-50 px-3 py-1 text-xs font-bold text-success-600 ring-1 ring-success-200">
+          数据来自后端
+        </span>
+      ) : null}
       <p className="inline-flex items-center gap-1 text-xs text-[var(--meta)]"><ShieldCheck size={14} /> 建议当面验货</p>
     </div>
 
-    {filtered.length ? <div className="stagger mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{filtered.map((item) => {
+    {productsLoading ? (
+      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+        {[0, 1, 2, 3, 4, 5].map((key) => (
+          <div key={key} className="aspect-[4/3] animate-pulse rounded-panel bg-[var(--border-soft)]" />
+        ))}
+      </div>
+    ) : dbStatus === "offline" ? (
+      <div role="alert" className="mt-6 rounded-panel border border-warn-200 bg-warn-50 p-6">
+        <p className="text-sm font-bold text-warn-900">暂时连不上后端，无法读取已保存的商品。</p>
+        <p className="mt-1 text-xs text-warn-700">下面显示的是本地演示数据，不会保存到服务器。</p>
+        <button
+          onClick={() => onRetryLoad?.()}
+          className="press mt-4 rounded-full bg-warn-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-warn-800"
+        >
+          重试连接
+        </button>
+      </div>
+    ) : !filtered.length ? (
+      <div className="mt-6 rounded-panel border border-dashed border-[var(--border)] bg-[var(--surface)] p-10 text-center">
+        <p className="text-sm font-bold text-[var(--fg)]">暂无商品</p>
+        <p className="mt-1 text-xs text-[var(--muted)]">
+          {products.length ? "当前筛选条件下没有商品，试试切换分类、校区或方式。" : "还没有人发布商品，你可以点上方按钮发布第一件。"}
+        </p>
+      </div>
+    ) : <div className="stagger mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{filtered.map((item) => {
       const saved = wishlistItems.some((entry) => entry.id === item.id);
       return <article key={item.id} className="card-product reveal group">
         <button onClick={() => setSelected(item)} className="relative block aspect-[4/3] w-full overflow-hidden bg-[var(--surface)] text-left">
@@ -113,11 +146,6 @@ export default function MarketplaceFullView({
           </div>
         </div>
       </article>;
-    })}</div> : <div className="mt-8 apple-card flex flex-col items-center gap-3 px-6 py-16 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--meta)]"><Package size={24} /></span>
-      <h3 className="font-display text-lg font-bold text-[var(--fg)]">没有找到符合条件的商品</h3>
-      <p className="max-w-sm text-sm leading-6 text-[var(--muted)]">换个关键词，或清除校区与方式筛选，看看全部在售书籍与闲置物品。</p>
-      <button onClick={() => { setQuery(""); setCategory("全部"); setCampus("全部校区"); setMode("全部"); }} className="press mt-1 rounded-full border border-[var(--border)] bg-transparent px-5 py-2.5 text-xs font-bold text-[var(--fg-2)] transition-colors hover:bg-[var(--surface)]">清除全部筛选</button>
-    </div>}
+    })}</div>}
   </section>;
 }

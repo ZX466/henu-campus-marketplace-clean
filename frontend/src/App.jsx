@@ -16,6 +16,7 @@ const ServicesSection = lazy(() => import("./components/ServicesView"));
 const CourseSection = lazy(() => import("./components/CourseView"));
 const CartFullView = lazy(() => import("./components/CartView"));
 const WishlistView = lazy(() => import("./components/WishListView"));
+const MyAccountView = lazy(() => import("./components/MyAccountView"));
 const OrderHistory = lazy(() => import("./components/OrderHistory"));
 const CampusMapModal = lazy(() => import("./components/CampusMapModal"));
 const SellerDashboard = lazy(() => import("./components/SellerDashboard"));
@@ -127,6 +128,7 @@ function App() {
   const [productToOpen, setProductToOpen] = useState(null);
   const [mongoProducts, setMongoProducts] = useState(CAMPUS_DATA.products);
   const [dbStatus, setDbStatus] = useState("connecting"); // 'connected', 'offline', 'connecting'
+  const [productsLoading, setProductsLoading] = useState(true);
 
   // MongoDB is the single source of truth for products.
   const allProducts = mongoProducts.length ? mongoProducts : CAMPUS_DATA.products;
@@ -468,10 +470,16 @@ function App() {
   };
 
   const refreshProducts = async () => {
-    const result = await fetchProductsFromBackend();
-    if (result.success) { setMongoProducts(result.products); setDbStatus("connected"); }
-    else setDbStatus("offline");
-    return result;
+    // 重试也要有加载反馈：否则点了「重试连接」界面毫无变化
+    setProductsLoading(true);
+    try {
+      const result = await fetchProductsFromBackend();
+      if (result.success) { setMongoProducts(result.products); setDbStatus("connected"); }
+      else setDbStatus("offline");
+      return result;
+    } finally {
+      setProductsLoading(false);
+    }
   };
 
   const handlePublishProduct = async (newProduct) => {
@@ -641,25 +649,16 @@ function App() {
               >
                 专业书单
               </button>
+              {/* 订单和收藏收进「我的」，不再单开入口（周期三：修复重复入口） */}
               <button
-                onClick={() => navigateTo("/orders")}
+                onClick={() => navigateTo("/me")}
                 className={`press rounded-full px-3 py-1 transition-all sm:px-3.5 sm:py-1 ${
-                  location.pathname === "/orders"
+                  location.pathname === "/me"
                     ? "bg-white font-bold text-ink-950 shadow"
                     : "text-[var(--meta)] hover:text-white"
                 }`}
               >
-                我的订单
-              </button>
-              <button
-                onClick={() => navigateTo("/wishlist")}
-                className={`press rounded-full px-3 py-1 transition-all sm:px-3.5 sm:py-1 ${
-                  location.pathname === "/wishlist"
-                    ? "bg-white font-bold text-ink-950 shadow"
-                    : "text-[var(--meta)] hover:text-white"
-                }`}
-              >
-                心愿单
+                我的
               </button>
               <button
                 onClick={() => navigateTo("/conversations")}
@@ -923,12 +922,12 @@ function App() {
                 </button>
                 <button
                 onClick={() => {
-                  navigateTo("/orders");
+                  navigateTo("/me");
                   setNavMenuOpen(false);
                 }}
                 className="press transition hover:text-white"
                 >
-                订单记录
+                我的
                 </button>
                 <button
                 onClick={() => {
@@ -1010,6 +1009,9 @@ function App() {
             element={
               <MarketplaceFullView
                 products={allProducts}
+                productsLoading={productsLoading}
+                dbStatus={dbStatus}
+                onRetryLoad={refreshProducts}
                 onAddToCart={addToCart}
                 onOpenSeller={setSelectedSeller}
                 onStartChat={startChat}
@@ -1039,6 +1041,30 @@ function App() {
                 orders={orders}
                 onBack={() => navigateTo("/marketplace")}
                 onCancelOrder={cancelOrder}
+              />
+            }
+          />
+          <Route
+            path="/me"
+            element={
+              <MyAccountView
+                orders={orders}
+                wishlistItems={wishlistItems}
+                products={allProducts}
+                currentUser={currentUser}
+                onBack={() => navigateTo("/marketplace")}
+                onOpenProduct={(product) => {
+                  setProductToOpen(product);
+                  navigateTo("/marketplace");
+                }}
+                onRemoveFromWishlist={removeFromWishlist}
+                onToggleNeeded={toggleNeededByMe}
+                onCancelOrder={cancelOrder}
+                onEditProduct={handleEditProduct}
+                onDeleteProduct={handleDeleteProduct}
+                notifications={notifications}
+                onMarkRead={handleMarkNotificationRead}
+                onMarkAllRead={handleMarkAllNotificationsRead}
               />
             }
           />

@@ -91,6 +91,8 @@ const CAMPUS_OPTIONS = ["全部校区", "金明校区", "明伦校区"];
 export default function ServicesSection({ onNotify, isLoggedIn = false, onRequireLogin }) {
   const [tasks, setTasks] = useState(loadTasks);
   const [dataSource, setDataSource] = useState("local");
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [campusFilter, setCampusFilter] = useState("全部校区");
   const [query, setQuery] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -105,18 +107,36 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
     note: ""
   });
 
-  useEffect(() => {
-    let cancelled = false;
-    fetchErrands().then((result) => {
-      if (cancelled) return;
+  /**
+   * 从后端拉取跑腿列表。发布成功后也调它刷新，避免只把新任务插在本地。
+   * isCancelled 让卸载后的请求结果不会写进已卸载组件的 state。
+   */
+  const loadTasks = async (isCancelled = () => false) => {
+    setIsLoading(true);
+    setLoadError("");
+    try {
+      const result = await fetchErrands();
+      if (isCancelled()) return;
       if (result.success) {
         setTasks(result.tasks.map(normalizeTask));
         setDataSource("server");
         setMessage("");
       } else {
+        setLoadError(result.error || "后端跑腿接口暂不可用。");
         setMessage("后端跑腿接口暂不可用，当前显示本地演示数据。");
       }
-    });
+    } catch (error) {
+      if (isCancelled()) return;
+      setLoadError(error?.message || "后端跑腿接口暂不可用。");
+      setMessage("后端跑腿接口暂不可用，当前显示本地演示数据。");
+    } finally {
+      if (!isCancelled()) setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    loadTasks(() => cancelled);
     return () => { cancelled = true; };
   }, []);
 
@@ -176,7 +196,8 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
         onNotify?.(`发布失败：${result.error}`);
         return;
       }
-      setTasks((current) => [normalizeTask(result.task), ...current]);
+      // 周期二：发布成功后重新拉服务端数据，避免本地和库里的列表不一致
+      await loadTasks();
     } else {
       setTasks((current) => [task, ...current]);
     }
