@@ -132,26 +132,27 @@ function CircularWheelShowcase({ onSelectCategory }) {
       return (
         <section 
           ref={sectionRef} 
-          className="relative bg-[#fcfcfd] border-t border-neutral-200/80 h-[280vh]"
+          className="relative h-[280vh] bg-ink-950 border-t border-white/10 text-white"
         >
           {/* STICKY VIEWPORT CONTAINER: Remains pinned while user scrolls through the 280vh track */}
-          <div className="sticky top-0 h-screen flex flex-col justify-between py-12 sm:py-16 px-6 sm:px-12 overflow-hidden select-none">
+          <div className="sticky top-0 h-screen overflow-hidden select-none">
+            <div className="hero-light relative flex h-full flex-col justify-between py-12 sm:py-16 px-6 sm:px-12">
             
             {/* Top Bar inside Sticky Viewport */}
-            <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 z-20">
+            <div className="section-head reveal max-w-7xl mx-auto w-full z-20">
               <div>
-                <span className="text-xs font-mono text-neutral-400 uppercase tracking-widest flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                <span className="eyebrow font-mono text-white/60 flex items-center gap-2">
+                  <span className="pulse-ring w-2 h-2 rounded-full bg-[var(--success)] text-[var(--success)]"></span>
                   / 00:10 滚动驱动集群
                 </span>
-                <h2 className="font-display text-2xl sm:text-3xl font-bold text-neutral-950 mt-1">
+                <h2 className="display-3 mt-1">
                   生态圈与认证实验室
                 </h2>
               </div>
               
               {/* Dial Controls & Scroll Badge */}
               <div className="flex items-center gap-3">
-                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-100 border border-neutral-200 text-xs font-mono text-neutral-500">
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-xs font-mono text-white/70">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-bounce">
                     <rect x="5" y="2" width="14" height="20" rx="7"></rect>
                     <line x1="12" y1="6" x2="12" y2="10"></line>
@@ -163,19 +164,19 @@ function CircularWheelShowcase({ onSelectCategory }) {
                   <button 
                     onClick={() => scrollToItem(Math.max(0, activeIndex - 1))}
                     aria-label="上一个"
-                    className="w-9 h-9 rounded-full border border-neutral-300 hover:border-neutral-900 flex items-center justify-center text-neutral-700 hover:text-black transition cursor-pointer"
+                    className="w-9 h-9 rounded-full border border-white/15 hover:border-[var(--accent)] hover:text-[var(--accent)] flex items-center justify-center text-white/70 transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 active:scale-95"
                   >
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <polyline points="15 18 9 12 15 6"></polyline>
                     </svg>
                   </button>
-                  <span className="text-xs font-mono text-neutral-700 font-bold px-2">
+                  <span className="text-xs font-mono text-white font-bold px-2 tnum">
                     {String(activeIndex + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
                   </span>
                   <button 
                     onClick={() => scrollToItem(Math.min(count - 1, activeIndex + 1))}
                     aria-label="下一个"
-                    className="w-9 h-9 rounded-full border border-neutral-300 hover:border-neutral-900 flex items-center justify-center text-neutral-700 hover:text-black transition cursor-pointer"
+                    className="w-9 h-9 rounded-full border border-white/15 hover:border-[var(--accent)] hover:text-[var(--accent)] flex items-center justify-center text-white/70 transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 active:scale-95"
                   >
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <polyline points="9 18 15 12 9 6"></polyline>
@@ -191,7 +192,7 @@ function CircularWheelShowcase({ onSelectCategory }) {
               {/* LEFT: Continuous Scroll-Driven Circular Arc */}
               <div className="lg:col-span-7 relative h-[440px] sm:h-[500px] overflow-visible">
                 {/* Reference circular orbit curve */}
-                <div className="absolute -left-[160px] sm:-left-[180px] top-1/2 -translate-y-1/2 w-[860px] h-[860px] rounded-full border border-neutral-200/50 pointer-events-none hidden sm:block"></div>
+                <div className="absolute -left-[160px] sm:-left-[180px] top-1/2 -translate-y-1/2 w-[860px] h-[860px] rounded-full border border-white/10 pointer-events-none hidden sm:block"></div>
 
                 {entities.map((item, idx) => {
                   const diff = idx - continuousIndex;
@@ -224,15 +225,15 @@ function CircularWheelShowcase({ onSelectCategory }) {
                         opacity: opacity,
                         transition: 'transform 0.08s ease-out, opacity 0.15s ease-out',
                       }}
-                      className={`absolute left-0 top-0 text-left whitespace-nowrap group font-display tracking-tight cursor-pointer ${
+                      className={`absolute left-0 top-0 text-left whitespace-nowrap group font-display tracking-tight cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                         isCurrent 
-                          ? 'text-neutral-900 font-bold text-3xl sm:text-4xl lg:text-[42px] z-30' 
-                          : 'text-neutral-400 hover:text-neutral-700 font-medium text-2xl sm:text-3xl z-10'
+                          ? 'text-white font-bold text-3xl sm:text-4xl lg:text-[42px] z-30' 
+                          : 'text-white/35 hover:text-white/70 font-medium text-2xl sm:text-3xl z-10'
                       }`}
                     >
                       <span>{item.name}</span>
                       {isCurrent && (
-                        <span className="inline-block w-2.5 h-2.5 rounded-full bg-neutral-900 ml-3 align-middle animate-pulse"></span>
+                        <span className="inline-block w-2.5 h-2.5 rounded-full bg-[var(--accent)] ml-3 align-middle animate-pulse"></span>
                       )}
                     </button>
                   );
@@ -243,22 +244,22 @@ function CircularWheelShowcase({ onSelectCategory }) {
               <div className="lg:col-span-5 pt-6 lg:pt-0 lg:pl-10 relative z-20">
                 <div 
                   key={activeItem.name} 
-                  className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 max-w-md"
+                  className="plate-dark p-6 sm:p-7 space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 max-w-md"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-[11px] font-mono font-bold tracking-wider uppercase bg-neutral-100 text-neutral-800 px-3 py-1 rounded-full border border-neutral-200">
+                    <span className="text-[11px] font-mono font-bold tracking-wider uppercase bg-white/10 text-white px-3 py-1 rounded-full border border-white/15">
                       {activeItem.category}
                     </span>
-                    <span className="text-xs text-neutral-400 font-medium">
+                    <span className="text-xs text-[var(--meta)] font-medium tnum">
                       {activeItem.stat}
                     </span>
                   </div>
 
-                  <h3 className="font-display text-4xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
-                    {activeItem.name}<span className="text-2xl sm:text-3xl text-neutral-400 font-normal ml-0.5">™</span>
+                  <h3 className="display-2">
+                    {activeItem.name}<span className="text-2xl sm:text-3xl text-white/40 font-normal ml-0.5">™</span>
                   </h3>
 
-                  <p className="text-base sm:text-lg text-neutral-500 font-normal leading-relaxed">
+                  <p className="text-base sm:text-lg text-white/70 font-normal leading-relaxed">
                     {activeItem.desc}
                   </p>
 
@@ -267,12 +268,12 @@ function CircularWheelShowcase({ onSelectCategory }) {
                       onClick={() => {
                         if (onSelectCategory) onSelectCategory(activeItem.name);
                       }}
-                      className="px-6 py-3.5 bg-neutral-950 hover:bg-neutral-800 text-white rounded-full font-display text-xs font-bold tracking-wider uppercase transition shadow-md hover:-translate-y-0.5 cursor-pointer"
+                      className="px-6 py-3.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)] text-white rounded-full font-display text-xs font-bold tracking-wider uppercase transition shadow-card hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 active:scale-[0.98]"
                     >
                       探索 {activeItem.name} 专区 →
                     </button>
-                    <span className="text-xs text-neutral-400 flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span className="text-xs text-white/60 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-[var(--success)]"></span>
                       已认证校内交易
                     </span>
                   </div>
@@ -283,17 +284,18 @@ function CircularWheelShowcase({ onSelectCategory }) {
             </div>
 
             {/* Bottom Scroll Progress Bar */}
-            <div className="max-w-7xl mx-auto w-full pt-4 border-t border-neutral-200/60 flex items-center justify-between text-xs text-neutral-400 font-mono">
-              <span>滚动进度：{Math.round((continuousIndex / (count - 1)) * 100)}%</span>
-              <div className="w-48 bg-neutral-200 h-1.5 rounded-full overflow-hidden">
+            <div className="reveal max-w-7xl mx-auto w-full pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/60 font-mono">
+              <span className="tnum">滚动进度：{Math.round((continuousIndex / (count - 1)) * 100)}%</span>
+              <div className="w-48 bg-white/15 h-1.5 rounded-full overflow-hidden">
                 <div 
-                  className="bg-neutral-900 h-full rounded-full transition-all duration-75"
+                  className="bg-[var(--accent)] h-full rounded-full transition-all duration-75"
                   style={{ width: `${(continuousIndex / (count - 1)) * 100}%` }}
                 ></div>
               </div>
               <span className="uppercase tracking-wider">河大同享核心引擎</span>
             </div>
 
+            </div>
           </div>
         </section>
       );
