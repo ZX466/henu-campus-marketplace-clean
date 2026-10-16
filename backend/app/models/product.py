@@ -6,9 +6,9 @@ from datetime import datetime
 class SellerInfo(BaseModel):
     model_config = {"extra": "ignore"}
 
-    name: str = "Campus Senior"
+    name: str = "校园同学"
 
-    email: Optional[str] = "senior@campus.edu"
+    email: Optional[str] = "senior@henu.edu.cn"
 
     avatar: Optional[str] = (
         "https://images.unsplash.com/"
@@ -21,7 +21,7 @@ class SellerInfo(BaseModel):
     verified: Optional[bool] = True
 
     department: Optional[str] = (
-        "Computer Science / Medicine"
+        "计算机科学与技术学院"
     )
 
 
@@ -30,27 +30,28 @@ class ProductBase(BaseModel):
 
     title: str = Field(
         ...,
-        example="Lab Notebook"
+        example="高等数学（同济第七版）"
     )
 
     category: str = Field(
         ...,
-        example="Notes & Material"
+        example="书籍"
     )
 
     stream: Optional[str] = Field(
-        "engineering",
-        example="engineering"
+        "book",
+        example="book"
     )
+    # book, digital, living, transport
 
     price: float = Field(
         ...,
-        example=15.0
+        example=18.0
     )
 
     originalPrice: Optional[float] = Field(
         None,
-        example=25.0
+        example=58.0
     )
 
     mode: Optional[str] = Field(
@@ -60,8 +61,8 @@ class ProductBase(BaseModel):
     # BUY, RENT, EXCHANGE
 
     condition: Optional[str] = Field(
-        "Like New",
-        example="Like New (Mint)"
+        "几乎全新",
+        example="九成新，少量笔记"
     )
 
     stock: Optional[int] = Field(
@@ -70,13 +71,13 @@ class ProductBase(BaseModel):
     )
 
     campus: Optional[str] = Field(
-        "Jadavpur University",
-        example="Jadavpur University"
+        "金明校区",
+        example="金明校区"
     )
 
     pickupLocation: Optional[str] = Field(
-        "Central Library Foyer",
-        example="Central Library Foyer"
+        "图书馆门口",
+        example="金明校区图书馆门口"
     )
 
     image: Optional[str] = Field(
@@ -87,7 +88,7 @@ class ProductBase(BaseModel):
 
     description: Optional[str] = Field(
         "",
-        example="High quality semester notes and materials."
+        example="适合大一高数课程使用，书页完整，有少量笔记。"
     )
 
     # Seller information

@@ -29,3 +29,10 @@
   `.\backend\.venv\Scripts\python.exe -m compileall backend`
   与 `.\backend\.venv\Scripts\python.exe -m pytest backend -q`。
 - 提交前用 `git status` 确认第 2 条列出的文件不在暂存区里。
+
+## 5. 交付后关闭开发服务
+
+- 提交或推送完成后，把本次为演示/测试启动的开发服务关掉
+  （前端 Vite dev server、后端 uvicorn、临时浏览器进程等），
+  不要长期占用用户的端口和电脑资源。
+- 需要继续演示时再重新启动，并在交付信息里写清楚当前是否仍在运行。

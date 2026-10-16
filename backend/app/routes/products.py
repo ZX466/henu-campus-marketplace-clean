@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Query, Depends
+from fastapi import APIRouter, status, Query, Depends
 from bson import ObjectId
 from datetime import datetime
 from typing import List, Optional
@@ -11,11 +11,13 @@ from app.models.product import (
 )
 from app.data.initial_data import INITIAL_PRODUCTS
 from app.core.auth import get_current_user
+from app.core.errors import ERROR_RESPONSES, ApiError
 
 
 router = APIRouter(
     prefix="/api/v1/products",
     tags=["Products & Inventory CRUD"],
+    responses=ERROR_RESPONSES,
 )
 
 
@@ -72,7 +74,7 @@ def get_id_filter(product_id: str) -> dict:
 async def list_products(
     stream: Optional[str] = Query(
         None,
-        description="Filter by stream: medical, engineering, general",
+        description="Filter by stream: book, digital, living, transport",
     ),
 
     category: Optional[str] = Query(
@@ -187,10 +189,12 @@ async def get_product(
     )
 
     if not doc:
-        raise HTTPException(
-            status_code=404,
-            detail="Product not found in database",
+        raise ApiError(
+            404,
+            "Product not found in database",
+            code="PRODUCT_NOT_FOUND",
         )
+
 
     return serialize_doc(doc)
 
@@ -367,9 +371,10 @@ async def update_product(
     )
 
     if not existing:
-        raise HTTPException(
-            status_code=404,
-            detail="Product not found to update",
+        raise ApiError(
+            404,
+            "Product not found to update",
+            code="PRODUCT_NOT_FOUND",
         )
 
     current_user_id = str(
@@ -387,20 +392,17 @@ async def update_product(
     # ------------------------------------------------------------------------
 
     if not existing_seller_id:
-        raise HTTPException(
-            status_code=403,
-            detail=(
-                "This product is not assigned "
-                "to a seller and cannot be edited."
-            ),
+        raise ApiError(
+            403,
+            "This product is not assigned to a seller and cannot be edited.",
+            code="PRODUCT_UNASSIGNED",
         )
 
     if str(existing_seller_id) != current_user_id:
-        raise HTTPException(
-            status_code=403,
-            detail=(
-                "You can only edit your own listings"
-            ),
+        raise ApiError(
+            403,
+            "You can only edit your own listings",
+            code="PRODUCT_NOT_OWNED",
         )
 
     # ------------------------------------------------------------------------
@@ -414,9 +416,10 @@ async def update_product(
     }
 
     if not fields:
-        raise HTTPException(
-            status_code=400,
-            detail="No fields provided for update",
+        raise ApiError(
+            400,
+            "No fields provided for update",
+            code="PRODUCT_UPDATE_EMPTY",
         )
 
     # Protect ownership fields.
@@ -432,9 +435,10 @@ async def update_product(
     )
 
     if result.matched_count == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Product not found to update",
+        raise ApiError(
+            404,
+            "Product not found to update",
+            code="PRODUCT_NOT_FOUND",
         )
 
     updated_product = await db["products"].find_one(
@@ -470,9 +474,10 @@ async def delete_product(
     )
 
     if not existing:
-        raise HTTPException(
-            status_code=404,
-            detail="Product not found",
+        raise ApiError(
+            404,
+            "Product not found",
+            code="PRODUCT_NOT_FOUND",
         )
 
     current_user_id = str(
@@ -489,20 +494,17 @@ async def delete_product(
     # ------------------------------------------------------------------------
 
     if not existing_seller_id:
-        raise HTTPException(
-            status_code=403,
-            detail=(
-                "This product is not assigned "
-                "to a seller and cannot be deleted."
-            ),
+        raise ApiError(
+            403,
+            "This product is not assigned to a seller and cannot be deleted.",
+            code="PRODUCT_UNASSIGNED",
         )
 
     if str(existing_seller_id) != current_user_id:
-        raise HTTPException(
-            status_code=403,
-            detail=(
-                "You can only delete your own listings"
-            ),
+        raise ApiError(
+            403,
+            "You can only delete your own listings",
+            code="PRODUCT_NOT_OWNED",
         )
 
     result = await db["products"].delete_one(
@@ -510,9 +512,10 @@ async def delete_product(
     )
 
     if result.deleted_count != 1:
-        raise HTTPException(
-            status_code=404,
-            detail="Product could not be deleted",
+        raise ApiError(
+            404,
+            "Product could not be deleted",
+            code="PRODUCT_NOT_FOUND",
         )
 
     return {
