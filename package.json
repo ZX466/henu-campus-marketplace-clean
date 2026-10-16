@@ -8,7 +8,13 @@
     "dev:backend": "node scripts/start-backend.cjs",
     "build": "npm --prefix frontend run build",
     "preview": "npm --prefix frontend run preview",
-    "install:frontend": "node scripts/install-frontend.cjs"
+    "install:frontend": "node scripts/install-frontend.cjs",
+    "setup:backend": "node scripts/setup-backend.cjs",
+    "setup": "npm install && npm run install:frontend && npm run setup:backend",
+    "check:health": "node scripts/check-health.cjs",
+    "db:start": "node scripts/mongo-docker.cjs start",
+    "db:stop": "node scripts/mongo-docker.cjs stop",
+    "db:status": "node scripts/mongo-docker.cjs status"
   },
   "keywords": [
     "campuscart",
@@ -22,5 +28,8 @@
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^10.0.5"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
