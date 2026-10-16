@@ -114,6 +114,14 @@ async def login(
             detail="Email is required",
         )
 
+    # 密码必须显式提供：空密码既不能开户也不能登录，
+    # 否则任何账号都能被空口令登入
+    if not payload.password:
+        raise HTTPException(
+            status_code=400,
+            detail="Password is required",
+        )
+
     roll, default_name, default_dept, default_campus, default_hostel = (
         derive_student_details(email)
     )
@@ -139,9 +147,7 @@ async def login(
                 "dept": default_dept,
                 "campus": default_campus,
                 "hostel": default_hostel,
-                "password_hash": hash_password(
-                    payload.password or "student123"
-                ),
+                "password_hash": hash_password(payload.password),
                 "verified": True,
                 "trustScore": 99,
                 "created_at": now,
@@ -161,11 +167,7 @@ async def login(
         else:
             stored_hash = user_doc.get("password_hash")
 
-            if (
-                stored_hash
-                and payload.password
-                and payload.password != "campuscart-demo-password"
-            ):
+            if stored_hash and payload.password:
                 if not verify_password(
                     payload.password,
                     stored_hash,
@@ -309,9 +311,7 @@ async def register(
             "dept": req.department or dept,
             "campus": req.campus or campus,
             "hostel": hostel,
-            "password_hash": hash_password(
-                req.password or "student123"
-            ),
+            "password_hash": hash_password(req.password),
             "verified": True,
             "trustScore": 99,
             "created_at": now,
