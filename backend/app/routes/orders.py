@@ -1,14 +1,19 @@
 from datetime import datetime
 import secrets
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from bson import ObjectId
 
 from app.core.auth import get_current_user
+from app.core.errors import ERROR_RESPONSES, ApiError
 from app.core.mongodb import get_database
 from app.core.mongodb import mongo_manager
 from app.models.order import CheckoutRequest
 
-router = APIRouter(prefix="/api/v1/orders", tags=["Orders & Checkout"])
+router = APIRouter(
+    prefix="/api/v1/orders",
+    tags=["Orders & Checkout"],
+    responses=ERROR_RESPONSES,
+)
 
 @router.get("")
 async def list_orders(current=Depends(get_current_user)):
@@ -23,7 +28,7 @@ async def list_orders(current=Depends(get_current_user)):
 @router.post("/checkout")
 async def checkout(payload: CheckoutRequest, current=Depends(get_current_user)):
     if not payload.items:
-        raise HTTPException(status_code=400, detail="Cart is empty")
+        raise ApiError(400, "Cart is empty", code="CART_EMPTY")
 
     client = mongo_manager.client
     if client is None:
@@ -48,11 +53,19 @@ async def checkout(payload: CheckoutRequest, current=Depends(get_current_user)):
 
                     product = await db["products"].find_one(product_filter, session=sess)
                     if not product:
-                        raise HTTPException(status_code=404, detail=f"Product {item.id} not found")
+                        raise ApiError(
+                            404,
+                            f"Product {item.id} not found",
+                            code="ORDER_ITEM_NOT_FOUND",
+                        )
 
                     stock = int(product.get("stock", 0) or 0)
                     if stock < item.qty:
-                        raise HTTPException(status_code=409, detail=f"Only {stock} of {product.get('title', item.title)} available")
+                        raise ApiError(
+                            409,
+                            f"Only {stock} of {product.get('title', item.title)} available",
+                            code="INSUFFICIENT_STOCK",
+                        )
 
                     updated = await db["products"].update_one(
                         {**product_filter, "stock": {"$gte": item.qty}},
@@ -60,7 +73,11 @@ async def checkout(payload: CheckoutRequest, current=Depends(get_current_user)):
                         session=sess,
                     )
                     if updated.modified_count != 1:
-                        raise HTTPException(status_code=409, detail=f"Stock changed for {product.get('title', item.title)}")
+                        raise ApiError(
+                            409,
+                            f"Stock changed for {product.get('title', item.title)}",
+                            code="STOCK_CHANGED",
+                        )
 
                     snapshot = item.model_dump()
                     snapshot["price"] = float(product.get("price", item.price))
@@ -127,15 +144,19 @@ async def cancel_order(order_id: str, current=Depends(get_current_user)):
     try:
         oid = ObjectId(order_id)
     except Exception:
-        raise HTTPException(status_code=400, detail="Invalid order id")
+        raise ApiError(400, "Invalid order id", code="INVALID_ORDER_ID")
 
     order = await db["orders"].find_one({"_id": oid, "buyer_id": current["sub"]})
     if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise ApiError(404, "Order not found", code="ORDER_NOT_FOUND")
     if order.get("status") == "Cancelled":
         return {"id": order_id, "status": "Cancelled"}
     if order.get("status") in {"Completed", "Ready for Pickup"}:
-        raise HTTPException(status_code=409, detail="This order can no longer be cancelled")
+        raise ApiError(
+            409,
+            "This order can no longer be cancelled",
+            code="ORDER_NOT_CANCELLABLE",
+        )
 
     async with await mongo_manager.client.start_session() as session:
         async def transaction(sess):

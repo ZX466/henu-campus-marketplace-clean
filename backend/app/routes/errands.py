@@ -1,13 +1,18 @@
 from datetime import datetime
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 
 from app.core.auth import get_current_user
+from app.core.errors import ERROR_RESPONSES, ApiError
 from app.core.mongodb import get_database
 from app.models.errand import ErrandAction, ErrandCreate
 
-router = APIRouter(prefix="/api/v1/errands", tags=["Errands"])
+router = APIRouter(
+    prefix="/api/v1/errands",
+    tags=["Errands"],
+    responses=ERROR_RESPONSES,
+)
 
 
 def _serialize(doc: dict) -> dict:
@@ -64,7 +69,7 @@ async def create_errand(payload: ErrandCreate, current=Depends(get_current_user)
 async def _get_task(db, task_id: str) -> dict:
     doc = await db["errands"].find_one({"task_id": task_id})
     if not doc:
-        raise HTTPException(status_code=404, detail="Errand task not found")
+        raise ApiError(404, "Errand task not found", code="ERRAND_NOT_FOUND")
     return doc
 
 
@@ -77,9 +82,17 @@ async def claim_errand(
     db = get_database()
     doc = await _get_task(db, task_id)
     if doc["status"] != "open":
-        raise HTTPException(status_code=409, detail=f"Task is {doc['status']}, not open")
+        raise ApiError(
+            409,
+            f"Task is {doc['status']}, not open",
+            code="ERRAND_NOT_OPEN",
+        )
     if doc["creator_id"] == current["sub"]:
-        raise HTTPException(status_code=409, detail="Creator cannot claim own task")
+        raise ApiError(
+            409,
+            "Creator cannot claim own task",
+            code="ERRAND_SELF_CLAIM",
+        )
 
     update = {
         "$set": {
@@ -103,11 +116,17 @@ async def complete_errand(
     db = get_database()
     doc = await _get_task(db, task_id)
     if doc["status"] != "claimed":
-        raise HTTPException(
-            status_code=409, detail=f"Task is {doc['status']}, only claimed tasks can be completed"
+        raise ApiError(
+            409,
+            f"Task is {doc['status']}, only claimed tasks can be completed",
+            code="ERRAND_NOT_CLAIMED",
         )
     if current["sub"] not in (doc["creator_id"], doc.get("claimer_id")):
-        raise HTTPException(status_code=403, detail="Only creator or claimer can complete the task")
+        raise ApiError(
+            403,
+            "Only creator or claimer can complete the task",
+            code="ERRAND_NOT_PARTICIPANT",
+        )
 
     update = {"$set": {"status": "completed", "updated_at": datetime.utcnow().isoformat()}}
     if payload and payload.note:

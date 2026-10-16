@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from app.core.config import settings
+from app.core.errors import register_error_handlers
 from app.core.mongodb import get_database, check_mongo_health, mongo_manager
 from app.routes.products import router as products_router
 from app.routes.auth import router as auth_router
@@ -63,6 +64,9 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
+
+# 统一 400 / 401 / 403 / 404 / 409 / 422 / 500 的错误响应格式
+register_error_handlers(app)
 
 
 # --------------------------------------------------
