@@ -58,6 +58,11 @@ py -3.12 -m venv backend\.venv
 .\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 ```
 
+> 本机没有安装 Python Launcher（`py` 命令）时，改用：
+> `python -m venv backend\.venv`
+> （确认 `python --version` 为 3.12.x；若不是，改用上面的 uv 版，
+> uv 可用 `--python 3.12` 自动取得对应解释器）
+
 macOS/Linux：
 
 ```bash
@@ -85,7 +90,7 @@ python3.12 -m venv backend/.venv
 | --- | --- |
 | 页面能打开但登录/同步失败 | 访问 MongoDB 检查地址；`connected: false` 时检查 MongoDB 服务和 `.env` 的 `MONGO_URI`。无 MongoDB 时登录走本地临时回退，重启即失效；注册和数据写入需恢复数据库 |
 | 找不到后端虚拟环境 / 找不到 fastapi | 在仓库根目录按上面步骤创建 `backend\.venv` 并装依赖；已有则直接复用 |
-| `py -3.12` 无法识别 | 用 `py --list` 查看本机登记的版本标识（如 `py -V:Astral/CPython3.12.15 -m venv backend\.venv`），或改用 uv 版 |
+| `py -3.12` 无法识别 | 本机未装 Python Launcher：改用 `python -m venv backend\.venv`，或直接用 uv 版（`uv venv backend\.venv --python 3.12`，uv 会自动下载 3.12 解释器） |
 | `npm` 报 `ENOENT` 找不到 `package.json` | 当前目录错误：回到仓库根目录再执行 |
 | `npm error code EALLOWSCRIPTS` | npm 12 会把用户 `.npmrc` 的 `allow-scripts` 条目经环境变量带入嵌套安装并拒绝。项目已内置修复（`install:frontend` 走 `scripts/install-frontend.cjs` 清理环境变量）；若直接在 `frontend/` 里安装仍报错，检查用户级 `.npmrc` 的 `allow-scripts` 行 |
 | `npm error Exit handler never called!` | npm 11 兼容性问题：优先换 Node 20 LTS（npm 10）；或清理后用官方源重装（不要删 `package-lock.json`） |
