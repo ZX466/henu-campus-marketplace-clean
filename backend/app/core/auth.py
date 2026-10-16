@@ -5,9 +5,10 @@ import json
 import time
 from typing import Optional
 
-from fastapi import Cookie, Header, HTTPException, status
+from fastapi import Cookie, Header, status
 
 from app.core.config import settings
+from app.core.errors import ApiError
 
 SESSION_MAX_AGE = 60 * 60 * 24 * 7
 
@@ -58,10 +59,18 @@ async def get_current_user(
             token = authorization.strip()
 
     if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
+        raise ApiError(
+            status.HTTP_401_UNAUTHORIZED,
+            "Authentication required",
+            code="AUTH_REQUIRED",
+        )
 
     payload = decode_session_token(token)
     if not payload:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired session")
+        raise ApiError(
+            status.HTTP_401_UNAUTHORIZED,
+            "Invalid or expired session",
+            code="AUTH_INVALID_SESSION",
+        )
 
     return payload
