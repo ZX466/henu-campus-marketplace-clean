@@ -3,7 +3,7 @@
 Covers the login rules the frontend relies on:
 - an existing user with the wrong password is rejected (401)
 - the "campuscart-demo-password" placeholder cannot bypass that check
-- a brand-new henu email is auto-provisioned (first-time login)
+- an unregistered henu email is rejected (must register first)
 """
 import pytest
 import pytest_asyncio
@@ -113,11 +113,11 @@ async def test_login_accepts_correct_password(client, registered_user):
     assert body["user"]["email"] == EXISTING_EMAIL
 
 
-async def test_login_auto_provisions_new_henu_email(client):
+async def test_login_rejects_unregistered_email(client):
+    """Issue #11：未注册账号不能直接登录，必须先注册。"""
     response = await client.post(
         "/api/v1/auth/login",
         json={"email": "brand-new-user@henu.edu.cn", "password": "whatever"},
     )
 
-    assert response.status_code == 200, response.text
-    assert response.json().get("token")
+    assert response.status_code == 401, response.text

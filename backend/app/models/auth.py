@@ -64,6 +64,9 @@ class UserProfile(BaseModel):
 
     trustScore: int = 98
 
+    # True 表示该账号是历史自动创建、密码待认领重设
+    legacy_password_pending: bool = False
+
     created_at: Optional[str] = None
 
     last_login: Optional[str] = None

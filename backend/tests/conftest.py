@@ -43,7 +43,7 @@ def mongo_reachable(host: str = MONGO_HOST, port: int = MONGO_PORT, timeout: flo
 MONGO_AVAILABLE = mongo_reachable()
 
 # 需要真实 MongoDB 的测试模块（对外接口用例，走真实读写）
-MONGO_DEPENDENT_MODULES = {"test_errands"}
+MONGO_DEPENDENT_MODULES = {"test_errands", "test_auth_login", "test_mongo_singleton"}
 
 
 def pytest_collection_modifyitems(items):
