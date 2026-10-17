@@ -46,13 +46,14 @@
 
 | HTTP | 语义 | 错误码 | 触发场景示例 |
 | --- | --- | --- | --- |
-| 400 | 请求不合法 | `BAD_REQUEST` / `CART_EMPTY` / `INVALID_ORDER_ID` / `PRODUCT_UPDATE_EMPTY` | 空购物车结算、订单 id 非法、更新体没有任何字段 |
-| 401 | 未登录 / 会话失效 | `UNAUTHORIZED` / `AUTH_REQUIRED` / `AUTH_INVALID_SESSION` | 未带 token；token 被篡改或过期 |
+| 400 | 请求不合法 | `BAD_REQUEST` / `CART_EMPTY` / `INVALID_ORDER_ID` / `PRODUCT_UPDATE_EMPTY` / `AUTH_EMAIL_REQUIRED` / `AUTH_PASSWORD_REQUIRED` / `AUTH_EMAIL_TAKEN` | 空购物车结算、订单 id 非法、更新体没有任何字段、登录/注册缺少邮箱或密码、邮箱已注册 |
+| 401 | 未登录 / 会话失效 | `UNAUTHORIZED` / `AUTH_REQUIRED` / `AUTH_INVALID_SESSION` / `AUTH_UNREGISTERED` / `AUTH_INVALID_CREDENTIALS` / `AUTH_SESSION_INVALID` | 未带 token；token 被篡改或过期；未注册邮箱登录；密码错误 |
 | 403 | 无权限 | `FORBIDDEN` / `PRODUCT_UNASSIGNED` / `PRODUCT_NOT_OWNED` / `ERRAND_NOT_PARTICIPANT` | 改别人的商品；非创建者/接单者去完成跑腿 |
 | 404 | 资源不存在 | `NOT_FOUND` / `PRODUCT_NOT_FOUND` / `ORDER_NOT_FOUND` / `ORDER_ITEM_NOT_FOUND` / `ERRAND_NOT_FOUND` | 商品/订单/跑腿任务不存在 |
 | 409 | 状态冲突 | `CONFLICT` / `ERRAND_NOT_OPEN` / `ERRAND_SELF_CLAIM` / `ERRAND_NOT_CLAIMED` / `INSUFFICIENT_STOCK` / `STOCK_CHANGED` / `ORDER_NOT_CANCELLABLE` | 重复接单；创建者接自己的单；库存不足 |
 | 422 | 字段校验失败 | `VALIDATION_ERROR` | 缺必填字段、`reward < 0`、`qty < 1` |
-| 500 | 服务端异常 | `INTERNAL_ERROR` | 未捕获异常（不向前端泄露堆栈） |
+| 500 | 服务端异常 | `INTERNAL_ERROR` / `AUTH_REGISTER_FAILED` | 未捕获异常（不向前端泄露堆栈）；注册写库失败 |
+| 503 | 依赖服务不可用 | `AUTH_SERVICE_UNAVAILABLE` | 登录时 MongoDB 不可达 |
 
 ### 2.2 401 未登录
 
@@ -251,22 +252,67 @@ open ──claim(接单)──> claimed ──complete(完成)──> completed
 | POST | `/api/v1/errands/{task_id}/claim` | 是 | 可选 `{note}` | `200` 跑腿对象（`status=claimed`） | `401`、`404` `ERRAND_NOT_FOUND`、`409` `ERRAND_NOT_OPEN` / `ERRAND_SELF_CLAIM` |
 | POST | `/api/v1/errands/{task_id}/complete` | 是 | 可选 `{note}` | `200` 跑腿对象（`status=completed`） | `401`、`403` `ERRAND_NOT_PARTICIPANT`、`404`、`409` `ERRAND_NOT_CLAIMED` |
 
-## 6. 健康检查
+## 6. 认证接口（Authentication）
+
+> 周期一整合说明：采用 PR #25 的「必须已注册才能登录」语义（Issue #11 要求），
+> 历史自动创建的账号可以在「注册」页用同一邮箱认领并设置新密码，
+> 详见 `docs/auth-legacy-accounts.md`。
+
+### 6.1 接口清单
+
+| 方法 | 路径 | 认证 | 请求 | 成功响应 | 主要错误 |
+| --- | --- | --- | --- | --- | --- |
+| POST | `/api/v1/auth/login` | 否 | `{email, password}` | `200 {success, token, token_type, message, user}` | `400` `AUTH_EMAIL_REQUIRED` / `AUTH_PASSWORD_REQUIRED`；`401` `AUTH_UNREGISTERED` / `AUTH_INVALID_CREDENTIALS`；`422`；`503` `AUTH_SERVICE_UNAVAILABLE` |
+| POST | `/api/v1/auth/register` | 否 | `{email, password, name?, roll?, department?, campus?}` | `200 {success, token, token_type, message, user}` | `400` `AUTH_EMAIL_TAKEN`；`422`；`500` `AUTH_REGISTER_FAILED` |
+| GET | `/api/v1/auth/me` | 是 | 无 | `200 {success, user}` | `401` `AUTH_REQUIRED` / `AUTH_INVALID_SESSION` / `AUTH_SESSION_INVALID` |
+| POST | `/api/v1/auth/logout` | 否 | 无 | `200 {message}` | — |
+
+### 6.2 UserProfile 字段
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | string | 用户 id |
+| `email` | string | 河南大学邮箱 |
+| `roll` | string | 学号 |
+| `name` | string | 姓名 |
+| `department` / `dept` | string | 院系 |
+| `campus` | string | 校区 |
+| `hostel` | string | 宿舍 |
+| `verified` | bool | 是否已认证 |
+| `trustScore` | int | 信任分 |
+| `created_at` / `last_login` | string \| null | 时间 |
+
+### 6.3 密码与缓存约定
+
+- 登录密码缺失或为空 → `400 AUTH_PASSWORD_REQUIRED`；注册密码缺失或为空 → `400`。
+- 未注册邮箱 → `401 AUTH_UNREGISTERED`（不再自动开户）。
+- 前端只缓存 token 与用户摘要，**不缓存密码**；登录成功后立即清空密码输入框。
+- 登录请求期间按钮显示「正在验证…」，失败后保留邮箱与密码输入，方便直接重试。
+
+## 7. 健康检查
 
 | 方法 | 路径 | 响应字段 |
 | --- | --- | --- |
 | GET | `/api/v1/health` | `status`、`service`、`version`、`timestamp` |
 | GET | `/api/v1/health/mongodb` | `status`、`database`、`db_name`、`products_count`、`connected`（失败时含 `error`） |
 
-## 7. 字段检查结论（周期一）
+## 8. 字段检查结论（周期一）
 
 1. **商品**：`stream` 默认值与示例原先写成 `engineering` / `medical`，与种子数据（`book/digital/living/transport`）不符，已修正；`campus`、`pickupLocation`、`condition`、`category` 等默认值原先仍是 Jadavpur / 英文示例，已统一为河南大学金明、明伦校区的中文默认值。
 2. **订单**：`status` 保持英文枚举（`Pending Pickup` 等），因为前端 `OrderHistory` 依赖该枚举做状态机映射；已在本文档固定下来，不再改动。
 3. **跑腿**：字段与状态机保持交付包三的合同，仅把错误码固定为 `ERRAND_*`。
 4. **认证**：注册/登录模型的示例值由 `Aarav Patel`、`Computer Science & Engineering` 改为中文校内示例。
-5. **错误**：新增 `app/core/errors.py`，对 400/401/403/404/409/422/500 统一封装，`detail` 保持字符串以兼容旧前端。
+5. **错误**：新增 `app/core/errors.py`，对 400/401/403/404/409/422/500/503 统一封装，`detail` 保持字符串以兼容旧前端；认证接口也补上了稳定的 `AUTH_*` 错误码。
+6. **分支整合**：本文件随 `feature/period-1-integration` 更新，已合并 PR #22（开发环境/数据库启动）、#23（学报版 UI + 空密码修复）、#25（注册登录与会话恢复）。
+   - 前端界面与交互以 #23 的学报版设计为准（保留其懒加载、夜间模式）；
+   - 认证语义以 #25 为准（未注册不能登录、历史账号可认领），#23 中「登录自动开户」的测试已同步改为断言 `401`；
+   - 开发脚本、健康检查、MongoDB 事务提示以 #22 为准。
+7. **订单响应字段（本次修复）**：`POST /api/v1/orders/checkout` 的成功响应只包含字符串 `id`，**不能带 MongoDB 的 `_id`（ObjectId）**。
+   此前 `insert_one()` 会把 `_id` 写回返回字典，导致事务已经提交、接口却因为 JSON 序列化失败返回 `500`；
+   现在已显式 `pop("_id")`，并实测下单返回 `200 {id, status:"Pending Pickup", ...}`。
+8. **事务前置条件**：订单接口依赖 MongoDB 副本集。单机模式的 `mongod` 会直接让下单失败，请用 `npm run db:start` 启动 Docker 副本集（`rs0`），健康检查里 `transactions_supported` 必须为 `true`。
 
-## 8. 验证方式
+## 9. 验证方式
 
 ```powershell
 # 后端单元测试（含统一错误格式用例）
@@ -280,7 +326,7 @@ open ──claim(接单)──> claimed ──complete(完成)──> completed
 # 浏览器打开 http://localhost:8000/docs
 ```
 
-## 9. 交付物
+## 10. 交付物
 
 | 交付物 | 位置 | 说明 |
 | --- | --- | --- |

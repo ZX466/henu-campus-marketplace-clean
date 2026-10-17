@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 
 from app.core.config import settings
 from app.core.errors import register_error_handlers
-from app.core.mongodb import get_database, check_mongo_health, mongo_manager
+from app.core.mongodb import get_database, check_mongo_health, describe_topology, mongo_manager, redact_mongo_uri
 from app.routes.products import router as products_router
 from app.routes.auth import router as auth_router
 from app.routes.cart import router as cart_router
@@ -29,10 +29,16 @@ logger = logging.getLogger("campuscart.api")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("🚀 Starting CampusCart API...")
+    logger.info(f"APP_ENV={settings.APP_ENV} | MongoDB={redact_mongo_uri(settings.MONGO_URI)}/{settings.MONGO_DB_NAME} | FRONTEND_URL={settings.FRONTEND_URL}")
+    if settings.uses_default_secret:
+        logger.warning("⚠️ JWT_SECRET_KEY 仍是默认值：本地开发可以，部署前必须在 .env 中换成随机长字符串。")
     try:
         db = get_database()
         await db.command("ping")
         logger.info("✅ Connected to MongoDB successfully!")
+        topo = await describe_topology(db)
+        if not topo["transactions_supported"]:
+            logger.warning("⚠️ MongoDB 是单机模式，下单/取消订单需要事务会失败；请以副本集方式启动，见 docs/dev-environment.md。")
 
         # Option 1: Auto-seed initial items if collection is empty
         count = await db["products"].count_documents({})
@@ -74,15 +80,17 @@ register_error_handlers(app)
 # --------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        # Local development
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
+    allow_origins=sorted({
+        # Local development（前端固定 3334 端口）
         "http://localhost:3334",
         "http://127.0.0.1:3334",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
         # Vercel production frontend (no trailing slash!)
         "https://campuscart-iota-one.vercel.app",
-    ],
+        # .env 中配置的前端地址（部署时改这里即可）
+        settings.FRONTEND_URL.rstrip("/"),
+    }),
     allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
@@ -98,6 +106,7 @@ async def health_check():
         "status": "healthy",
         "service": "CampusCart API",
         "version": settings.APP_VERSION,
+        "environment": settings.APP_ENV,
         "timestamp": datetime.utcnow().isoformat()
     }
 

@@ -1,114 +1,656 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
-  --font-sans: "Plus Jakarta Sans", sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
-  --color-brand-50: #f8fafc;
-  --color-brand-900: #090d16;
-  --color-brand-950: #030712;
-  --color-accent-teal: #14b8a6;
-  --color-accent-indigo: #6366f1;
-}
-
 /* =============================================================================
    河大同享 — 河南大学校园二手交易与互助平台样式表
-   校园风格视觉、微交互与排版
+   学报版 v3 · 孔版印刷（Risograph）设计系统
+   方向：新闻纸 + 双专色（孔版红 / 孔版蓝）+ 栏线网格 + 套色错位 + 橡皮图章。
+   反 AI 味：无蓝紫发光渐变、无通用三卡行、无超大圆角、无玻璃拟态、无 emoji 占位。
+   令牌集中于此；组件只引用类名与令牌，不散落硬编码值。
    ============================================================================= */
 
+@theme {
+  /* ---- 字体：中文衬线做展题（宋为主），系统无衬线做界面，等宽做眉标/数字 ---- */
+  --font-sans: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  --font-display: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", Georgia, "Times New Roman", serif;
+  --font-serif: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", Georgia, "Times New Roman", serif;
+  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- 暖墨层级（正文色 / 深色报底）---- */
+  --color-ink-950: #191510;
+  --color-ink-900: #221d16;
+  --color-ink-850: #2b261e;
+  --color-ink-800: #35302a;
+  --color-ink-700: #4a4238;
+  --color-ink-600: #6b6252;
+
+  /* ---- 新闻纸 ---- */
+  --color-brand-50: #f7f0e1;
+  --color-brand-900: #191510;
+  --color-brand-950: #100d09;
+  --color-accent-blue: #e5472a;
+
+  /* ---- 专色一 · 孔版红：覆盖 teal / indigo / sky 三套旧品牌色（动作 / 链接 / 焦点）---- */
+  --color-teal-50: #fdeeea;
+  --color-teal-100: #fbdad1;
+  --color-teal-200: #f7b8a8;
+  --color-teal-300: #f1917b;
+  --color-teal-400: #ea6a4e;
+  --color-teal-500: #e5472a;
+  --color-teal-600: #d13c20;
+  --color-teal-700: #bf3418;
+  --color-teal-800: #9a2a14;
+  --color-teal-900: #74200f;
+  --color-teal-950: #4a1409;
+
+  --color-indigo-50: #fdeeea;
+  --color-indigo-100: #fbdad1;
+  --color-indigo-200: #f7b8a8;
+  --color-indigo-300: #f1917b;
+  --color-indigo-400: #ea6a4e;
+  --color-indigo-500: #e5472a;
+  --color-indigo-600: #d13c20;
+  --color-indigo-700: #bf3418;
+  --color-indigo-800: #9a2a14;
+  --color-indigo-900: #74200f;
+  --color-indigo-950: #4a1409;
+
+  --color-sky-50: #fdeeea;
+  --color-sky-100: #fbdad1;
+  --color-sky-200: #f7b8a8;
+  --color-sky-300: #f1917b;
+  --color-sky-400: #ea6a4e;
+  --color-sky-500: #e5472a;
+  --color-sky-600: #d13c20;
+  --color-sky-700: #bf3418;
+  --color-sky-800: #9a2a14;
+  --color-sky-900: #74200f;
+  --color-sky-950: #4a1409;
+
+  /* ---- 中性：暖纸 / 暖墨（统一 slate / neutral）---- */
+  --color-neutral-50: #f7f0e1;
+  --color-neutral-100: #f1e7d3;
+  --color-neutral-200: #e7d9bd;
+  --color-neutral-300: #d3c1a0;
+  --color-neutral-400: #b3a184;
+  --color-neutral-500: #8c7f68;
+  --color-neutral-600: #6b6252;
+  --color-neutral-700: #554d40;
+  --color-neutral-800: #3d372e;
+  --color-neutral-900: #241f18;
+  --color-neutral-950: #131009;
+
+  --color-slate-50: #f7f0e1;
+  --color-slate-100: #f1e7d3;
+  --color-slate-200: #e7d9bd;
+  --color-slate-300: #d3c1a0;
+  --color-slate-400: #b3a184;
+  --color-slate-500: #8c7f68;
+  --color-slate-600: #6b6252;
+  --color-slate-700: #554d40;
+  --color-slate-800: #3d372e;
+  --color-slate-900: #241f18;
+  --color-slate-950: #131009;
+
+  /* ---- 语义橙：提示 / 待办（孔版土黄）---- */
+  --color-amber-50: #faf3e0;
+  --color-amber-100: #f4e6c2;
+  --color-amber-200: #edda9f;
+  --color-amber-300: #e2c469;
+  --color-amber-400: #d4ab34;
+  --color-amber-500: #bc8611;
+  --color-amber-600: #a06f0c;
+  --color-amber-700: #825a0d;
+  --color-amber-800: #63440c;
+  --color-amber-900: #3f2c07;
+
+  /* ---- 语义绿：成功 / 在线 / 可自提 ---- */
+  --color-success-50: #eef6ef;
+  --color-success-100: #d8ecdb;
+  --color-success-200: #b3dab8;
+  --color-success-300: #83c08c;
+  --color-success-400: #4ea061;
+  --color-success-500: #2f7d4f;
+  --color-success-600: #286a43;
+  --color-success-700: #215537;
+  --color-success-800: #193f29;
+  --color-success-900: #10291b;
+
+  /* ---- 语义红：错误 / 取消 / 危险（比专色更深、更沉）---- */
+  --color-danger-50: #f9ece9;
+  --color-danger-100: #f2d2ca;
+  --color-danger-200: #e8aca0;
+  --color-danger-300: #dc8071;
+  --color-danger-400: #cb5442;
+  --color-danger-500: #b02a1b;
+  --color-danger-600: #972317;
+  --color-danger-700: #7d1d13;
+  --color-danger-800: #5f160e;
+  --color-danger-900: #401009;
+
+  /* ---- 专色二 · 孔版蓝：图章 / 副标 ---- */
+  --color-azure-50: #eef2fb;
+  --color-azure-100: #dbe4f6;
+  --color-azure-200: #b7c9ed;
+  --color-azure-300: #8aa8e0;
+  --color-azure-400: #5b83cf;
+  --color-azure-500: #1f4fa0;
+  --color-azure-600: #1a4389;
+  --color-azure-700: #163b7a;
+  --color-azure-800: #112c5c;
+  --color-azure-900: #0c1e3f;
+
+  /* ---- 字重纪律：印刷以正文 400 / 展题 700 ---- */
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 700;
+  --font-weight-black: 800;
+
+  /* ---- 硬边圆角：印刷不做大圆角 ---- */
+  --radius-card: 3px;
+  --radius-panel: 4px;
+  --radius-hero: 4px;
+  --radius-field: 2px;
+  /* 覆盖 Tailwind 默认软圆角：rounded-sm/md/lg/xl/2xl/3xl 全部落到硬边（rounded-full 仍为圆） */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 6px;
+
+  /* ---- 套色投影（offset print）：硬边、无模糊 ---- */
+  --shadow-card: 3px 3px 0 rgba(25, 21, 16, .16);
+  --shadow-card-hover: 5px 5px 0 rgba(229, 71, 42, .9);
+  --shadow-panel: 4px 4px 0 rgba(25, 21, 16, .18);
+  --shadow-float: 6px 6px 0 rgba(25, 21, 16, .22);
+  /* 覆盖 Tailwind 默认软投影：shadow / shadow-sm/md/lg/xl/2xl 全部落到套色硬投影 */
+  --shadow: 3px 3px 0 rgba(25, 21, 16, .16);
+  --shadow-sm: 3px 3px 0 rgba(25, 21, 16, .16);
+  --shadow-md: 4px 4px 0 rgba(25, 21, 16, .18);
+  --shadow-lg: 5px 5px 0 rgba(25, 21, 16, .20);
+  --shadow-xl: 6px 6px 0 rgba(25, 21, 16, .22);
+  --shadow-2xl: 8px 8px 0 rgba(25, 21, 16, .24);
+
+  --ease-out-soft: cubic-bezier(0.28, 0, 0.22, 1);
+  --ease-in-soft: cubic-bezier(0.4, 0, 0.22, 1);
+}
+
+:root {
+  --bg: #f4ecdc;
+  --surface: #eee3cc;
+  --surface-warm: #efe4cf;
+  --paper: #f4ecdc;
+  --paper-2: #eee3cc;
+  --ink-100: #e7d9bd;
+  --hairline: rgba(25, 21, 16, .24);
+  --hairline-strong: rgba(25, 21, 16, .42);
+
+  --accent: #e5472a;
+  --accent-hover: #d13c20;
+  --accent-active: #bf3418;
+
+  /* 浮层：不透明报面 + 实描边（弃玻璃拟态） */
+  --glass-dark-bg: #191510;
+  --glass-dark-border: rgba(244, 236, 220, .24);
+  --glass-light-bg: #f4ecdc;
+  --glass-light-border: rgba(25, 21, 16, .42);
+
+  --teal: #e5472a;
+  --teal-ink: #bf3418;
+  --indigo: #1f4fa0;
+  --amber: #bc8611;
+  --danger: #b02a1b;
+
+  /* 扩展令牌 */
+  --fg: #191510;
+  --fg-2: #4a4238;
+  --muted: #6b6252;
+  --meta: #726754;
+  /* 深色报面专用辅助色（墨底上达标的浅色）——由 .on-ink 等深色容器切换 */
+  --muted-on-ink: #cbbca2;
+  --meta-on-ink: #b3a184;
+  /* 墨底（深色报面）材质令牌：收敛散落的 white/xx 魔数，日刊/夜刊同值 */
+  --on-ink-strong: rgba(255, 255, 255, .90); /* 墨底主文字 */
+  --on-ink: rgba(255, 255, 255, .70);        /* 墨底次要文字 */
+  --on-ink-soft: rgba(255, 255, 255, .50);   /* 墨底弱化文字（≈5.4:1） */
+  --plate-line: rgba(255, 255, 255, .10);    /* 墨底细描边 */
+  --plate-line-strong: rgba(255, 255, 255, .20);
+  --plate-line-stronger: rgba(255, 255, 255, .28);
+  --plate-fill-faint: rgba(255, 255, 255, .03); /* 墨底极淡填充 */
+  --plate-fill: rgba(255, 255, 255, .06);
+  --plate-fill-strong: rgba(255, 255, 255, .12);
+  --plate-fill-stronger: rgba(255, 255, 255, .20);
+  --border: #191510;
+  --border-soft: rgba(25, 21, 16, .16);
+  --success: #2f7d4f;
+  --warn: #bc8611;
+  --blue: #1f4fa0;
+  --elev-raised: 4px 4px 0 rgba(25, 21, 16, .18);
+  --focus-ring: 3px 3px 0 var(--accent);
+  --motion-fast: 120ms;
+  --motion-base: 220ms;
+  --ease-standard: cubic-bezier(0.28, 0, 0.22, 1);
+}
+
+/* ---------- 夜刊（深色报面）：可整体覆盖 :root ----------
+   由 <html data-theme="night"> 或 .dark 触发；切换与初值见规范 2.5 节。 */
+[data-theme="night"],
+.dark {
+  --bg: #16130e;
+  --surface: #1e1a13;
+  --surface-warm: #1e1a13;
+  --paper: #16130e;
+  --paper-2: #1e1a13;
+
+  --fg: #f2e8d4;
+  --fg-2: #cbbca2;
+  --muted: #b8a98d;
+  --meta: #a2947a;
+  --border: #f2e8d4;
+  --border-soft: rgba(242, 232, 212, .16);
+  --hairline: rgba(242, 232, 212, .26);
+  --hairline-strong: rgba(242, 232, 212, .46);
+  --ink-100: #26201a;
+
+  --accent: #ff6a4a;
+  --accent-hover: #ff8567;
+  --accent-active: #ff9d84;
+  --blue: #6f9dff;
+
+  --success: #5fbf81;
+  --warn: #e0b040;
+  --danger: #ff6a52;
+
+  --glass-dark-bg: #0d0b08;
+  --glass-light-bg: #16130e;
+  --glass-light-border: rgba(242, 232, 212, .34);
+  --shadow-card: 3px 3px 0 rgba(0, 0, 0, .5);
+  --shadow-card-hover: 5px 5px 0 rgba(255, 106, 74, .85);
+
+  color-scheme: dark;
+}
+
+/* 深色报面上的辅助文字（报眉 / 报头栏 / 页脚 / 移动菜单 / 通知 / 聊天 / 地图 / 机器人）：
+   切换到墨底达标的浅色令牌，避免浅色报面令牌（--meta/--muted 已按纸底加暗到 ≥4.5:1）
+   被带到深色背景上导致对比不足。 */
+.on-ink,
+.floating-pill,
+.plate-dark,
+.glass-dark {
+  --muted: var(--muted-on-ink);
+  --meta: var(--meta-on-ink);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: #fcfcfd;
-  color: #090d16;
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--fg);
+  letter-spacing: 0.002em;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 新闻纸质感：细密栏格（纯渐变，无外链纹理） */
+.newsprint-bg {
+  background-image:
+    repeating-linear-gradient(0deg, rgba(25, 21, 16, .03) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(90deg, rgba(25, 21, 16, .022) 0 1px, transparent 1px 6px);
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
 }
 
 .font-display {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-/* 大字水印排版（河大同享页脚水印） */
+/* 全站可见焦点环（孔版红硬边，键盘可达性） */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 大字水印排版（报底 / 报头水印） */
 .hero-watermark {
+  font-family: var(--font-display);
   font-size: clamp(4rem, 16vw, 15rem);
-  font-weight: 900;
-  letter-spacing: -0.05em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 0.8;
-  color: rgba(255, 255, 255, 0.22);
+  color: rgba(244, 236, 220, 0.10);
   pointer-events: none;
   user-select: none;
 }
 
 .hero-watermark-dark {
+  font-family: var(--font-display);
   font-size: clamp(4rem, 16vw, 15rem);
-  font-weight: 900;
-  letter-spacing: -0.05em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 0.8;
-  color: rgba(0, 0, 0, 0.08);
-  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.05);
+  color: rgba(25, 21, 16, 0.06);
+  -webkit-text-stroke: 1.5px rgba(25, 21, 16, 0.05);
   pointer-events: none;
   user-select: none;
 }
 
-/* Marquee ticker animation */
+/* ---------------------------------- 组件级工具 --------------------------- */
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.hairline {
+  border-color: var(--hairline);
+}
+
+/* 数字列对齐：价格 / 统计 / 库存 */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 深色报底浮层（导航 / 模态 / toast）——实心，非玻璃 */
+.glass-dark {
+  background: var(--glass-dark-bg);
+  border: 2px solid #191510;
+}
+
+/* 浅色报面浮层（模态 / 下拉） */
+.glass-light {
+  background: var(--glass-light-bg);
+  border: 2px solid #191510;
+}
+
+/* 孔版印刷不做玻璃模糊：所有 backdrop 模糊一律落到实心报面（含任意值 backdrop-blur-[…]） */
+[class*="backdrop-blur"] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* 深色报眉（顶栏） */
+.floating-pill {
+  background: #191510;
+  border: 1px solid rgba(244, 236, 220, 0.16);
+  box-shadow: 4px 4px 0 rgba(25, 21, 16, .22);
+}
+
+/* 报面卡片：以实描边分层，套色投影 */
+.apple-card {
+  background: var(--paper);
+  border: 2px solid var(--fg);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------------------------------- 组件语言 --------------------------- */
+/* 配方：btn-pill / btn / field / card / badge / nav。硬边圆角，套色投影。 */
+
+/* 签名 CTA（方角实心） */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border: 2px solid var(--fg);
+  border-radius: var(--radius-field);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard),
+    background-color var(--motion-fast) var(--ease-standard);
+}
+.btn-pill:hover { background: var(--accent-hover); box-shadow: var(--shadow-print-blue, 4px 4px 0 #1f4fa0); transform: translate(-1px, -1px); }
+.btn-pill:active { background: var(--accent-active); transform: translate(1px, 1px); box-shadow: none; }
+.btn-pill:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-field);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  text-decoration: none;
+  background: transparent;
+  color: var(--fg);
+  transition: transform var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard),
+    background-color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard);
+}
+.btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.btn:active { transform: translate(1px, 1px); box-shadow: none; }
+.btn-primary { background: #191510; border-color: #191510; color: var(--paper); }
+.btn-primary:hover { box-shadow: var(--shadow-print-red, 4px 4px 0 #e5472a); transform: translate(-1px, -1px); }
+.btn-secondary { background: transparent; color: var(--fg); border-color: var(--border); }
+.btn-secondary:hover { background: var(--surface); box-shadow: var(--shadow-card); }
+
+/* 栏式表单控件 */
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field input,
+.field select,
+.field textarea {
+  padding: 11px 13px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-field);
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.2;
+  outline: none;
+  transition: box-shadow var(--motion-fast) var(--ease-standard);
+}
+.field input::placeholder { color: var(--meta); }
+.field input:hover { border-color: var(--ink-600); }
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 3px 3px 0 var(--accent);
+}
+.field-help { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+/* 卡片：实描边 + 套色投影 */
+.card {
+  background: var(--paper);
+  border: 2px solid var(--fg);
+  border-radius: var(--radius-card);
+  padding: 22px;
+  transition: box-shadow var(--motion-base) var(--ease-standard), transform var(--motion-base) var(--ease-standard);
+}
+.card:hover { box-shadow: var(--shadow-card-hover); transform: translate(-2px, -2px); }
+.card-feature {
+  background: var(--surface);
+  border: 2px solid var(--fg);
+  border-radius: var(--radius-card);
+  padding: 30px 22px;
+  box-shadow: var(--shadow-card);
+}
+
+/* 图章 / 状态标签 */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 9px;
+  border: 1.5px solid currentColor;
+  border-radius: var(--radius-field);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+}
+.badge-success { color: var(--success); }
+.badge-muted { color: var(--muted); }
+.badge-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.icon { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* 触感反馈（位移，非模糊阴影） */
+.lift {
+  transition: transform .16s var(--ease-out-soft), box-shadow .16s var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .lift:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+
+.press {
+  transition: transform .12s var(--ease-in-soft);
+}
+.press:active {
+  transform: translate(1px, 1px);
+}
+
+/* 统一键盘焦点可见性：所有链接 / 按钮默认给出焦点环，已有自定义焦点样式的组件豁免 */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.btn:focus-visible,
+.btn-pill:focus-visible,
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: none;
+}
+
+/* 状态圆点脉冲（未读 / 进行中） */
+.pulse-ring { position: relative; }
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 0 currentColor;
+  opacity: .5;
+  animation: ringPulse 2.2s var(--ease-out-soft) infinite;
+}
+
+/* ---------------------------------- 动效 -------------------------------- */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-fade-up { animation: fade-up .26s var(--ease-out-soft) both; }
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(.965); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-scale-in { animation: scale-in .2s var(--ease-out-soft) both; }
+
+/* 浮层进场 / 退场（配合 usePresence 保留挂载后再卸载） */
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.animate-fade-in { animation: fade-in .2s var(--ease-out-soft) both; }
+@keyframes fade-out { to { opacity: 0; } }
+.animate-fade-out { animation: fade-out .2s var(--ease-in-soft) both; }
+@keyframes scale-out { to { opacity: 0; transform: scale(.965); } }
+.animate-scale-out { animation: scale-out .18s var(--ease-in-soft) both; }
+
+/* 右抽屉：右滑进出 */
+@keyframes drawer-in { from { transform: translateX(100%); } to { transform: none; } }
+.animate-drawer-in { animation: drawer-in .28s var(--ease-out-soft) both; }
+@keyframes drawer-out { to { transform: translateX(100%); } }
+.animate-drawer-out { animation: drawer-out .24s var(--ease-in-soft) both; }
+
+@keyframes ringPulse {
+  0%   { box-shadow: 0 0 0 0 currentColor; }
+  70%  { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* 号外走马灯 */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
-
 .animate-marquee {
   display: flex;
   width: 200%;
   animation: marquee 28s linear infinite;
 }
-
-.animate-marquee:hover {
-  animation-play-state: paused;
+@media (hover: hover) {
+  .animate-marquee:hover { animation-play-state: paused; }
 }
 
-/* SVGator-Style Shipping Line Animation */
+/* SVGator 式航线动画 */
 @keyframes shippingDash {
-  to {
-    stroke-dashoffset: -100;
-  }
+  to { stroke-dashoffset: -100; }
 }
-
 .animate-shipping-line {
   stroke-dasharray: 12 8;
   animation: shippingDash 2.5s linear infinite;
 }
 
-/* Glassmorphism Floating Pill Nav */
-.floating-pill {
-  background: rgba(22, 24, 29, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-/* Custom minimal scrollbar */
-.custom-scroll::-webkit-scrollbar {
-  width: 5px;
-}
-
+/* 极简滚动条 */
+.custom-scroll::-webkit-scrollbar { width: 7px; }
+.custom-scroll::-webkit-scrollbar-track { background: transparent; }
 .custom-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
+  background: rgba(25, 21, 16, .24);
+  border-radius: 0;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(25, 21, 16, .42); }
+
+/* ---------------------------------- Leaflet 地图 ------------------------ */
+
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: #191510;
 }
 
-/* Leaflet 校园地图自定义图钉与弹窗样式 */
 .campus-pin-wrapper {
   background: transparent !important;
   border: none !important;
 }
 
 .campus-map-popup .leaflet-popup-content-wrapper {
-  background: #0b0f19 !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6) !important;
+  background: #191510 !important;
+  border: 2px solid rgba(244, 236, 220, 0.22) !important;
+  border-radius: 4px !important;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4) !important;
   padding: 0 !important;
 }
 
@@ -118,57 +660,230 @@ body {
 }
 
 .campus-map-popup .leaflet-popup-tip {
-  background: #0b0f19 !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background: #191510 !important;
+  border: 1px solid rgba(244, 236, 220, 0.22) !important;
 }
 
 .campus-map-popup .leaflet-popup-close-button {
-  color: #94a3b8 !important;
+  color: #b3a184 !important;
   top: 8px !important;
   right: 8px !important;
   font-size: 16px !important;
 }
-
-.campus-map-popup .leaflet-popup-close-button:hover {
-  color: #ffffff !important;
-}
+.campus-map-popup .leaflet-popup-close-button:hover { color: #f4ecdc !important; }
 
 .zone-boundary-tooltip {
-  background: rgba(12, 16, 25, 0.92) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(8px) !important;
+  background: rgba(25, 21, 16, 0.94) !important;
+  border: 1px solid rgba(244, 236, 220, 0.28) !important;
+  border-radius: 2px !important;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4) !important;
+  font-family: var(--font-mono) !important;
 }
+.zone-boundary-tooltip::before { border-top-color: rgba(25, 21, 16, 0.94) !important; }
 
-.zone-boundary-tooltip::before {
-  border-top-color: rgba(12, 16, 25, 0.92) !important;
-}
-
-/* Prominent sliding bar for Campus Details panel */
+/* 校园详情滑条（孔版红） */
 .campus-sliding-bar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(20, 184, 166, 0.5) rgba(255, 255, 255, 0.04);
+  scrollbar-color: rgba(229, 71, 42, 0.6) rgba(25, 21, 16, 0.05);
 }
-
-.campus-sliding-bar::-webkit-scrollbar {
-  width: 7px;
-}
-
+.campus-sliding-bar::-webkit-scrollbar { width: 7px; }
 .campus-sliding-bar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 9999px;
+  background: rgba(25, 21, 16, 0.06);
+  border-radius: 0;
   margin: 4px 0;
 }
-
 .campus-sliding-bar::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #14b8a6, #0d9488);
-  border-radius: 9999px;
-  border: 1.5px solid rgba(12, 16, 23, 0.8);
+  background: rgba(229, 71, 42, .8);
+  border-radius: 0;
+}
+.campus-sliding-bar::-webkit-scrollbar-thumb:hover { background: rgba(191, 52, 24, .95); }
+
+/* ------------------------- 学报版 v3 配方 --------------------------- */
+/* 流体展题字阶（宋体，套色错位） */
+.display-1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+.display-2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4.6vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+.display-3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  font-weight: 700;
 }
 
-.campus-sliding-bar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #2dd4bf, #14b8a6);
+/* 套色错位：标题的偏移专色副影（riso 套印） */
+.mis { position: relative; z-index: 0; }
+.mis::before {
+  content: attr(data-t);
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  z-index: -1;
+  color: var(--accent);
+  opacity: .9;
 }
 
+/* 报面高光底色（替代影院冷光） */
+.hero-light { position: relative; }
+.hero-light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(25, 21, 16, .22) 1px, transparent 1.5px);
+  background-size: 8px 8px;
+  opacity: .5;
+  pointer-events: none;
+  z-index: 0;
+}
 
+/* 深色报面栏（头版主栏 / 页脚） */
+.plate-dark {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #191510;
+  border-radius: var(--radius-card);
+  background: #191510;
+  color: #f4ecdc;
+  box-shadow: 6px 6px 0 rgba(25, 21, 16, .28);
+}
+
+/* Bento：非均匀注意力网格 */
+.bento { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (min-width: 768px) { .bento { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; } }
+.bento-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 2px solid var(--fg);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+/* 商品卡 v3：图像先行、实描边、悬停套色 */
+.card-product {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--fg);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  transition: transform .16s var(--ease-out-soft), box-shadow .16s var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .card-product:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+.price { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: -0.01em; }
+
+
+/* 节标题排版：栏号 + 展题 */
+.section-head { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
+@media (min-width: 640px) {
+  .section-head { flex-direction: row; align-items: flex-end; }
+}
+
+/* 滚动进场：仅在支持 scroll-driven 的浏览器启用，其余静态降级 */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up both linear;
+      animation-timeline: view();
+      animation-range: entry 3% cover 24%;
+    }
+  }
+}
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(16px) scale(.99); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-hero-in { animation: hero-in .6s var(--ease-out-soft) both; }
+
+/* 视图切换进场（路由变更重挂载触发，见 App.jsx main 容器 key） */
+@keyframes view-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-view-in { animation: view-in .3s var(--ease-out-soft) both; }
+
+/* 栅格 / 列表错峰进场：纯 CSS 逐个延迟，上限 12 项。
+   backwards 填充（非 both）：延迟期即隐藏，动画结束后不残留 transform，避免压掉 .card-product:hover 位移 */
+.stagger > * { animation: fade-up .32s var(--ease-out-soft) backwards; }
+.stagger > *:nth-child(2)  { animation-delay: 40ms; }
+.stagger > *:nth-child(3)  { animation-delay: 80ms; }
+.stagger > *:nth-child(4)  { animation-delay: 120ms; }
+.stagger > *:nth-child(5)  { animation-delay: 160ms; }
+.stagger > *:nth-child(6)  { animation-delay: 200ms; }
+.stagger > *:nth-child(7)  { animation-delay: 240ms; }
+.stagger > *:nth-child(8)  { animation-delay: 280ms; }
+.stagger > *:nth-child(9)  { animation-delay: 320ms; }
+.stagger > *:nth-child(10) { animation-delay: 360ms; }
+.stagger > *:nth-child(11) { animation-delay: 400ms; }
+.stagger > *:nth-child(12) { animation-delay: 440ms; }
+
+/* 数量徽标 / 数字弹跳 */
+@keyframes pop {
+  0%   { transform: scale(.5); opacity: .4; }
+  60%  { transform: scale(1.18); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-pop { animation: pop .32s var(--ease-out-soft) both; }
+
+/* Toast 退场 */
+@keyframes toast-out {
+  to { opacity: 0; transform: translateY(8px); }
+}
+.animate-toast-out { animation: toast-out .22s var(--ease-in-soft) both; }
+
+/* 图片解码淡入 */
+@keyframes img-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.img-in { animation: img-in .5s var(--ease-out-soft) both; }
+
+/* 收藏心形弹跳 */
+@keyframes heart-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.32); }
+  100% { transform: scale(1); }
+}
+.animate-heart { animation: heart-pop .3s var(--ease-out-soft); }
+
+/* 骨架微光 */
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--paper-2) 37%, var(--surface) 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+/* ---------------------------------- 降级 -------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .stagger > * { animation-delay: 0ms !important; }
+}

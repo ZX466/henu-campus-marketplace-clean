@@ -45,7 +45,7 @@ const starterTasks = [
   }
 ];
 
-function loadTasks() {
+function loadLocalTasks() {
   try {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -81,16 +81,18 @@ function normalizeTask(task) {
 }
 
 const STATUS_META = {
-  待接单: { className: "bg-amber-50 text-amber-700" },
-  已接单: { className: "bg-blue-50 text-blue-700" },
-  已完成: { className: "bg-emerald-50 text-emerald-700" }
+  待接单: { className: "bg-amber-50 text-amber-800 ring-amber-200" },
+  已接单: { className: "bg-success-50 text-success-600 ring-success-200" },
+  已完成: { className: "bg-success-100 text-success-700 ring-success-200" }
 };
 
 const CAMPUS_OPTIONS = ["全部校区", "金明校区", "明伦校区"];
 
 export default function ServicesSection({ onNotify, isLoggedIn = false, onRequireLogin }) {
-  const [tasks, setTasks] = useState(loadTasks);
+  const [tasks, setTasks] = useState(loadLocalTasks);
   const [dataSource, setDataSource] = useState("local");
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [campusFilter, setCampusFilter] = useState("全部校区");
   const [query, setQuery] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -105,18 +107,36 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
     note: ""
   });
 
-  useEffect(() => {
-    let cancelled = false;
-    fetchErrands().then((result) => {
-      if (cancelled) return;
+  /**
+   * 从后端拉取跑腿列表。发布成功后也调它刷新，避免只把新任务插在本地。
+   * isCancelled 让卸载后的请求结果不会写进已卸载组件的 state。
+   */
+  const loadTasks = async (isCancelled = () => false) => {
+    setIsLoading(true);
+    setLoadError("");
+    try {
+      const result = await fetchErrands();
+      if (isCancelled()) return;
       if (result.success) {
         setTasks(result.tasks.map(normalizeTask));
         setDataSource("server");
         setMessage("");
       } else {
+        setLoadError(result.error || "后端跑腿接口暂不可用。");
         setMessage("后端跑腿接口暂不可用，当前显示本地演示数据。");
       }
-    });
+    } catch (error) {
+      if (isCancelled()) return;
+      setLoadError(error?.message || "后端跑腿接口暂不可用。");
+      setMessage("后端跑腿接口暂不可用，当前显示本地演示数据。");
+    } finally {
+      if (!isCancelled()) setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    loadTasks(() => cancelled);
     return () => { cancelled = true; };
   }, []);
 
@@ -176,7 +196,8 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
         onNotify?.(`发布失败：${result.error}`);
         return;
       }
-      setTasks((current) => [normalizeTask(result.task), ...current]);
+      // 周期二：发布成功后重新拉服务端数据，避免本地和库里的列表不一致
+      await loadTasks();
     } else {
       setTasks((current) => [task, ...current]);
     }
@@ -246,22 +267,22 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
 
   return (
     <section className="mx-auto max-w-7xl px-6 pb-24 pt-32 sm:px-12">
-      <div className="overflow-hidden rounded-[2rem] bg-slate-950 p-7 text-white sm:p-10">
+      <div className="hero-light overflow-hidden rounded-hero bg-ink-950 p-7 text-white shadow-panel sm:p-12">
         <div className="flex flex-col justify-between gap-7 md:flex-row md:items-end">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--plate-line-strong)] bg-[var(--plate-fill-strong)] px-3 py-1.5 text-xs font-semibold text-[var(--on-ink-strong)] backdrop-blur">
               <Truck size={14} /> 金明 / 明伦校区跑腿互助
             </span>
-            <h1 className="mt-5 font-display text-4xl font-black sm:text-5xl">
+            <h1 className="mt-5 display-2">
               校园跑腿任务广场
             </h1>
-            <p className="mt-4 leading-7 text-slate-300">
+            <p className="mt-4 leading-8 text-[var(--on-ink)]">
               发布代取快递、代送物品、打印资料等需求。后端可用时任务会同步保存，离线时保留本地演示流程。
             </p>
           </div>
           <button
             onClick={() => setIsFormOpen(true)}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 py-3 font-bold text-slate-950 hover:bg-emerald-300"
+            className="press inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3.5 font-bold text-white transition-colors hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)]"
           >
             <Plus size={18} /> 发布跑腿任务
           </button>
@@ -272,13 +293,13 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
         <label className="relative flex-1">
           <Search
             size={17}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--meta)]"
           />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="搜索代取快递、送书、打印资料…"
-            className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-emerald-500"
+            className="w-full rounded-field border border-[var(--border-soft)] bg-[var(--bg)] py-3 pl-11 pr-4 text-sm text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--border)] focus:border-[var(--accent)]"
           />
         </label>
         <div className="flex gap-2">
@@ -286,10 +307,10 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
             <button
               key={campus}
               onClick={() => setCampusFilter(campus)}
-              className={`rounded-xl px-4 py-3 text-sm font-semibold ${
+              className={`press rounded-field px-4 py-3 text-sm font-semibold transition-colors ${
                 campusFilter === campus
-                  ? "bg-slate-950 text-white"
-                  : "bg-white text-slate-600 ring-1 ring-slate-200"
+                  ? "bg-[var(--accent)] text-white shadow-card"
+                  : "bg-[var(--bg)] text-[var(--fg-2)] ring-1 ring-[var(--border-soft)] hover:bg-[var(--surface)] hover:ring-[var(--border)] active:bg-[var(--border-soft)]"
               }`}
             >
               {campus}
@@ -299,77 +320,78 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
       </div>
 
       {message && (
-        <p className="mt-5 rounded-xl bg-emerald-50 p-4 text-sm text-emerald-800">
+        <p className="mt-5 rounded-field border border-[var(--border-soft)] bg-[var(--surface)] p-4 text-sm font-medium text-[var(--fg-2)]">
           {message}
         </p>
       )}
-      <div className="mt-8 flex items-center justify-between">
-        <h2 className="text-xl font-bold">
+
+      <div className="mt-8 flex items-center justify-between gap-4">
+        <h2 className="font-display text-xl font-bold text-[var(--fg)]">
           当前任务{" "}
-          <span className="ml-2 text-sm font-medium text-slate-400">
+          <span className="ml-2 text-sm font-medium text-[var(--meta)] tnum">
             {filteredTasks.length} 条
           </span>
         </h2>
-        <span className="text-xs text-slate-400">{dataSource === "server" ? "数据来自后端" : "本地演示数据"}</span>
+        <span className="text-xs text-[var(--meta)] tnum">{dataSource === "server" ? "数据来自后端" : "本地演示数据"}</span>
       </div>
 
       {filteredTasks.length ? (
-        <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        <div className="stagger mt-6 grid gap-6 lg:grid-cols-2">
           {filteredTasks.map((task) => {
             const statusMeta = STATUS_META[task.status] || STATUS_META["待接单"];
             return (
               <article
                 key={task.id}
-                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="lift flex flex-col rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] p-6 shadow-card"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[var(--fg-2)]">
                     <MapPin size={14} />
                     {task.campus}
                   </div>
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-bold ${statusMeta.className}`}
+                    className={`rounded-full px-3 py-1 text-xs font-bold ring-1 ${statusMeta.className}`}
                   >
                     {task.status}
                   </span>
                 </div>
-                <h3 className="mt-4 text-lg font-bold text-slate-900">
+                <h3 className="mt-4 font-display text-lg font-bold leading-snug text-[var(--fg)]">
                   {task.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
+                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
                   {task.note || "暂无补充说明。"}
                 </p>
-                <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-slate-50 p-4 text-xs">
+                <div className="mt-5 grid grid-cols-2 gap-4 rounded-card bg-[var(--surface)] p-4 text-xs">
                   <div>
-                    <span className="text-slate-400">起点</span>
-                    <p className="mt-1 font-semibold text-slate-700">
+                    <span className="text-[var(--meta)]">起点</span>
+                    <p className="mt-1 font-semibold text-[var(--fg-2)]">
                       {task.start || "沟通确认"}
                     </p>
                   </div>
                   <div>
-                    <span className="text-slate-400">终点</span>
-                    <p className="mt-1 font-semibold text-slate-700">
+                    <span className="text-[var(--meta)]">终点</span>
+                    <p className="mt-1 font-semibold text-[var(--fg-2)]">
                       {task.end || "沟通确认"}
                     </p>
                   </div>
                   <div className="col-span-2">
-                    <span className="text-slate-400">截止时间</span>
-                    <p className="mt-1 font-semibold text-slate-700">
+                    <span className="text-[var(--meta)]">截止时间</span>
+                    <p className="mt-1 font-semibold text-[var(--fg-2)]">
                       {formatDeadline(task.deadline)}
                     </p>
                   </div>
                 </div>
-                <div className="mt-5 flex items-center justify-between">
-                  <p className="text-sm text-slate-500">
+                <div className="mt-5 flex items-center justify-between gap-4 border-t border-[var(--border-soft)] pt-5">
+                  <p className="text-sm text-[var(--muted)]">
                     报酬{" "}
-                    <strong className="ml-1 text-xl text-slate-950">
+                    <strong className="ml-1 font-display text-2xl text-[var(--fg)] tnum">
                       ¥{task.reward}
                     </strong>
                   </p>
                   {task.status === "待接单" && (
                     <button
                       onClick={() => acceptTask(task)}
-                      className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white hover:bg-slate-800"
+                      className="press inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)]"
                     >
                       接单 <ArrowRight size={15} />
                     </button>
@@ -377,13 +399,13 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
                   {task.status === "已接单" && (
                     <button
                       onClick={() => completeTask(task)}
-                      className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-600"
+                      className="press inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)]"
                     >
                       标记完成 <CheckCircle2 size={15} />
                     </button>
                   )}
                   {task.status === "已完成" && (
-                    <span className="inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-bold text-slate-500">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-success-50 px-5 py-2.5 text-sm font-bold text-success-600">
                       已完成 <CheckCircle2 size={15} />
                     </span>
                   )}
@@ -393,34 +415,35 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
           })}
         </div>
       ) : (
-        <div className="mt-5 rounded-3xl border border-dashed border-slate-300 py-16 text-center text-sm text-slate-500">
+        <div className="mt-6 rounded-panel border border-dashed border-[var(--border)] bg-[var(--surface-warm)] py-16 text-center text-sm font-medium text-[var(--muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
           没有找到符合条件的任务。
         </div>
       )}
 
       {isFormOpen && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/60 p-4">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm">
           <form
             onSubmit={publishTask}
-            className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+            className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] p-6 shadow-float animate-scale-in sm:p-8"
           >
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-emerald-600">
+                <p className="eyebrow text-[var(--accent)]">
                   发布需求
                 </p>
-                <h2 className="mt-2 text-2xl font-black">新增跑腿任务</h2>
+                <h2 className="mt-2 display-3 text-[var(--fg)]">新增跑腿任务</h2>
               </div>
               <button
                 type="button"
                 onClick={() => setIsFormOpen(false)}
-                className="text-2xl leading-none text-slate-400"
+                className="press flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface)] text-xl leading-none text-[var(--muted)] transition-colors hover:bg-[var(--border-soft)] hover:text-[var(--fg)] active:bg-[var(--border)]"
+                aria-label="关闭发布窗口"
               >
                 ×
               </button>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <label className="sm:col-span-2 text-sm font-semibold">
+              <label className="text-sm font-semibold sm:col-span-2">
                 标题
                 <input
                   required
@@ -428,7 +451,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
                   value={draft.title}
                   onChange={(event) => updateDraft("title", event.target.value)}
                   placeholder="例如：帮忙从快递点取一个包裹"
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-emerald-500"
+                  className="mt-2 w-full rounded-field border border-[var(--border-soft)] bg-[var(--bg)] px-4 py-3 font-normal text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--border)] focus:border-[var(--accent)]"
                 />
               </label>
               <label className="text-sm font-semibold">
@@ -436,7 +459,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
                 <select
                   value={draft.campus}
                   onChange={(event) => updateDraft("campus", event.target.value)}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 font-normal"
+                  className="mt-2 w-full rounded-field border border-[var(--border-soft)] bg-[var(--bg)] px-4 py-3 font-normal text-[var(--fg)] outline-none transition-colors hover:border-[var(--border)] focus:border-[var(--accent)]"
                 >
                   <option>金明校区</option>
                   <option>明伦校区</option>
@@ -451,7 +474,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
                   value={draft.reward}
                   onChange={(event) => updateDraft("reward", event.target.value)}
                   placeholder="例如：3"
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-emerald-500"
+                  className="mt-2 w-full rounded-field border border-[var(--border-soft)] bg-[var(--bg)] px-4 py-3 font-normal text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--border)] focus:border-[var(--accent)]"
                 />
               </label>
               <label className="text-sm font-semibold">
@@ -461,7 +484,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
                   value={draft.start}
                   onChange={(event) => updateDraft("start", event.target.value)}
                   placeholder="例如：北门快递点"
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-emerald-500"
+                  className="mt-2 w-full rounded-field border border-[var(--border-soft)] bg-[var(--bg)] px-4 py-3 font-normal text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--border)] focus:border-[var(--accent)]"
                 />
               </label>
               <label className="text-sm font-semibold">
@@ -471,7 +494,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
                   value={draft.end}
                   onChange={(event) => updateDraft("end", event.target.value)}
                   placeholder="例如：生活服务中心"
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-emerald-500"
+                  className="mt-2 w-full rounded-field border border-[var(--border-soft)] bg-[var(--bg)] px-4 py-3 font-normal text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--border)] focus:border-[var(--accent)]"
                 />
               </label>
               <label className="text-sm font-semibold">
@@ -481,26 +504,26 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
                   type="datetime-local"
                   value={draft.deadline}
                   onChange={(event) => updateDraft("deadline", event.target.value)}
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-emerald-500"
+                  className="mt-2 w-full rounded-field border border-[var(--border-soft)] bg-[var(--bg)] px-4 py-3 font-normal text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--border)] focus:border-[var(--accent)]"
                 />
               </label>
-              <label className="sm:col-span-2 text-sm font-semibold">
+              <label className="text-sm font-semibold sm:col-span-2">
                 备注
                 <textarea
                   rows="3"
                   value={draft.note}
                   onChange={(event) => updateDraft("note", event.target.value)}
                   placeholder="请说明物品大小、取件方式或其他要求"
-                  className="mt-2 w-full resize-y rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-emerald-500"
+                  className="mt-2 w-full resize-y rounded-field border border-[var(--border-soft)] bg-[var(--bg)] px-4 py-3 font-normal text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--border)] focus:border-[var(--accent)]"
                 />
               </label>
             </div>
-            <p className="mt-4 text-xs leading-5 text-slate-400">
+            <p className="mt-4 text-xs leading-5 text-[var(--meta)]">
               {dataSource === "server" ? "任务会保存到后端，其他登录用户可以看到并接单。" : "后端不可用时使用本地演示数据，启动后端并登录即可同步。"}
             </p>
             <button
               type="submit"
-              className="mt-5 w-full rounded-xl bg-slate-950 py-3.5 font-bold text-white hover:bg-slate-800"
+              className="press mt-5 w-full rounded-full bg-[var(--accent)] py-3.5 font-bold text-white transition-colors hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)]"
             >
               发布任务
             </button>

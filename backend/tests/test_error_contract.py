@@ -146,6 +146,14 @@ async def test_400_invalid_order_id(client):
     assert_envelope(resp.json(), 400, "INVALID_ORDER_ID")
 
 
+async def test_400_auth_missing_password(client):
+    """登录缺密码：统一格式 + 稳定的 AUTH_PASSWORD_REQUIRED 错误码。"""
+
+    resp = await client.post("/api/v1/auth/login", json={"email": "someone@henu.edu.cn"})
+    assert resp.status_code == 400
+    assert_envelope(resp.json(), 400, "AUTH_PASSWORD_REQUIRED")
+
+
 async def test_404_product_not_found(client, monkeypatch):
     monkeypatch.setattr(products_routes, "get_database", lambda: FakeDatabase())
     resp = await client.get("/api/v1/products/unknown-product")

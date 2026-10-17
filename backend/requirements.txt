@@ -1,11 +1,22 @@
-fastapi>=0.100.0
-uvicorn[standard]>=0.22.0
-motor>=3.7.0
-pymongo>=4.8.0
-dnspython>=2.6.0
-python-dotenv>=1.0.0
-pydantic-settings>=2.0.0
-pydantic>=2.0.0
-pytest>=8.0
-pytest-asyncio>=0.23
-httpx>=0.27
+# 河大同享后端依赖（Python 3.12 推荐，3.10~3.14 均可）
+# 每个包都写了上限，防止新电脑装到不兼容的大版本。
+# 安装：在仓库根目录执行 npm run setup:backend（或 README 中的手动命令）
+
+# ---- Web 框架 ----
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+
+# ---- MongoDB ----
+motor>=3.7,<4.0
+pymongo>=4.9,<5.0          # motor 3.7 要求 pymongo >=4.9,<5
+dnspython>=2.6,<3.0        # mongodb+srv:// (Atlas) 连接串需要
+
+# ---- 配置 ----
+pydantic>=2.7,<3.0
+pydantic-settings>=2.3,<3.0
+python-dotenv>=1.0,<2.0    # pydantic-settings 读取 .env 需要
+
+# ---- 测试（pytest backend -q）----
+pytest>=8.0,<10.0
+pytest-asyncio>=1.0,<2.0   # pytest.ini 用到 asyncio_default_test_loop_scope
+httpx>=0.27,<1.0

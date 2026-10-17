@@ -79,3 +79,8 @@ __pycache__/
 
 # Test-only env files
 backend/.env.test
+
+# Environment files
+.env
+.env.local
+.env.*.local

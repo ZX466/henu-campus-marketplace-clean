@@ -167,7 +167,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
           const scene = Math.min(3, Math.floor(t / 6));
 
           // Clear Stage
-          ctx.fillStyle = '#060911';
+          ctx.fillStyle = '#000000';
           ctx.fillRect(0, 0, W, H);
 
           // Scene-specific Ambient Gradient
@@ -199,11 +199,11 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
           }
 
           // Scene Subtitle Tag
-          ctx.font = '700 13px "Space Grotesk", monospace';
-          ctx.fillStyle = scene === 0 ? '#10b981' : (scene === 1 ? '#3b82f6' : (scene === 2 ? '#c084fc' : '#34d399'));
+          ctx.font = '700 13px -apple-system, monospace';
+          ctx.fillStyle = scene === 0 ? '#e5472a' : (scene === 1 ? '#5b83cf' : (scene === 2 ? '#1f4fa0' : '#2f7d4f'));
           ctx.fillText(`SCENE 0${scene + 1} // ${chapters[scene].title.toUpperCase()}`, 64, 76);
 
-          ctx.font = '800 28px "Space Grotesk", sans-serif';
+          ctx.font = '800 28px -apple-system, sans-serif';
           ctx.fillStyle = '#ffffff';
           ctx.fillText(chapters[scene].sub, 64, 114);
 
@@ -231,16 +231,16 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.beginPath(); ctx.arc(cx, cy, pulse, 0, Math.PI * 2); ctx.stroke();
 
             // Central Shield Badge
-            ctx.fillStyle = '#0a1420';
+            ctx.fillStyle = '#191510';
             ctx.beginPath(); ctx.arc(cx, cy, 110, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = '#10b981';
+            ctx.strokeStyle = '#e5472a';
             ctx.lineWidth = 4;
             ctx.stroke();
 
             // Shield Geometry
             ctx.save();
             ctx.translate(cx, cy);
-            ctx.fillStyle = '#10b981';
+            ctx.fillStyle = '#e5472a';
             ctx.beginPath();
             ctx.moveTo(0, -45);
             ctx.lineTo(35, -25);
@@ -264,8 +264,8 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.restore();
 
             // Label Below Shield
-            ctx.font = '700 13px "Space Grotesk", monospace';
-            ctx.fillStyle = '#10b981';
+            ctx.font = '700 13px -apple-system, monospace';
+            ctx.fillStyle = '#e5472a';
             ctx.textAlign = 'center';
             ctx.fillText('@CAMPUS.EDU VERIFIED', cx, cy + 180);
             ctx.textAlign = 'left';
@@ -276,7 +276,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             const cardW = 560;
             const cardH = 360;
 
-            ctx.fillStyle = '#0d1527';
+            ctx.fillStyle = '#191510';
             ctx.beginPath(); ctx.roundRect(cardX, cardY, cardW, cardH, 20); ctx.fill();
             ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
             ctx.lineWidth = 1.5; ctx.stroke();
@@ -284,24 +284,24 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             // Passport Header
             ctx.fillStyle = 'rgba(255,255,255,0.06)';
             ctx.beginPath(); ctx.roundRect(cardX, cardY, cardW, 60, [20, 20, 0, 0]); ctx.fill();
-            ctx.font = '700 13px "Space Grotesk", monospace';
-            ctx.fillStyle = '#94a3b8';
+            ctx.font = '700 13px -apple-system, monospace';
+            ctx.fillStyle = '#86868b';
             ctx.fillText('INSTITUTIONAL PASSPORT // ACCESS GRANTED', cardX + 24, cardY + 36);
 
-            ctx.fillStyle = '#10b981';
+            ctx.fillStyle = '#e5472a';
             ctx.beginPath(); ctx.arc(cardX + cardW - 32, cardY + 32, 6, 0, Math.PI * 2); ctx.fill();
 
             // Student Details
-            ctx.font = '800 24px "Space Grotesk", sans-serif';
+            ctx.font = '800 24px -apple-system, sans-serif';
             ctx.fillStyle = '#ffffff';
             ctx.fillText('Aarav Patel', cardX + 32, cardY + 116);
 
             ctx.font = '600 15px monospace';
-            ctx.fillStyle = '#38bdf8';
+            ctx.fillStyle = '#1f4fa0';
             ctx.fillText('Roll No: 2024CS1089@campus.edu', cardX + 32, cardY + 148);
 
-            ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
-            ctx.fillStyle = '#94a3b8';
+            ctx.font = '500 14px -apple-system, sans-serif';
+            ctx.fillStyle = '#86868b';
             ctx.fillText('Dept: Computer Science & Engineering (Batch of 2026)', cardX + 32, cardY + 180);
             ctx.fillText('Hostel Residence: Block 4, Room 218', cardX + 32, cardY + 208);
 
@@ -309,14 +309,14 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.fillStyle = 'rgba(0,0,0,0.4)';
             ctx.beginPath(); ctx.roundRect(cardX + 32, cardY + 236, cardW - 64, 42, 8); ctx.fill();
             ctx.font = '500 11px monospace';
-            ctx.fillStyle = '#64748b';
+            ctx.fillStyle = '#6e6e73';
             ctx.fillText('SHA-256 HASH: 9f7b2c018a3e...b418 [VALIDATED AGAINST REGISTRAR]', cardX + 44, cardY + 262);
 
             // Verification Pill
-            ctx.fillStyle = '#10b981';
+            ctx.fillStyle = '#e5472a';
             ctx.beginPath(); ctx.roundRect(cardX + 32, cardY + 296, 260, 36, 18); ctx.fill();
-            ctx.font = '700 12px "Space Grotesk", sans-serif';
-            ctx.fillStyle = '#060911';
+            ctx.font = '700 12px -apple-system, sans-serif';
+            ctx.fillStyle = '#000000';
             ctx.fillText('✓ CLEARED FOR IN-CAMPUS SAFE HANDOVERS', cardX + 48, cardY + 319);
           }
 
@@ -356,7 +356,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.fill();
 
             // Sweep Needle
-            ctx.strokeStyle = '#60a5fa';
+            ctx.strokeStyle = '#5b83cf';
             ctx.lineWidth = 2.5;
             ctx.beginPath();
             ctx.moveTo(rx, ry);
@@ -365,51 +365,51 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.restore();
 
             // Center Point
-            ctx.fillStyle = '#3b82f6';
+            ctx.fillStyle = '#5b83cf';
             ctx.beginPath(); ctx.arc(rx, ry, 6, 0, Math.PI * 2); ctx.fill();
 
             // Blip 1: Casio Calculator
             const b1x = 340;
             const b1y = 260;
-            ctx.fillStyle = '#3b82f6';
+            ctx.fillStyle = '#5b83cf';
             ctx.beginPath(); ctx.arc(b1x, b1y, 7, 0, Math.PI * 2); ctx.fill();
             ctx.strokeStyle = 'rgba(59, 130, 246, 0.5)';
             ctx.beginPath(); ctx.arc(b1x, b1y, 14 + Math.sin(t * 6) * 4, 0, Math.PI * 2); ctx.stroke();
 
-            ctx.fillStyle = '#0d172a';
+            ctx.fillStyle = '#191510';
             ctx.beginPath(); ctx.roundRect(b1x - 140, b1y + 16, 280, 84, 12); ctx.fill();
-            ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.font = '700 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#5b83cf'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.font = '700 13px -apple-system, sans-serif'; ctx.fillStyle = '#ffffff';
             ctx.fillText('卡西欧 fx-991EX 科学计算器', b1x - 124, b1y + 40);
-            ctx.font = '700 13px monospace'; ctx.fillStyle = '#10b981';
+            ctx.font = '700 13px monospace'; ctx.fillStyle = '#e5472a';
             ctx.fillText('¥72  (低于零售价 60%)', b1x - 124, b1y + 64);
-            ctx.font = '500 11px sans-serif'; ctx.fillStyle = '#94a3b8';
+            ctx.font = '500 11px sans-serif'; ctx.fillStyle = '#86868b';
             ctx.fillText('4 号宿舍 • 4 分钟内交接', b1x - 124, b1y + 86);
 
             // Blip 2: Mini Drafter
             const b2x = 940;
             const b2y = 300;
-            ctx.fillStyle = '#a855f7';
+            ctx.fillStyle = '#1f4fa0';
             ctx.beginPath(); ctx.arc(b2x, b2y, 7, 0, Math.PI * 2); ctx.fill();
             ctx.strokeStyle = 'rgba(168, 85, 247, 0.5)';
             ctx.beginPath(); ctx.arc(b2x, b2y, 14 + Math.cos(t * 6) * 4, 0, Math.PI * 2); ctx.stroke();
 
-            ctx.fillStyle = '#0d172a';
+            ctx.fillStyle = '#191510';
             ctx.beginPath(); ctx.roundRect(b2x - 140, b2y + 16, 280, 84, 12); ctx.fill();
-            ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.font = '700 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#1f4fa0'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.font = '700 13px -apple-system, sans-serif'; ctx.fillStyle = '#ffffff';
             ctx.fillText('迷你绘图仪与丁字尺套装', b2x - 124, b2y + 40);
-            ctx.font = '700 13px monospace'; ctx.fillStyle = '#c084fc';
+            ctx.font = '700 13px monospace'; ctx.fillStyle = '#1f4fa0';
             ctx.fillText('¥45  (租用：每学期 ¥12)', b2x - 124, b2y + 64);
-            ctx.font = '500 11px sans-serif'; ctx.fillStyle = '#94a3b8';
+            ctx.font = '500 11px sans-serif'; ctx.fillStyle = '#86868b';
             ctx.fillText('机械学院 • 已验功能正常', b2x - 124, b2y + 86);
 
             // Blip 3: Lab Coat
             const b3x = 520;
             const b3y = 560;
-            ctx.fillStyle = '#10b981';
+            ctx.fillStyle = '#e5472a';
             ctx.beginPath(); ctx.arc(b3x, b3y, 5, 0, Math.PI * 2); ctx.fill();
-            ctx.font = '600 12px monospace'; ctx.fillStyle = '#6ee7b7';
+            ctx.font = '600 12px monospace'; ctx.fillStyle = '#2f7d4f';
             ctx.fillText('化学实验服与护目镜 • ¥12', b3x + 12, b3y + 4);
           }
 
@@ -423,28 +423,28 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             const termH = 460;
 
             // Terminal Card Background
-            ctx.fillStyle = '#080d1a';
+            ctx.fillStyle = '#000000';
             ctx.beginPath(); ctx.roundRect(termX, termY, termW, termH, 16); ctx.fill();
             ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)'; ctx.lineWidth = 2; ctx.stroke();
 
             // Terminal Header Bar
-            ctx.fillStyle = '#0f172a';
+            ctx.fillStyle = '#191510';
             ctx.beginPath(); ctx.roundRect(termX, termY, termW, 44, [16, 16, 0, 0]); ctx.fill();
 
             // Traffic lights
-            ['#ef4444', '#f59e0b', '#10b981'].forEach((col, i) => {
+            ['#b02a1b', '#bc8611', '#e5472a'].forEach((col, i) => {
               ctx.fillStyle = col;
               ctx.beginPath(); ctx.arc(termX + 24 + i * 18, termY + 22, 5.5, 0, Math.PI * 2); ctx.fill();
             });
 
-            ctx.font = '600 12px monospace'; ctx.fillStyle = '#94a3b8';
+            ctx.font = '600 12px monospace'; ctx.fillStyle = '#86868b';
             ctx.fillText('学长辅导服务 — bash — 80x24', termX + 90, termY + 26);
 
             // Terminal Text & Code Output
-            ctx.font = '500 14px monospace'; ctx.fillStyle = '#38bdf8';
+            ctx.font = '500 14px monospace'; ctx.fillStyle = '#1f4fa0';
             ctx.fillText('> 校园伙伴 --query "数据结构 树形动态规划与图算法模拟面试"', termX + 32, termY + 84);
 
-            ctx.fillStyle = '#a855f7';
+            ctx.fillStyle = '#1f4fa0';
             ctx.fillText('[雷达匹配] 当前校园内有 1 位学长导师可提供帮助', termX + 32, termY + 116);
 
             // Senior Mentor Showcase Card
@@ -458,33 +458,33 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 1; ctx.stroke();
 
             // Senior Badge
-            ctx.font = '800 20px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
+            ctx.font = '800 20px -apple-system, sans-serif'; ctx.fillStyle = '#ffffff';
             ctx.fillText('张学长', mX + 24, mY + 42);
 
-            ctx.fillStyle = '#10b981';
+            ctx.fillStyle = '#e5472a';
             ctx.beginPath(); ctx.roundRect(mX + 210, mY + 24, 180, 24, 12); ctx.fill();
-            ctx.font = '700 11px monospace'; ctx.fillStyle = '#060911';
+            ctx.font = '700 11px monospace'; ctx.fillStyle = '#000000';
             ctx.fillText('已入职 微软（软件工程师）', mX + 222, mY + 40);
 
-            ctx.font = '500 13px "Plus Jakarta Sans", sans-serif'; ctx.fillStyle = '#cbd5e1';
+            ctx.font = '500 13px -apple-system, sans-serif'; ctx.fillStyle = '#d2d2d7';
             ctx.fillText('学业认证：绩点 3.9/4.0 • 高级数据结构（CS301）S 级', mX + 24, mY + 80);
             ctx.fillText('辅导方向：LeetCode 难题套路、图论动态规划、系统设计、简历打磨', mX + 24, mY + 106);
 
             // Booking Pill
-            ctx.fillStyle = '#a855f7';
+            ctx.fillStyle = '#1f4fa0';
             ctx.beginPath(); ctx.roundRect(mX + 24, mY + 140, 220, 36, 18); ctx.fill();
-            ctx.font = '700 12px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
+            ctx.font = '700 12px -apple-system, sans-serif'; ctx.fillStyle = '#ffffff';
             ctx.fillText('预约一对一辅导（¥20）', mX + 38, mY + 163);
 
-            ctx.font = '600 12px monospace'; ctx.fillStyle = '#34d399';
+            ctx.font = '600 12px monospace'; ctx.fillStyle = '#2f7d4f';
             ctx.fillText('✓ 图书馆研讨室 3B • 监控安全交接点', mX + 260, mY + 163);
 
             // Blinking cursor
             if (Math.floor(t * 2) % 2 === 0) {
-              ctx.fillStyle = '#38bdf8';
+              ctx.fillStyle = '#1f4fa0';
               ctx.fillRect(termX + 32, termY + 395, 10, 16);
             }
-            ctx.font = '500 13px monospace'; ctx.fillStyle = '#64748b';
+            ctx.font = '500 13px monospace'; ctx.fillStyle = '#6e6e73';
             ctx.fillText('campus@secure-node:~$ awaiting confirmation...', termX + 50, termY + 408);
           }
 
@@ -500,25 +500,25 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.beginPath(); ctx.roundRect(420, 150, 440, 38, 19); ctx.fill();
             ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)'; ctx.lineWidth = 1; ctx.stroke();
 
-            ctx.fillStyle = '#ef4444';
+            ctx.fillStyle = '#b02a1b';
             ctx.beginPath(); ctx.arc(444, 169, 5, 0, Math.PI * 2); ctx.fill();
 
-            ctx.font = '700 12px monospace'; ctx.fillStyle = '#fca5a5';
+            ctx.font = '700 12px monospace'; ctx.fillStyle = '#ff6b60';
             ctx.fillText('LIVE CCTV SECURITY ACTIVE: LIBRARY FOYER SAFE DESK', 460, 173);
 
             // Holographic QR Container Card
             const qrCardW = 320;
             const qrCardH = 340;
-            ctx.fillStyle = '#0d1728';
+            ctx.fillStyle = '#191510';
             ctx.beginPath(); ctx.roundRect(qx - qrCardW / 2, qy - qrCardH / 2, qrCardW, qrCardH, 24); ctx.fill();
-            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5; ctx.stroke();
+            ctx.strokeStyle = '#e5472a'; ctx.lineWidth = 2.5; ctx.stroke();
 
             // QR Target Corner Reticles
             const retSize = 24;
             const rx1 = qx - 110; const ry1 = qy - 110;
             const rx2 = qx + 110; const ry2 = qy + 110;
 
-            ctx.strokeStyle = '#10b981';
+            ctx.strokeStyle = '#e5472a';
             ctx.lineWidth = 4;
             // Top-left
             ctx.beginPath(); ctx.moveTo(rx1, ry1 + retSize); ctx.lineTo(rx1, ry1); ctx.lineTo(rx1 + retSize, ry1); ctx.stroke();
@@ -555,7 +555,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
 
             // Laser Scanning Bar
             const laserY = startY + ((t * 1.6) % 1) * 162;
-            ctx.strokeStyle = '#10b981';
+            ctx.strokeStyle = '#e5472a';
             ctx.lineWidth = 3;
             ctx.beginPath(); ctx.moveTo(startX - 10, laserY); ctx.lineTo(startX + 172, laserY); ctx.stroke();
 
@@ -569,23 +569,23 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
 
             // Left Peer: Student Seller
             const sX = 220; const sY = 410;
-            ctx.fillStyle = '#1e293b';
+            ctx.fillStyle = '#191510';
             ctx.beginPath(); ctx.roundRect(sX - 90, sY - 50, 180, 100, 16); ctx.fill();
-            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.font = '700 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#1f4fa0'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.font = '700 13px -apple-system, sans-serif'; ctx.fillStyle = '#ffffff';
             ctx.fillText('卖家（3 号宿舍）', sX - 70, sY - 20);
-            ctx.font = '500 12px monospace'; ctx.fillStyle = '#38bdf8';
+            ctx.font = '500 12px monospace'; ctx.fillStyle = '#1f4fa0';
             ctx.fillText('已生成凭证 ✓', sX - 70, sY + 6);
             ctx.fillText('学号：2024CS0892', sX - 70, sY + 28);
 
             // Right Peer: Student Buyer
             const bX = 1060; const bY = 410;
-            ctx.fillStyle = '#1e293b';
+            ctx.fillStyle = '#191510';
             ctx.beginPath(); ctx.roundRect(bX - 90, bY - 50, 180, 100, 16); ctx.fill();
-            ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.font = '700 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#1f4fa0'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.font = '700 13px -apple-system, sans-serif'; ctx.fillStyle = '#ffffff';
             ctx.fillText('买家（5 号宿舍）', bX - 70, sY - 20);
-            ctx.font = '500 12px monospace'; ctx.fillStyle = '#c084fc';
+            ctx.font = '500 12px monospace'; ctx.fillStyle = '#1f4fa0';
             ctx.fillText('已扫码并付款 ✓', bX - 70, sY + 6);
             ctx.fillText('学号：2025ME0411', bX - 70, sY + 28);
 
@@ -597,9 +597,9 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             ctx.beginPath(); ctx.moveTo(bX - 90, bY); ctx.quadraticCurveTo((bX + qx) / 2, bY - 40, qx + qrCardW / 2, qy); ctx.stroke();
 
             // Success Bottom Banner
-            ctx.fillStyle = '#10b981';
+            ctx.fillStyle = '#e5472a';
             ctx.beginPath(); ctx.roundRect(qx - 220, qy + qrCardH / 2 + 20, 440, 44, 22); ctx.fill();
-            ctx.font = '800 13px "Space Grotesk", sans-serif'; ctx.fillStyle = '#060911';
+            ctx.font = '800 13px -apple-system, sans-serif'; ctx.fillStyle = '#000000';
             ctx.textAlign = 'center';
             ctx.fillText('✓ 零佣金交接已验证，担保资金已释放', qx, qy + qrCardH / 2 + 47);
             ctx.textAlign = 'left';
@@ -636,7 +636,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
       };
 
       return (
-        <div ref={containerRef} className="relative rounded-3xl overflow-hidden border border-neutral-800 shadow-2xl bg-[#060911] group">
+        <div ref={containerRef} className="reveal plate-dark group">
           
           {/* Canvas Rendering Stage (16:9) */}
           <div className="relative w-full aspect-[16/9] cursor-pointer" onClick={togglePlay}>
@@ -648,15 +648,15 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
             />
 
             {/* Top Overlay Badge */}
-            <div className="absolute top-6 left-6 flex items-center gap-2 bg-neutral-950/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 text-xs font-mono text-white pointer-events-none">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <div className="absolute top-6 left-6 flex items-center gap-2 glass-dark px-3.5 py-1.5 rounded-full text-xs font-mono text-white pointer-events-none">
+              <span className="pulse-ring w-2 h-2 rounded-full bg-[var(--success)] text-[var(--success)]"></span>
               <span className="font-bold">河大同享动态展示 • 原生生成短片</span>
             </div>
 
             {/* Center Pause Indicator (Shows when paused) */}
             {!isPlaying && (
               <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full bg-white/90 text-neutral-950 flex items-center justify-center shadow-2xl scale-110 transition-transform">
+                <div className="w-20 h-20 rounded-full bg-white/90 text-ink-950 flex items-center justify-center shadow-float scale-110 transition-transform">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="6 4 20 12 6 20 6 4"></polygon>
                   </svg>
@@ -666,17 +666,17 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
           </div>
 
           {/* Video Control Bar */}
-          <div className="bg-neutral-950/95 border-t border-neutral-800/80 p-4 sm:p-5 space-y-3">
+          <div className="bg-ink-950/95 border-t border-ink-800/80 p-4 sm:p-5 space-y-3">
             
             {/* Timeline Scrubber */}
             <div 
               onClick={handleScrubberClick}
-              className="relative h-2.5 w-full bg-neutral-800/90 rounded-full cursor-pointer overflow-hidden group/scrub"
+              className="relative h-2.5 w-full bg-ink-800/90 rounded-full cursor-pointer overflow-hidden group/scrub"
               title="点击或拖动进度"
             >
               {/* Active Progress Fill */}
               <div 
-                className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-emerald-400 via-sky-400 to-indigo-400 transition-all duration-75"
+                className="absolute top-0 bottom-0 left-0 bg-[var(--accent)] transition-all duration-75"
                 style={{ width: `${(currentTime / TOTAL_DURATION) * 100}%` }}
               ></div>
 
@@ -693,7 +693,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
               <div className="flex items-center gap-3">
                 <button 
                   onClick={togglePlay}
-                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] active:scale-95"
                   title={isPlaying ? "暂停" : "播放"}
                 >
                   {isPlaying ? (
@@ -708,15 +708,15 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                   )}
                 </button>
 
-                <div className="font-mono text-neutral-300 font-semibold">
+                <div className="price font-mono text-white/70 tnum">
                   <span className="text-white">{formatTime(currentTime)}</span>
-                  <span className="text-neutral-500"> / {formatTime(TOTAL_DURATION)}</span>
+                  <span className="text-[var(--meta)]"> / {formatTime(TOTAL_DURATION)}</span>
                 </div>
 
                 {/* Sound Toggle */}
                 <button 
                   onClick={toggleMute}
-                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer flex items-center gap-1"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] active:scale-95"
                   title={isMuted ? "开启环境音" : "静音"}
                 >
                   {isMuted ? (
@@ -731,7 +731,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     </svg>
                   )}
-                  <span className="text-[10px] text-neutral-400 hidden sm:inline">{isMuted ? '已静音' : '声音开启'}</span>
+                  <span className="text-[10px] text-[var(--meta)] hidden sm:inline">{isMuted ? '已静音' : '声音开启'}</span>
                 </button>
               </div>
 
@@ -741,10 +741,10 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                   <button
                     key={idx}
                     onClick={() => seekTo(ch.start)}
-                    className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition cursor-pointer ${
+                    className={`px-2.5 py-1 rounded-lg font-mono text-[11px] tnum transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] active:scale-95 ${
                       activeChapterIdx === idx 
-                        ? 'bg-white text-black font-bold shadow' 
-                        : 'bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800'
+                        ? 'bg-[var(--accent)] text-white font-bold shadow-card' 
+                        : 'bg-ink-900 text-[var(--meta)] hover:text-white border border-ink-800 hover:border-ink-700'
                     }`}
                   >
                     {ch.title.split(' ')[0]} {ch.tag}
@@ -756,7 +756,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => setPlaybackSpeed(s => s === 1 ? 1.5 : (s === 1.5 ? 2 : 1))}
-                  className="px-2.5 py-1 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 font-mono text-[11px] transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-ink-900 hover:bg-ink-800 border border-ink-800 hover:border-ink-700 text-white/70 font-mono text-[11px] tnum transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] active:scale-95"
                   title="播放速度"
                 >
                   {playbackSpeed}x
@@ -765,7 +765,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
                 {/* Export / Download Video Button */}
                 <button 
                   onClick={exportVideoReel}
-                  className="px-3 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-[11px] transition flex items-center gap-1.5 cursor-pointer"
+                  className="press px-3 py-1 rounded-lg bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 border border-[var(--accent)]/30 text-[var(--accent)] font-mono text-[11px] transition-colors flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   title="下载视频文件 (.webm)"
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -778,7 +778,7 @@ function CampusCartVideoShowcase({ onOpenLogin }) {
 
                 <button 
                   onClick={toggleFullscreen}
-                  className="p-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 transition cursor-pointer"
+                  className="p-2 rounded-lg bg-ink-900 hover:bg-ink-800 border border-ink-800 hover:border-ink-700 text-white/70 transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] active:scale-95"
                   title="切换全屏"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

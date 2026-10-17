@@ -173,11 +173,11 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
       const isSelected = college.id === activeCollege?.id;
       const isBook = college.stream === 'book';
 
-      const primaryColor = isBook ? '#14b8a6' : '#f59e0b';
-      const badgeBg = isBook ? 'bg-teal-500' : 'bg-amber-500';
+      const primaryColor = isBook ? '#e5472a' : '#bc8611';
+      const badgeBg = isBook ? 'bg-[var(--accent)]' : 'bg-amber-500';
       const borderGlow = isSelected
-        ? `border-white ring-4 ${isBook ? 'ring-teal-500/70' : 'ring-amber-500/70'} scale-110`
-        : `border-white/90 ${isBook ? 'hover:ring-teal-400/50' : 'hover:ring-amber-400/50'} hover:scale-105`;
+        ? `border-white ring-4 ${isBook ? 'ring-[var(--accent)]/70' : 'ring-amber-500/70'} scale-110`
+        : `border-white/90 ${isBook ? 'hover:ring-[var(--accent)]/50' : 'hover:ring-amber-400/50'} hover:scale-105`;
 
       const pinHtml = `
         <div class="relative flex flex-col items-center group cursor-pointer transition-all duration-200 ${isSelected ? 'z-50' : 'z-20'}">
@@ -199,8 +199,8 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
 
           <div class="mt-0.5 px-1.5 py-0.5 rounded-md text-[9.5px] font-bold tracking-tight whitespace-nowrap shadow-md border transition-all ${
             isSelected
-              ? `${isBook ? 'bg-teal-950/95 border-teal-500 text-teal-200' : 'bg-amber-950/95 border-amber-500 text-amber-200'} scale-105`
-              : 'bg-neutral-900/90 border-white/20 text-neutral-200 group-hover:bg-neutral-800'
+              ? `${isBook ? 'bg-ink-950/95 border-[var(--accent)] text-white' : 'bg-amber-950/95 border-amber-500 text-amber-200'} scale-105`
+              : 'bg-ink-900/90 border-[var(--plate-line-strong)] text-[var(--on-ink)] group-hover:bg-ink-800'
           }">
             <span class="mr-0.5">${isBook ? '📚' : '🛍️'}</span>${college.shortName}
           </div>
@@ -221,7 +221,7 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
       }).addTo(map);
 
       const popupHtml = `
-        <div style="font-family: sans-serif; color: #fff; background: #0f172a; padding: 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.15); min-width: 220px;">
+        <div style="font-family: sans-serif; color: #fff; background: #191510; padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); min-width: 220px;">
           <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
             <span style="font-size:10px; font-weight:700; text-transform:uppercase; padding:2px 6px; border-radius:6px; background:${primaryColor}22; color:${primaryColor}; border:1px solid ${primaryColor}55;">
               ${isBook ? '📚 书籍专区校区' : '🛍️ 二手物品校区'}
@@ -230,10 +230,10 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
           <div style="font-weight:700; font-size:13px; color:#fff; margin-bottom:3px; line-height:1.2;">
             ${college.name}
           </div>
-          <div style="font-size:11px; color:#94a3b8; margin-bottom:8px;">
+          <div style="font-size:11px; color:#86868b; margin-bottom:8px;">
             📍 ${college.city} · ${college.district}
           </div>
-          <div style="font-size:11px; color:#38bdf8; background:rgba(56,189,248,0.1); padding:4px 8px; border-radius:6px; margin-bottom:8px; border:1px solid rgba(56,189,248,0.2);">
+          <div style="font-size:11px; color:#1f4fa0; background:rgba(31,79,160,0.1); padding:4px 8px; border-radius:6px; margin-bottom:8px; border:1px solid rgba(31,79,160,0.2);">
             ⚡ 交接时间：<b>${college.avgMeetupTime}</b>
           </div>
           <button id="popup-select-${college.id}" style="width:100%; cursor:pointer; background:${primaryColor}; color:#fff; font-weight:700; font-size:11px; padding:6px 10px; border-radius:8px; border:none;">
@@ -330,15 +330,15 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-neutral-950/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-6xl h-[94vh] max-h-[900px] bg-[#0c1017] border border-white/10 rounded-3xl shadow-2xl flex flex-col min-h-0 overflow-hidden text-white font-sans">
+    <div className="on-ink fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-ink-950/85 backdrop-blur-md animate-in fade-in duration-200" role="dialog" aria-modal="true" aria-label="河南大学校区地图">
+      <div className="hero-light animate-scale-in relative w-full max-w-6xl h-[94vh] max-h-[900px] bg-ink-950 border border-[var(--plate-line)] rounded-panel shadow-float flex flex-col min-h-0 overflow-hidden text-white font-sans">
         
         {/* =========================================================================
             HEADER BAR
            ========================================================================= */}
-        <div className="px-5 py-3 border-b border-white/10 flex items-center justify-between bg-white/[0.02] flex-shrink-0">
+        <div className="px-5 py-3 border-b border-[var(--plate-line)] flex items-center justify-between bg-[var(--plate-fill-faint)] flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400 flex-shrink-0">
+            <div className="w-9 h-9 rounded-2xl bg-[rgba(229,71,42,0.12)] border border-[rgba(229,71,42,0.3)] flex items-center justify-center text-[var(--accent)] flex-shrink-0">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
                 <line x1="8" y1="2" x2="8" y2="18"></line>
@@ -347,14 +347,14 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h2 className="font-display font-bold text-base sm:text-lg text-white tracking-wide">
+                <h2 className="display-3 text-white">
                   河南大学校区地图
                 </h2>
-                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30 uppercase">
+                <span className="eyebrow hidden sm:inline-block px-2 py-0.5 rounded-full text-[11px] bg-[rgba(229,71,42,0.15)] text-[var(--accent)] border border-[rgba(229,71,42,0.3)]">
                   金明校区 • 明伦校区
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-neutral-400">
+              <p className="text-[11px] sm:text-xs text-[var(--on-ink)]">
                 查看校区位置和建议交接点，具体时间地点请通过站内沟通确认。
               </p>
             </div>
@@ -362,7 +362,7 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 hover:text-white flex items-center justify-center transition border border-white/10 cursor-pointer flex-shrink-0"
+            className="w-8 h-8 rounded-full bg-[var(--plate-fill-strong)] hover:bg-[var(--plate-fill-stronger)] text-[var(--on-ink)] hover:text-white active:scale-90 focus-visible:ring-2 focus-visible:ring-[var(--accent)] flex items-center justify-center transition border border-[var(--plate-line)] cursor-pointer flex-shrink-0"
             title="关闭地图 (Esc)"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -375,16 +375,16 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
         {/* =========================================================================
             DUAL DELIVERY BANNER
            ========================================================================= */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 px-5 py-2 bg-white/[0.015] border-b border-white/5 text-xs flex-shrink-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 px-5 py-2 bg-[var(--plate-fill-faint)] border-b border-[var(--plate-line)] text-xs flex-shrink-0">
           <div 
             onClick={() => setSelectedDeliveryMode('in-campus')}
-            className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-2.5 ${
+            className={`p-2 rounded-xl border transition-all cursor-pointer active:scale-[0.99] flex items-center gap-2.5 ${
               selectedDeliveryMode === 'in-campus'
-                ? 'bg-teal-950/30 border-teal-500/50 shadow-sm shadow-teal-950/30'
-                : 'bg-white/[0.02] border-white/5 hover:border-white/20'
+                ? 'bg-[rgba(229,71,42,0.12)] border-[var(--accent)] shadow-sm'
+                : 'bg-[var(--plate-fill-faint)] border-[var(--plate-line)] hover:border-[var(--plate-line-strong)]'
             }`}
           >
-            <div className="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center flex-shrink-0">
+            <div className="w-6 h-6 rounded-lg bg-[rgba(229,71,42,0.16)] text-[var(--accent)] flex items-center justify-center flex-shrink-0">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
               </svg>
@@ -392,20 +392,20 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="font-bold text-white text-[11px]">校内当面交接</span>
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-[9px] px-1 rounded font-bold uppercase">
+                <span className="bg-[rgba(229,71,42,0.15)] text-[var(--accent)] border border-[rgba(229,71,42,0.3)] font-mono text-[9px] px-1 rounded font-bold uppercase">
                   双方协商
                 </span>
-                <span className="text-neutral-400 text-[10px]">按约定时间</span>
+                <span className="text-[var(--meta)] text-[11px]">按约定时间</span>
               </div>
             </div>
           </div>
 
           <div 
             onClick={() => setSelectedDeliveryMode('out-of-campus')}
-            className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-2.5 ${
+            className={`p-2 rounded-xl border transition-all cursor-pointer active:scale-[0.99] flex items-center gap-2.5 ${
               selectedDeliveryMode === 'out-of-campus'
                 ? 'bg-amber-950/30 border-amber-500/50 shadow-sm shadow-amber-950/30'
-                : 'bg-white/[0.02] border-white/5 hover:border-white/20'
+                : 'bg-[var(--plate-fill-faint)] border-[var(--plate-line)] hover:border-[var(--plate-line-strong)]'
             }`}
           >
             <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
@@ -422,7 +422,7 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
                 <span className="bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono text-[9px] px-1 rounded font-bold uppercase">
                   校内同学接单
                 </span>
-                <span className="text-neutral-400 text-[10px]">按双方约定</span>
+                <span className="text-[var(--meta)] text-[11px]">按双方约定</span>
               </div>
             </div>
           </div>
@@ -431,22 +431,22 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
         {/* =========================================================================
             STREAM TABS & SEARCH BAR
            ========================================================================= */}
-        <div className="px-5 py-2.5 bg-neutral-950/40 border-b border-white/5 flex flex-wrap items-center justify-between gap-2.5 text-xs flex-shrink-0">
-          <div className="flex items-center gap-1.5 bg-neutral-900/80 p-1 rounded-xl border border-white/10">
+        <div className="px-5 py-2.5 bg-ink-950/40 border-b border-[var(--plate-line)] flex flex-wrap items-center justify-between gap-2.5 text-xs flex-shrink-0">
+          <div className="flex items-center gap-1.5 bg-ink-900/80 p-1 rounded-xl border border-[var(--plate-line)]">
             {CAMPUS_STREAMS.map((s) => {
               const active = selectedStream === s.id;
               return (
                 <button
                   key={s.id}
                   onClick={() => setSelectedStream(s.id)}
-                  className={`px-3 py-1 rounded-lg font-semibold transition-all text-[11px] cursor-pointer ${
+                  className={`px-3 py-1 rounded-lg font-semibold transition-all text-[11px] cursor-pointer active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                     active
                       ? s.id === 'book'
-                        ? 'bg-teal-600 text-white shadow-sm'
+                        ? 'bg-[var(--accent)] text-white shadow-sm'
                         : s.id === 'goods'
                         ? 'bg-amber-500 text-white shadow-sm'
-                        : 'bg-white/20 text-white'
-                      : 'text-neutral-400 hover:text-white'
+                        : 'bg-[var(--plate-fill-stronger)] text-white'
+                      : 'text-[var(--meta)] hover:text-white'
                   }`}
                 >
                   {s.label}
@@ -463,7 +463,7 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
               fill="none"
               stroke="currentColor"
               strokeWidth="2.2"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--meta)] pointer-events-none"
             >
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -473,12 +473,12 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="搜索校区、城市或交接点..."
-              className="w-full bg-neutral-900/90 border border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-teal-400 transition"
+              className="w-full bg-ink-900/90 border border-[var(--plate-line)] hover:border-[var(--plate-line-stronger)] rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder:text-[var(--meta)] focus:outline-none focus:border-[var(--accent)] focus-visible:ring-4 focus-visible:ring-[rgba(229,71,42,0.35)] transition"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white text-xs"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--meta)] hover:text-white active:scale-90 focus-visible:ring-2 focus-visible:ring-[var(--accent)] text-xs cursor-pointer"
               >
                 ✕
               </button>
@@ -489,9 +489,9 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
         {/* =========================================================================
             PROMINENT ZONE SELECTOR (CHIPS + DROPDOWN SELECTOR)
            ========================================================================= */}
-        <div className="px-5 py-2 flex flex-wrap items-center justify-between gap-2 border-b border-white/5 bg-[#090d14] flex-shrink-0">
+        <div className="px-5 py-2 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--plate-line)] bg-ink-950 flex-shrink-0">
           <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
-            <span className="text-[10px] font-mono text-neutral-400 uppercase font-bold mr-1 flex-shrink-0">
+            <span className="eyebrow text-[11px] text-[var(--meta)] mr-1 flex-shrink-0">
               校区筛选：
             </span>
             {CAMPUS_ZONES.map((zone) => {
@@ -500,15 +500,15 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
                 <button
                   key={zone.id}
                   onClick={() => handleZoneSelect(zone.id)}
-                  className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all flex items-center gap-1.5 cursor-pointer border ${
+                  className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--accent)] flex items-center gap-1.5 cursor-pointer border ${
                     isSelected
-                      ? 'bg-teal-400 text-neutral-950 font-bold border-teal-300 shadow-md shadow-teal-950/40'
-                      : 'bg-white/5 text-neutral-300 border-white/10 hover:text-white hover:bg-white/10'
+                      ? 'bg-[var(--accent)] text-white font-bold border-[var(--accent-hover)] shadow-md shadow-black/30'
+                      : 'bg-[var(--plate-fill)] text-[var(--on-ink)] border-[var(--plate-line)] hover:text-white hover:bg-[var(--plate-fill-strong)]'
                   }`}
                 >
                   <span
                     className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: isSelected ? '#0f172a' : zone.color }}
+                    style={{ backgroundColor: isSelected ? '#191510' : zone.color }}
                   ></span>
                   <span>{zone.short}</span>
                 </button>
@@ -520,10 +520,10 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
             <select
               value={selectedZone}
               onChange={(e) => handleZoneSelect(e.target.value)}
-              className="bg-neutral-900 border border-white/15 text-neutral-200 text-[11px] font-medium rounded-lg px-2.5 py-1 focus:outline-none focus:border-teal-400 cursor-pointer"
+              className="bg-ink-900 border border-[var(--plate-line-strong)] hover:border-[var(--plate-line-stronger)] text-[var(--on-ink)] text-[11px] font-medium rounded-lg px-2.5 py-1 focus:outline-none focus:border-[var(--accent)] focus-visible:ring-4 focus-visible:ring-[rgba(229,71,42,0.35)] cursor-pointer"
             >
               {CAMPUS_ZONES.map((z) => (
-                <option key={z.id} value={z.id} className="bg-neutral-900 text-white">
+                <option key={z.id} value={z.id} className="bg-ink-900 text-white">
                   {z.name}
                 </option>
               ))}
@@ -537,28 +537,28 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
         <div className="flex-1 min-h-0 flex flex-col lg:flex-row overflow-hidden relative">
           
           {/* REAL LEAFLET MAP CONTAINER */}
-          <div className="relative flex-1 min-h-[260px] h-full bg-[#070a0f] overflow-hidden">
+          <div className="relative flex-1 min-h-[260px] h-full bg-ink-950 overflow-hidden">
             
             {/* The Actual Leaflet Canvas Div */}
             <div
               ref={mapContainerRef}
               className="w-full h-full z-0 cursor-grab active:cursor-grabbing"
-              style={{ background: '#070a0f' }}
+              style={{ background: '#000000' }}
             />
 
             {/* COMPACT, SLEEK ZOOM (+ / -) & RE-CENTER CONTROLS */}
             <div className="absolute top-3 left-3 z-30 flex flex-col gap-1.5">
-              <div className="bg-[#0e131d]/90 backdrop-blur-md rounded-xl border border-white/20 shadow-lg flex flex-col overflow-hidden">
+              <div className="glass-dark rounded-xl shadow-panel flex flex-col overflow-hidden">
                 <button
                   onClick={handleZoomIn}
-                  className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white hover:bg-teal-500/25 hover:text-teal-300 active:scale-95 transition text-base font-bold cursor-pointer border-b border-white/10"
+                  className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white hover:bg-[rgba(229,71,42,0.22)] hover:text-[var(--accent)] active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--accent)] transition text-base font-bold cursor-pointer border-b border-[var(--plate-line)]"
                   title="放大 (+)"
                 >
                   +
                 </button>
                 <button
                   onClick={handleZoomOut}
-                  className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white hover:bg-teal-500/25 hover:text-teal-300 active:scale-95 transition text-base font-bold cursor-pointer"
+                  className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white hover:bg-[rgba(229,71,42,0.22)] hover:text-[var(--accent)] active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--accent)] transition text-base font-bold cursor-pointer"
                   title="缩小 (-)"
                 >
                   &minus;
@@ -567,10 +567,10 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
 
               <button
                 onClick={handleResetCampusView}
-                className="bg-[#0e131d]/90 hover:bg-neutral-800 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/20 text-neutral-300 hover:text-white text-[10.5px] font-semibold shadow-md flex items-center gap-1 transition cursor-pointer active:scale-95"
+                className="glass-dark hover:bg-ink-800 px-2.5 py-1 rounded-xl text-[var(--on-ink)] hover:text-white text-[10.5px] font-semibold shadow-md flex items-center gap-1 transition cursor-pointer active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                 title="查看全部校区"
               >
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-teal-400">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[var(--accent)]">
                   <circle cx="12" cy="12" r="10"></circle>
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
@@ -580,42 +580,42 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
 
             {/* TOP RIGHT: MAP STYLE TOGGLE & PIN COUNT */}
             <div className="absolute top-3 right-3 z-30 flex items-center gap-2">
-              <div className="bg-[#0e131d]/90 backdrop-blur-md rounded-xl border border-white/20 p-0.5 flex items-center text-[10px] font-semibold shadow-md">
+              <div className="glass-dark rounded-xl p-0.5 flex items-center text-[11px] font-semibold shadow-md">
                 <button
                   onClick={() => setMapStyle('dark')}
-                  className={`px-2 py-1 rounded-lg transition cursor-pointer ${
-                    mapStyle === 'dark' ? 'bg-teal-500/30 text-teal-300 border border-teal-500/40' : 'text-neutral-400 hover:text-white'
+                  className={`px-2 py-1 rounded-lg transition cursor-pointer active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                    mapStyle === 'dark' ? 'bg-[rgba(229,71,42,0.25)] text-[var(--accent)] border border-[rgba(229,71,42,0.4)]' : 'text-[var(--meta)] hover:text-white'
                   }`}
                 >
                   🌙 深色
                 </button>
                 <button
                   onClick={() => setMapStyle('street')}
-                  className={`px-2 py-1 rounded-lg transition cursor-pointer ${
-                    mapStyle === 'street' ? 'bg-amber-500/30 text-amber-300 border border-amber-500/40' : 'text-neutral-400 hover:text-white'
+                  className={`px-2 py-1 rounded-lg transition cursor-pointer active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                    mapStyle === 'street' ? 'bg-amber-500/30 text-amber-300 border border-amber-500/40' : 'text-[var(--meta)] hover:text-white'
                   }`}
                 >
                   🗺️ 街道
                 </button>
               </div>
 
-              <div className="bg-[#0e131d]/90 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/20 text-teal-400 text-[10.5px] font-mono font-bold shadow-md hidden sm:flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
-                <span>{filteredColleges.length} 个校区</span>
+              <div className="glass-dark px-2.5 py-1 rounded-xl text-[var(--accent)] text-[10.5px] font-mono font-bold shadow-md hidden sm:flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-success-400 text-success-400 animate-pulse"></span>
+                <span className="price">{filteredColleges.length} 个校区</span>
               </div>
             </div>
 
             {/* BOTTOM MAP LEGEND */}
-            <div className="absolute bottom-3 left-3 z-30 bg-[#0e131d]/90 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/20 shadow-md flex items-center gap-2.5 text-[10px]">
+            <div className="absolute bottom-3 left-3 z-30 glass-dark px-2.5 py-1.5 rounded-xl shadow-md flex items-center gap-2.5 text-[11px]">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-teal-500 border border-white shadow-sm"></span>
-                <span className="text-neutral-200 font-semibold">书籍专区校区</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent)] border border-white shadow-sm"></span>
+                <span className="text-[var(--on-ink)] font-semibold">书籍专区校区</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500 border border-white shadow-sm"></span>
-                <span className="text-neutral-200 font-semibold">二手物品校区</span>
+                <span className="text-[var(--on-ink)] font-semibold">二手物品校区</span>
               </div>
-              <div className="hidden sm:flex items-center gap-1 pl-1.5 border-l border-white/10 text-neutral-400 text-[9.5px]">
+              <div className="hidden sm:flex items-center gap-1 pl-1.5 border-l border-[var(--plate-line)] text-[var(--meta)] text-[9.5px]">
                 <span>点击图钉查看详情</span>
               </div>
             </div>
@@ -625,17 +625,17 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
           {/* =========================================================================
               SIDEBAR INSPECTOR WITH VISIBLE SLIDING BAR & PINNED ACTION BUTTON
              ========================================================================= */}
-          <div className="w-full lg:w-96 bg-[#0c1017] border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col flex-shrink-0 min-h-0 overflow-hidden">
+          <div className="w-full lg:w-96 bg-ink-950 border-t lg:border-t-0 lg:border-l border-[var(--plate-line)] flex flex-col flex-shrink-0 min-h-0 overflow-hidden">
             
             {/* Sidebar Top Header */}
-            <div className="px-4 py-2.5 border-b border-white/10 bg-white/[0.02] flex items-center justify-between flex-shrink-0">
+            <div className="px-4 py-2.5 border-b border-[var(--plate-line)] bg-[var(--plate-fill-faint)] flex items-center justify-between flex-shrink-0">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-white">
+                <span className="w-2 h-2 rounded-full bg-success-400 text-success-400 animate-pulse"></span>
+                <span className="eyebrow text-[11px] font-mono text-white">
                   校区与交接点
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-neutral-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+              <span className="price text-[11px] font-mono text-[var(--meta)] bg-[var(--plate-fill)] px-2 py-0.5 rounded-full border border-[var(--plate-line)]">
                 {filteredColleges.length} 个在列
               </span>
             </div>
@@ -645,16 +645,16 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
               
               {/* Active Selected Campus Details */}
               {activeCollege && (
-                <div className="space-y-3 bg-white/[0.015] p-3.5 rounded-2xl border border-white/5">
+                <div className="plate-dark space-y-3 p-4">
                   <div className="flex items-center justify-between gap-2">
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase border ${
+                    <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase border ${
                       activeCollege.stream === 'book'
-                        ? 'bg-teal-500/20 text-teal-300 border-teal-500/40'
+                        ? 'bg-[rgba(229,71,42,0.16)] text-[var(--accent)] border-[rgba(229,71,42,0.4)]'
                         : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                     }`}>
                       {activeCollege.stream === 'book' ? '📚 书籍专区校区' : '🛍️ 二手物品校区'}
                     </span>
-                    <span className="text-[10px] font-mono text-neutral-400">
+                    <span className="text-[11px] font-mono text-[var(--meta)]">
                       {activeCollege.district}
                     </span>
                   </div>
@@ -663,40 +663,40 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
                     <h3 className="font-display font-bold text-white text-base leading-snug">
                       {activeCollege.name}
                     </h3>
-                    <p className="text-xs text-neutral-400 mt-0.5">
+                    <p className="text-xs text-[var(--on-ink)] mt-0.5">
                       📍 {activeCollege.city} · {activeCollege.district}
                     </p>
                   </div>
 
                   {/* Key Metrics */}
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-neutral-900/90 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-neutral-400 block font-mono uppercase">约定交接</span>
-                      <span className="text-xs font-bold text-emerald-400 flex items-center gap-1 mt-0.5">
+                    <div className="bg-ink-900/90 p-2.5 rounded-xl border border-[var(--plate-line)]">
+                      <span className="text-[9px] text-[var(--meta)] block font-mono uppercase">约定交接</span>
+                      <span className="tnum text-xs font-bold text-[var(--accent)] flex items-center gap-1 mt-0.5">
                         ⚡ {activeCollege.avgMeetupTime}
                       </span>
                     </div>
-                    <div className="bg-neutral-900/90 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-neutral-400 block font-mono uppercase">建议交接点</span>
-                      <span className="text-xs font-bold text-teal-400 flex items-center gap-1 mt-0.5">
+                    <div className="bg-ink-900/90 p-2.5 rounded-xl border border-[var(--plate-line)]">
+                      <span className="text-[9px] text-[var(--meta)] block font-mono uppercase">建议交接点</span>
+                      <span className="text-xs font-bold text-[var(--accent)] flex items-center gap-1 mt-0.5">
                         📍 {activeCollege.primaryPickup}
                       </span>
                     </div>
                   </div>
 
                   {/* Safe Pickup Points */}
-                  <div className="bg-neutral-900/70 p-2.5 rounded-xl border border-white/5 space-y-1.5">
+                  <div className="bg-ink-900/70 p-2.5 rounded-xl border border-[var(--plate-line)] space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-neutral-400 uppercase font-bold">
+                      <span className="text-[11px] font-mono text-[var(--meta)] uppercase font-bold">
                         建议交接点：
                       </span>
-                      <span className="text-[9px] font-mono text-emerald-400 font-bold uppercase">公共区域</span>
+                      <span className="text-[9px] font-mono text-[var(--accent)] font-bold uppercase">公共区域</span>
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {activeCollege.pickupPoints.map((spot, idx) => (
                         <span
                           key={idx}
-                          className="bg-white/5 border border-white/10 text-neutral-300 text-[10px] px-2 py-0.5 rounded-md"
+                          className="bg-[var(--plate-fill)] border border-[var(--plate-line)] text-[var(--on-ink)] text-[11px] px-2 py-0.5 rounded-md"
                         >
                           ✓ {spot}
                         </span>
@@ -705,24 +705,24 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
                   </div>
 
                   {/* Campus Highlight Note */}
-                  <p className="text-[10.5px] text-neutral-300 italic bg-white/[0.02] p-2.5 rounded-xl border border-white/5 leading-relaxed">
+                  <p className="text-[10.5px] text-[var(--on-ink)] italic bg-[var(--plate-fill-faint)] p-2.5 rounded-xl border border-[var(--plate-line)] leading-relaxed">
                     "{activeCollege.highlight}"
                   </p>
                 </div>
               )}
 
               {/* List of Campuses in View */}
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center justify-between px-1 text-[10.5px] font-mono text-neutral-400 uppercase font-bold">
+              <div className="reveal space-y-2 pt-1">
+                <div className="eyebrow flex items-center justify-between px-1 text-[10.5px] font-mono text-[var(--meta)]">
                   <span>
                     {selectedZone === 'all'
                       ? `全部校区（${filteredColleges.length}）`
                       : `当前校区（${filteredColleges.length}）`}
                   </span>
-                  <span className="text-[9.5px] text-teal-400">点击查看</span>
+                  <span className="text-[9.5px] text-[var(--accent)]">点击查看</span>
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="overflow-hidden rounded-lg border border-[var(--plate-line)] divide-y divide-[var(--plate-line)]">
                   {filteredColleges.map((col) => {
                     const isSelected = col.id === activeCollege?.id;
                     const isBook = col.stream === 'book';
@@ -730,17 +730,17 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
                       <div
                         key={col.id}
                         onClick={() => focusOnCollege(col)}
-                        className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
+                        className={`p-2.5 transition-colors cursor-pointer flex items-center justify-between ${
                           isSelected
                             ? isBook
-                              ? 'bg-teal-950/40 border-teal-500 text-white shadow-sm'
-                              : 'bg-amber-950/40 border-amber-500 text-white shadow-sm'
-                            : 'bg-white/[0.02] border-white/5 hover:border-white/20 hover:bg-white/[0.05] text-neutral-300'
+                              ? 'bg-[rgba(229,71,42,0.14)] text-white'
+                              : 'bg-[rgba(255,159,10,0.14)] text-white'
+                            : 'hover:bg-[var(--plate-fill-faint)] text-[var(--on-ink)]'
                         }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
                           <div className={`w-6 h-6 rounded-lg flex items-center justify-center text-white text-[11px] flex-shrink-0 ${
-                            isBook ? 'bg-teal-500' : 'bg-amber-500'
+                            isBook ? 'bg-[var(--accent)]' : 'bg-amber-500'
                           }`}>
                             {isBook ? '📚' : '🛍️'}
                           </div>
@@ -748,7 +748,7 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
                             <div className="font-semibold text-white text-xs truncate">
                               {col.shortName}
                             </div>
-                            <div className="text-[10px] text-neutral-400 truncate">
+                            <div className="tnum text-[11px] text-[var(--meta)] truncate">
                               {col.city} · {col.avgMeetupTime}
                             </div>
                           </div>
@@ -756,11 +756,11 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
 
                         <div className="flex items-center gap-1.5 flex-shrink-0">
                           {isSelected && (
-                            <span className="text-[9px] font-mono font-bold uppercase bg-teal-500/20 text-teal-300 border border-teal-500/30 px-1.5 py-0.5 rounded">
+                            <span className="text-[9px] font-mono font-bold uppercase bg-[rgba(229,71,42,0.18)] text-[var(--accent)] border border-[rgba(229,71,42,0.35)] px-1.5 py-0.5 rounded">
                               当前
                             </span>
                           )}
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-neutral-500">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--meta)]">
                             <polyline points="9 18 15 12 9 6"></polyline>
                           </svg>
                         </div>
@@ -774,16 +774,16 @@ export default function CampusMapModal({ isOpen, onClose, onSelectCampus }) {
 
             {/* PINNED ALWAYS-VISIBLE ACTION FOOTER (NEVER CUT OFF) */}
             {activeCollege && (
-              <div className="p-3 border-t border-white/10 bg-[#0a0e16] flex-shrink-0 shadow-2xl">
+              <div className="p-3 border-t border-[var(--plate-line)] bg-ink-950 flex-shrink-0 shadow-2xl">
                 <button
                   onClick={() => {
                     if (onSelectCampus) onSelectCampus(activeCollege);
                     onClose();
                   }}
-                  className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] ${
+                  className={`press w-full py-2.5 px-4 rounded-field font-bold text-xs shadow-lg transition-colors focus-visible:ring-4 focus-visible:ring-[rgba(229,71,42,0.35)] flex items-center justify-center gap-2 ${
                     activeCollege.stream === 'book'
-                      ? 'bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-neutral-950 shadow-teal-950/60'
-                      : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-neutral-950 shadow-amber-950/60'
+                      ? 'bg-[var(--accent)] hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)] text-white'
+                      : 'bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-ink-950'
                   }`}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

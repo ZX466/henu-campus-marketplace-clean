@@ -11,6 +11,7 @@ from app.models.product import (
 )
 from app.data.initial_data import INITIAL_PRODUCTS
 from app.core.auth import get_current_user
+from app.core.config import settings
 from app.core.errors import ERROR_RESPONSES, ApiError
 
 
@@ -294,6 +295,10 @@ async def seed_products(
         description="Force re-seed even if products already exist",
     ),
 ):
+    # 开发用接口：force=true 会清空全部商品，线上环境（APP_ENV=production）直接关闭
+    if settings.is_production:
+        raise ApiError(404, "Not Found", code="NOT_FOUND")
+
     db = get_database()
 
     count = await db["products"].count_documents({})
