@@ -45,7 +45,7 @@ const starterTasks = [
   }
 ];
 
-function loadTasks() {
+function loadLocalTasks() {
   try {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -89,7 +89,7 @@ const STATUS_META = {
 const CAMPUS_OPTIONS = ["全部校区", "金明校区", "明伦校区"];
 
 export default function ServicesSection({ onNotify, isLoggedIn = false, onRequireLogin }) {
-  const [tasks, setTasks] = useState(loadTasks);
+  const [tasks, setTasks] = useState(loadLocalTasks);
   const [dataSource, setDataSource] = useState("local");
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");

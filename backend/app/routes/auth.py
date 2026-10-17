@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Response, status, Depends, Request
@@ -10,6 +11,7 @@ from app.core.auth import (
     verify_password,
 )
 from app.core.mongodb import get_database
+from app.core.errors import ApiError
 from app.models.auth import (
     LoginRequest,
     RegisterRequest,
@@ -22,6 +24,8 @@ router = APIRouter(
     prefix="/api/v1/auth",
     tags=["Authentication & Student Access"],
 )
+
+logger = logging.getLogger("campuscart.auth")
 
 
 def derive_student_details(email: str):
@@ -111,16 +115,10 @@ async def login(
     email = payload.email.strip().lower()
 
     if not email:
-        raise HTTPException(
-            status_code=400,
-            detail="邮箱不能为空。",
-        )
+        raise ApiError(400, "邮箱不能为空。", code="AUTH_EMAIL_REQUIRED")
 
     if not payload.password:
-        raise HTTPException(
-            status_code=400,
-            detail="密码不能为空。",
-        )
+        raise ApiError(400, "密码不能为空。", code="AUTH_PASSWORD_REQUIRED")
 
     roll, *_ = derive_student_details(email)
 
@@ -130,25 +128,29 @@ async def login(
         db = get_database()
         user_doc = await db["users"].find_one({"email": email})
     except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="用户服务暂时不可用，请稍后再试。",
+        logger.exception("Login failed: user service unavailable")
+        raise ApiError(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "用户服务暂时不可用，请稍后再试。",
+            code="AUTH_SERVICE_UNAVAILABLE",
         )
 
     # 未注册的账号不允许登录（不再自动创建账号）
     if not user_doc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="该邮箱尚未注册，请先注册后再登录。",
+        raise ApiError(
+            status.HTTP_401_UNAUTHORIZED,
+            "该邮箱尚未注册，请先注册后再登录。",
+            code="AUTH_UNREGISTERED",
         )
 
     stored_hash = user_doc.get("password_hash")
 
     # 强制校验密码，任何不匹配都拒绝登录
     if not stored_hash or not verify_password(payload.password, stored_hash):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="邮箱或密码错误。",
+        raise ApiError(
+            status.HTTP_401_UNAUTHORIZED,
+            "邮箱或密码错误。",
+            code="AUTH_INVALID_CREDENTIALS",
         )
 
     try:
@@ -209,16 +211,10 @@ async def register(
     email = req.email.strip().lower()
 
     if not email:
-        raise HTTPException(
-            status_code=400,
-            detail="邮箱不能为空。",
-        )
+        raise ApiError(400, "邮箱不能为空。", code="AUTH_EMAIL_REQUIRED")
 
     if not req.password:
-        raise HTTPException(
-            status_code=400,
-            detail="注册密码不能为空。",
-        )
+        raise ApiError(400, "注册密码不能为空。", code="AUTH_PASSWORD_REQUIRED")
 
     roll, name, dept, campus, hostel = derive_student_details(email)
 
@@ -265,9 +261,10 @@ async def register(
             message = "账号认领成功，新密码已生效。"
 
         elif existing:
-            raise HTTPException(
-                status_code=400,
-                detail="该邮箱已注册，请直接登录。",
+            raise ApiError(
+                400,
+                "该邮箱已注册，请直接登录。",
+                code="AUTH_EMAIL_TAKEN",
             )
 
         else:
@@ -325,9 +322,11 @@ async def register(
         raise
 
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=str(e),
+        logger.exception("Registration failed")
+        raise ApiError(
+            500,
+            "注册失败，请稍后再试。",
+            code="AUTH_REGISTER_FAILED",
         )
 
 
@@ -357,9 +356,10 @@ async def me(
 
     if not user:
         # 账号不存在（未注册或已注销）→ 会话失效，必须重新登录
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="账号不存在或会话已失效，请重新登录。",
+        raise ApiError(
+            status.HTTP_401_UNAUTHORIZED,
+            "账号不存在或会话已失效，请重新登录。",
+            code="AUTH_SESSION_INVALID",
         )
 
     return AuthResponse(

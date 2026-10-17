@@ -108,6 +108,9 @@ async def checkout(payload: CheckoutRequest, current=Depends(get_current_user)):
                 inserted = await db["orders"].insert_one(order, session=sess)
                 await db["carts"].update_one({"user_id": current["sub"]}, {"$set": {"items": []}}, upsert=True, session=sess)
                 order["id"] = str(inserted.inserted_id)
+                # insert_one() 会把 ObjectId 类型的 _id 写回 dict，
+                # 直接返回会导致 FastAPI 无法 JSON 序列化（提交成功后仍报 500）。
+                order.pop("_id", None)
 
                 # ------------------------------------------------------------
                 # SELLER NOTIFICATIONS:
@@ -123,7 +126,7 @@ async def checkout(payload: CheckoutRequest, current=Depends(get_current_user)):
                             "sender_name": buyer_name,
                             "type": "ITEM_SOLD",
                             "title": f"🎉 Item Sold: {s_item['title']}",
-                            "message": f"{buyer_name} just purchased {s_item['qty']}x '{s_item['title']}' for ₹{s_item['price'] * s_item['qty']:.2f}. Safe Handshake Token: {order_pickup_token}",
+                            "message": f"{buyer_name} just purchased {s_item['qty']}x '{s_item['title']}' for ¥{s_item['price'] * s_item['qty']:.2f}. Safe Handshake Token: {order_pickup_token}",
                             "order_id": order["id"],
                             "product_id": str(s_item.get("id")),
                             "pickup_token": order_pickup_token,
