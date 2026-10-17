@@ -1,9 +1,24 @@
-"""pytest 公共夹具（周期一 · 王少鹏）。
+"""Shared pytest fixtures for the CampusCart backend test suite.
 
-让后端测试在「有 MongoDB」和「没有 MongoDB」两种环境下都能给出明确结论：
-数据库不可用时，依赖真实数据库的用例显示为 skipped，而不是一片连接报错。
+Two concerns live here:
 
-真机上有 MongoDB 时，这个夹具不做任何事，所有用例照常执行。
+1. Event-loop hygiene (fix/errand-integration-tests-docs).
+   ``mongo_manager`` is a module-level singleton whose Motor client is bound to
+   whichever event loop first calls ``get_database()``. pytest-asyncio gives each
+   async fixture and each async test its own function-scoped loop, so a client
+   cached while a fixture ran is later reused from the test's different loop and
+   Motor raises ``RuntimeError: ... attached to a different loop`` (surfacing as a
+   500 from any write endpoint, and as a bogus 200 from the auto-provisioning
+   login path).
+
+   pytest-asyncio 0.24 has no "test loop scope" ini option, so the scope is set
+   per item here: every test and every async fixture runs on one session-scoped
+   loop, and the singleton cache is reset between tests so a client cached on a
+   closed loop is never reused.
+
+2. Clear results without MongoDB (upstream api-contract-check).
+   When 127.0.0.1:27017 is unreachable, modules that need real reads and writes
+   report as skipped instead of failing with a wall of connection errors.
 """
 
 import socket
@@ -31,6 +46,14 @@ MONGO_AVAILABLE = mongo_reachable()
 MONGO_DEPENDENT_MODULES = {"test_errands"}
 
 
+def pytest_collection_modifyitems(items):
+    """Force every async test onto the session-scoped event loop."""
+    asyncio_marker = pytest.mark.asyncio(loop_scope="session")
+    for item in items:
+        if getattr(item, "fixturenames", None):
+            item.add_marker(asyncio_marker)
+
+
 @pytest.fixture(autouse=True)
 def require_mongodb(request):
     """MongoDB 不可用时，跳过依赖数据库的测试模块。"""
@@ -42,3 +65,15 @@ def require_mongodb(request):
 
     if module_name in MONGO_DEPENDENT_MODULES:
         pytest.skip("MongoDB 未启动（127.0.0.1:27017）：跳过依赖数据库的用例")
+
+
+@pytest.fixture(autouse=True)
+def _reset_mongo_singleton():
+    """Drop any cached client so the next ``get_database()`` builds its own."""
+    from app.core import mongodb
+
+    mongodb.mongo_manager.client = None
+    mongodb.mongo_manager.db = None
+    yield
+    mongodb.mongo_manager.client = None
+    mongodb.mongo_manager.db = None

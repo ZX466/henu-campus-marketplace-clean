@@ -424,8 +424,8 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
     if (isBlinking || emotion === "sleepy") {
       return (
         <>
-          <path d="M 32 51 Q 42 51 52 51" stroke="#FFB020" strokeWidth="4.5" strokeLinecap="round" filter="url(#glow)" />
-          <path d="M 68 51 Q 78 51 88 51" stroke="#FFB020" strokeWidth="4.5" strokeLinecap="round" filter="url(#glow)" />
+          <path d="M 32 51 Q 42 51 52 51" stroke="#bc8611" strokeWidth="4.5" strokeLinecap="round" filter="url(#glow)" />
+          <path d="M 68 51 Q 78 51 88 51" stroke="#bc8611" strokeWidth="4.5" strokeLinecap="round" filter="url(#glow)" />
         </>
       );
     }
@@ -434,8 +434,8 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
     if (emotion === "happy") {
       return (
         <>
-          <path d="M 34 54 Q 42 42 50 54" fill="none" stroke="#FFB400" strokeWidth="5.5" strokeLinecap="round" filter="url(#glow)" />
-          <path d="M 70 54 Q 78 42 86 54" fill="none" stroke="#FFB400" strokeWidth="5.5" strokeLinecap="round" filter="url(#glow)" />
+          <path d="M 34 54 Q 42 42 50 54" fill="none" stroke="#bc8611" strokeWidth="5.5" strokeLinecap="round" filter="url(#glow)" />
+          <path d="M 70 54 Q 78 42 86 54" fill="none" stroke="#bc8611" strokeWidth="5.5" strokeLinecap="round" filter="url(#glow)" />
         </>
       );
     }
@@ -446,13 +446,13 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
         <>
           <path
             d="M 42 43 C 39 37 32 37 32 44 C 32 50 42 57 42 57 C 42 57 52 50 52 44 C 52 37 45 37 42 43 Z"
-            fill="#FF8038"
+            fill="#bc8611"
             filter="url(#glow)"
             transform="scale(0.85) translate(8, 7)"
           />
           <path
             d="M 78 43 C 75 37 68 37 68 44 C 68 50 78 57 78 57 C 78 57 88 50 88 44 C 88 37 81 37 78 43 Z"
-            fill="#FF8038"
+            fill="#bc8611"
             filter="url(#glow)"
             transform="scale(0.85) translate(18, 7)"
           />
@@ -470,10 +470,10 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
             width="12"
             height="14"
             rx="4"
-            fill="#FFAA00"
+            fill="#bc8611"
             filter="url(#glow)"
           />
-          <path d="M 70 53 Q 78 45 86 53" fill="none" stroke="#FFAA00" strokeWidth="5" strokeLinecap="round" filter="url(#glow)" />
+          <path d="M 70 53 Q 78 45 86 53" fill="none" stroke="#bc8611" strokeWidth="5" strokeLinecap="round" filter="url(#glow)" />
         </>
       );
     }
@@ -501,7 +501,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
             width={eyeWidth - 4}
             height="3"
             rx="1.5"
-            fill="#FFF4D0"
+            fill="#fff0d6"
             opacity="0.9"
           />
         </g>
@@ -523,7 +523,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
             width={eyeWidth - 4}
             height="3"
             rx="1.5"
-            fill="#FFF4D0"
+            fill="#fff0d6"
             opacity="0.9"
           />
         </g>
@@ -561,17 +561,17 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
         transform: `rotate(${dragTilt}deg)`,
         transition: isDragging ? "none" : "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
       }}
-      className="group select-none"
+      className="on-ink group select-none"
       title="校园小助手 — 你的 AI 伙伴（可拖拽到任意位置）"
     >
       {/* ── Quick Hover Speech Bubble ── */}
       {showQuickBubble && !isChatOpen && !isDragging && (
         <div
-          className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-neutral-900/90 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full shadow-xl border border-white/20 backdrop-blur-md pointer-events-none transition-all duration-300 animate-bounce"
+          className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap floating-pill text-white text-[11px] font-semibold px-3 py-1.5 rounded-full pointer-events-none transition-all duration-300 animate-bounce"
           style={{ animationDuration: "2.4s" }}
         >
           <span>{bubbleText}</span>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-neutral-900/90" />
+          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-[var(--glass-dark-bg)]" />
         </div>
       )}
 
@@ -589,23 +589,23 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               {/* Head Shell Gloss */}
               <linearGradient id="headGloss" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#FFFFFF" />
-                <stop offset="45%" stopColor="#F5F7FA" />
-                <stop offset="85%" stopColor="#DFE4EA" />
-                <stop offset="100%" stopColor="#CCD1D9" />
+                <stop offset="45%" stopColor="#f5f5f7" />
+                <stop offset="85%" stopColor="#e8e8ed" />
+                <stop offset="100%" stopColor="#d2d2d7" />
               </linearGradient>
 
               {/* Antenna Chrome */}
               <linearGradient id="chromeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#8A939E" />
+                <stop offset="0%" stopColor="#86868b" />
                 <stop offset="45%" stopColor="#FFFFFF" />
-                <stop offset="70%" stopColor="#ADB6C2" />
-                <stop offset="100%" stopColor="#5B626C" />
+                <stop offset="70%" stopColor="#aeaeb2" />
+                <stop offset="100%" stopColor="#6e6e73" />
               </linearGradient>
 
               {/* Eye Socket Convex Glass */}
               <radialGradient id="socketGrad" cx="40%" cy="35%" r="65%">
-                <stop offset="0%" stopColor="#1E2229" />
-                <stop offset="70%" stopColor="#0B0D11" />
+                <stop offset="0%" stopColor="#191510" />
+                <stop offset="70%" stopColor="#000000" />
                 <stop offset="100%" stopColor="#000000" />
               </radialGradient>
 
@@ -620,9 +620,9 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
 
               {/* Amber Pupil Gradient */}
               <linearGradient id="amberPupilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#FFDE59" />
-                <stop offset="60%" stopColor="#FF9F0A" />
-                <stop offset="100%" stopColor="#E06D00" />
+                <stop offset="0%" stopColor="#ffd60a" />
+                <stop offset="60%" stopColor="#bc8611" />
+                <stop offset="100%" stopColor="#c26a00" />
               </linearGradient>
 
               {/* Head Soft Highlight */}
@@ -634,42 +634,42 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
 
               {/* Ear Discs */}
               <radialGradient id="earDiscGrad" cx="40%" cy="40%" r="60%">
-                <stop offset="0%" stopColor="#3A3F47" />
-                <stop offset="80%" stopColor="#1A1C20" />
-                <stop offset="100%" stopColor="#0D0E11" />
+                <stop offset="0%" stopColor="#3a3a3c" />
+                <stop offset="80%" stopColor="#191510" />
+                <stop offset="100%" stopColor="#000000" />
               </radialGradient>
             </defs>
 
             {/* ── Side Ears / Discs ── */}
             <ellipse cx="14" cy="54" rx="5.5" ry="11" fill="url(#earDiscGrad)" stroke="#111" strokeWidth="1" />
-            <ellipse cx="14" cy="54" rx="2.5" ry="6" fill="#555B66" opacity="0.6" />
+            <ellipse cx="14" cy="54" rx="2.5" ry="6" fill="#6e6e73" opacity="0.6" />
 
             <ellipse cx="106" cy="54" rx="5.5" ry="11" fill="url(#earDiscGrad)" stroke="#111" strokeWidth="1" />
-            <ellipse cx="106" cy="54" rx="2.5" ry="6" fill="#555B66" opacity="0.6" />
+            <ellipse cx="106" cy="54" rx="2.5" ry="6" fill="#6e6e73" opacity="0.6" />
 
             {/* ── Lower Neck / Body Collar Ring ── */}
             <path
               d="M 38 88 Q 60 96 82 88 Q 78 98 60 99 Q 42 98 38 88 Z"
-              fill="#181B20"
-              stroke="#0A0B0E"
+              fill="#191510"
+              stroke="#000000"
               strokeWidth="1.2"
             />
             {/* White Chest Segment Peek */}
             <path
               d="M 44 94 Q 60 102 76 94 Q 72 106 60 107 Q 48 106 44 94 Z"
-              fill="#E6ECF2"
+              fill="#e8e8ed"
               opacity="0.9"
             />
 
             {/* ── Antenna Base & Mast ── */}
-            <ellipse cx="60" cy="18" rx="7" ry="3.5" fill="url(#chromeGrad)" stroke="#4A5059" strokeWidth="0.8" />
+            <ellipse cx="60" cy="18" rx="7" ry="3.5" fill="url(#chromeGrad)" stroke="#515154" strokeWidth="0.8" />
             <line x1="60" y1="18" x2="60" y2="7" stroke="url(#chromeGrad)" strokeWidth="2.2" strokeLinecap="round" />
             {/* Antenna Top Ball with Dynamic Reaction Glow */}
             <circle
               cx="60"
               cy="6"
               r="4"
-              fill={emotion === "love" ? "#FF4D6D" : emotion === "happy" ? "#00E5FF" : emotion === "excited" ? "#FF9F0A" : "#1A1D24"}
+              fill={emotion === "love" ? "#e5472a" : emotion === "happy" ? "#2f7d4f" : emotion === "excited" ? "#bc8611" : "#191510"}
               stroke="url(#chromeGrad)"
               strokeWidth="1.2"
               filter={emotion !== "normal" && emotion !== "sleepy" ? "url(#glow)" : undefined}
@@ -682,7 +682,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               cy="54"
               r="45"
               fill="url(#headGloss)"
-              stroke="#B8C0CC"
+              stroke="#aeaeb2"
               strokeWidth="0.8"
             />
 
@@ -696,7 +696,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
             />
 
             {/* ── Forehead Sensor Dot ── */}
-            <circle cx="60" cy="38" r="3.2" fill="#14171C" />
+            <circle cx="60" cy="38" r="3.2" fill="#191510" />
             <circle cx="59" cy="37" r="1" fill="#FFFFFF" opacity="0.5" />
 
             {/* ── Left Eye Socket (Concave Gloss Black) ── */}
@@ -705,7 +705,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               cy="52"
               r="17"
               fill="url(#socketGrad)"
-              stroke="#2B303A"
+              stroke="#3a3a3c"
               strokeWidth="2.4"
             />
             <path
@@ -723,7 +723,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               cy="52"
               r="17"
               fill="url(#socketGrad)"
-              stroke="#2B303A"
+              stroke="#3a3a3c"
               strokeWidth="2.4"
             />
             <path
@@ -744,7 +744,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               cy="64"
               rx="5"
               ry="2.5"
-              fill="#FF7E94"
+              fill="#e5472a"
               opacity={isHovered || emotion === "love" || emotion === "happy" ? "0.65" : "0"}
               className="transition-opacity duration-300"
             />
@@ -753,7 +753,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               cy="64"
               rx="5"
               ry="2.5"
-              fill="#FF7E94"
+              fill="#e5472a"
               opacity={isHovered || emotion === "love" || emotion === "happy" ? "0.65" : "0"}
               className="transition-opacity duration-300"
             />
@@ -770,7 +770,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
                   : "M 52 73 Q 60 78 68 73"
               }
               fill="none"
-              stroke="#1C2129"
+              stroke="#191510"
               strokeWidth="2.2"
               strokeLinecap="round"
               className="transition-all duration-200"
@@ -796,7 +796,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
       {isChatOpen && (
         <div
           onPointerDown={(e) => e.stopPropagation()}
-          className={`campusbot-chat-window absolute ${chatPlacementClass} ${chatVerticalClass} w-80 sm:w-96 rounded-3xl overflow-hidden shadow-2xl border border-white/20 text-left`}
+          className={`campusbot-chat-window absolute ${chatPlacementClass} ${chatVerticalClass} w-80 sm:w-96 rounded-panel overflow-hidden shadow-float border border-[var(--plate-line-strong)] text-left`}
           style={{
             background: "rgba(18, 20, 26, 0.88)",
             backdropFilter: "blur(32px)",
@@ -806,17 +806,17 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
           }}
         >
           {/* Header Bar */}
-          <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-white/[0.03]">
+          <div className="px-5 py-4 border-b border-[var(--plate-line)] flex items-center justify-between bg-[var(--plate-fill-faint)]">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-sm shadow-inner">
+              <div className="w-8 h-8 rounded-full bg-[var(--plate-fill-strong)] border border-[var(--plate-line-strong)] flex items-center justify-center text-sm shadow-inner">
                 🤖
               </div>
               <div>
-                <h4 className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+                <h4 className="font-display text-sm font-bold text-white tracking-tight flex items-center gap-2">
                   校园小助手
-                  <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="pulse-ring inline-block w-2 h-2 rounded-full bg-success-400 text-success-400" />
                 </h4>
-                <p className="text-[10px] text-white/50">校园 AI 伙伴</p>
+                <p className="eyebrow text-[11px] text-[var(--on-ink)]">校园 AI 伙伴</p>
               </div>
             </div>
 
@@ -825,7 +825,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               <button
                 type="button"
                 onClick={() => setSoundEnabled((prev) => !prev)}
-                className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 text-xs transition"
+                className="w-7 h-7 rounded-full flex items-center justify-center text-[var(--on-ink)] hover:text-white hover:bg-[var(--plate-fill-strong)] active:scale-90 text-xs transition cursor-pointer"
                 title={soundEnabled ? "关闭提示音" : "开启提示音"}
               >
                 {soundEnabled ? "🔔" : "🔕"}
@@ -835,7 +835,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               <button
                 type="button"
                 onClick={handleDockCorner}
-                className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 text-xs transition"
+                className="w-7 h-7 rounded-full flex items-center justify-center text-[var(--on-ink)] hover:text-white hover:bg-[var(--plate-fill-strong)] active:scale-90 text-xs transition cursor-pointer"
                 title="停靠到右下角"
               >
                 📌
@@ -845,7 +845,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               <button
                 type="button"
                 onClick={() => setIsChatOpen(false)}
-                className="w-7 h-7 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 text-sm leading-none transition"
+                className="w-7 h-7 rounded-full flex items-center justify-center text-[var(--on-ink)] hover:text-white hover:bg-[var(--plate-fill-strong)] active:scale-90 text-sm leading-none transition cursor-pointer"
               >
                 ✕
               </button>
@@ -855,7 +855,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
           {/* Messages Stream */}
           <div
             ref={chatScrollRef}
-            className="p-4 space-y-3 max-h-64 overflow-y-auto"
+            className="reveal p-4 space-y-3 max-h-64 overflow-y-auto"
             style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.15) transparent" }}
           >
             {chatMessages.map((msg) => (
@@ -864,20 +864,20 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
                 className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
               >
                 <div
-                  className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed shadow-sm ${
+                  className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed shadow-sm transition-colors ${
                     msg.sender === "user"
-                      ? "bg-white text-neutral-900 font-medium rounded-tr-sm"
-                      : "bg-white/10 text-white/90 border border-white/10 backdrop-blur-md rounded-tl-sm"
+                      ? "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-medium rounded-tr-sm"
+                      : "bg-[var(--plate-fill-strong)] hover:bg-[var(--plate-fill-strong)] text-white border border-[var(--plate-line)] backdrop-blur-md rounded-tl-sm"
                   }`}
                 >
                   {msg.text}
                 </div>
-                <span className="text-[9px] text-white/40 mt-1 px-1">{msg.time}</span>
+                <span className="tnum text-[9px] text-[var(--meta)] mt-1 px-1">{msg.time}</span>
               </div>
             ))}
 
             {isThinking && (
-              <div className="flex items-center gap-2 text-white/60 text-xs px-3 py-2 bg-white/5 rounded-2xl w-fit">
+              <div className="flex items-center gap-2 text-[var(--on-ink)] text-xs px-3 py-2 bg-[var(--plate-fill)] rounded-2xl w-fit">
                 <span className="animate-spin inline-block">⚙️</span>
                 <span>校园小助手正在思考…</span>
               </div>
@@ -885,7 +885,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
           </div>
 
           {/* Quick Suggestion Prompts */}
-          <div className="px-4 py-2 border-t border-white/5 flex gap-1.5 overflow-x-auto text-[11px] whitespace-nowrap no-scrollbar">
+          <div className="px-4 py-2 border-t border-[var(--plate-line)] flex gap-1.5 overflow-x-auto text-[11px] whitespace-nowrap no-scrollbar">
             {[
               "📚 找教材",
               "💻 数码好物",
@@ -896,7 +896,7 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
                 key={chip}
                 type="button"
                 onClick={() => handleSendMessage(chip)}
-                className="px-2.5 py-1 rounded-xl bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition text-[11px]"
+                className="px-2.5 py-1 rounded-xl bg-[var(--plate-fill)] hover:bg-[var(--plate-fill-strong)] hover:text-white active:bg-[var(--plate-fill-stronger)] text-[var(--on-ink-strong)] border border-[var(--plate-line)] transition text-[11px] cursor-pointer"
               >
                 {chip}
               </button>
@@ -909,28 +909,28 @@ export default function CampusBot({ currentUser, onNavigate, allProducts = [] })
               e.preventDefault();
               handleSendMessage();
             }}
-            className="p-3 border-t border-white/10 flex items-center gap-2 bg-white/[0.02]"
+            className="p-3 border-t border-[var(--plate-line)] flex items-center gap-2 bg-[var(--plate-fill-faint)]"
           >
             <input
               type="text"
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               placeholder="问问校园小助手…"
-              className="flex-1 bg-white/10 border border-white/15 focus:border-white/40 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-white/40 focus:outline-none transition"
+              className="flex-1 bg-[var(--plate-fill-strong)] border border-[var(--plate-line-strong)] hover:border-[var(--plate-line-stronger)] focus:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[rgba(229,71,42,0.4)] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-white/50 focus:outline-none transition"
             />
             <button
               type="submit"
               disabled={!userInput.trim() || isThinking}
-              className="px-3.5 py-2.5 rounded-xl bg-white text-neutral-950 font-bold text-xs hover:bg-white/90 disabled:opacity-40 transition flex items-center justify-center cursor-pointer shadow-md"
+              className="px-3.5 py-2.5 rounded-xl bg-[var(--accent)] text-white font-bold text-xs hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)] active:scale-95 disabled:opacity-40 transition flex items-center justify-center cursor-pointer shadow-md"
             >
               <span>发送</span>
             </button>
           </form>
 
           {/* Micro Footer Notice */}
-          <div className="px-4 py-1.5 bg-black/30 text-center text-[10px] text-white/40 flex items-center justify-between">
+          <div className="px-4 py-1.5 bg-black/30 text-center text-[11px] text-[var(--meta)] flex items-center justify-between">
             <span>✨ 可以把小助手拖到页面任意位置</span>
-            <span className="text-emerald-400">AI 已就绪</span>
+            <span className="text-success-400">AI 已就绪</span>
           </div>
         </div>
       )}

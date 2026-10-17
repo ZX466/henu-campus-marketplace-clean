@@ -18,31 +18,23 @@ function WishlistView({
   });
 
   return (
-    <section className="max-w-7xl mx-auto px-6 sm:px-12 pt-32 pb-20">
+    <section className="mx-auto max-w-7xl px-6 pt-32 pb-20 sm:px-12">
       <button
         onClick={onBack}
-        className="mb-8 text-sm font-bold text-neutral-500 hover:text-neutral-950 transition"
+        className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-[var(--muted)] transition-colors hover:text-[var(--fg)]"
       >
         ← 返回集市
       </button>
 
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 border-b border-neutral-200 pb-6">
+      <div className="flex flex-col justify-between gap-5 border-b border-[var(--border-soft)] pb-7 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xs uppercase tracking-widest text-neutral-400 font-bold">
-            我的收藏
-          </p>
-
-          <h1 className="mt-2 text-4xl sm:text-5xl font-black font-display text-neutral-950">
-            我的心愿单
-          </h1>
-
-          <p className="mt-3 text-sm text-neutral-500">
-            收藏校园里想买或需要的物品，方便随时查看。
-          </p>
+          <p className="eyebrow text-[var(--meta)]">我的收藏</p>
+          <h1 className="mt-3 display-2 text-[var(--fg)]">我的心愿单</h1>
+          <p className="mt-3 text-sm text-[var(--muted)]">收藏校园里想买或需要的物品，方便随时查看。</p>
         </div>
 
-        <div className="text-sm text-neutral-500">
-          <strong className="text-neutral-950">{wishlistItems.length}</strong>{' '}
+        <div className="shrink-0 text-sm text-[var(--muted)]">
+          <strong className="font-display text-lg text-[var(--fg)] tnum">{wishlistItems.length}</strong>{' '}
           件已收藏
         </div>
       </div>
@@ -50,10 +42,10 @@ function WishlistView({
       <div className="mt-6 flex flex-wrap gap-2">
         <button
           onClick={() => setActiveTab('ALL')}
-          className={`px-4 py-2 rounded-full text-xs font-bold transition ${
+          className={`press rounded-full px-4 py-2 text-xs font-bold transition-colors ${
             activeTab === 'ALL'
-              ? 'bg-neutral-950 text-white'
-              : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              ? 'bg-ink-950 text-white'
+              : 'bg-[var(--surface)] text-[var(--fg-2)] hover:bg-[var(--border-soft)]'
           }`}
         >
           全部收藏
@@ -61,10 +53,10 @@ function WishlistView({
 
         <button
           onClick={() => setActiveTab('NEEDED')}
-          className={`px-4 py-2 rounded-full text-xs font-bold transition ${
+          className={`press rounded-full px-4 py-2 text-xs font-bold transition-colors ${
             activeTab === 'NEEDED'
-              ? 'bg-neutral-950 text-white'
-              : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              ? 'bg-ink-950 text-white'
+              : 'bg-[var(--surface)] text-[var(--fg-2)] hover:bg-[var(--border-soft)]'
           }`}
         >
           我正在求购
@@ -72,16 +64,16 @@ function WishlistView({
       </div>
 
       {filteredItems.length === 0 ? (
-        <div className="mt-10 py-20 text-center rounded-3xl border border-dashed border-neutral-300">
-          <div className="text-5xl">♡</div>
+        <div className="mt-10 apple-card flex flex-col items-center px-6 py-16 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--surface)] text-4xl leading-none text-[var(--meta)]">♡</span>
 
-          <h2 className="mt-4 text-xl font-bold text-neutral-950">
+          <h2 className="mt-5 font-display text-xl font-bold text-[var(--fg)]">
             {activeTab === 'NEEDED'
               ? '还没有标记为求购的商品'
               : '你的心愿单还是空的'}
           </h2>
 
-          <p className="mt-2 text-sm text-neutral-500">
+          <p className="mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">
             {activeTab === 'NEEDED'
               ? '把收藏的商品标记为“我正在求购”后，就会显示在这里。'
               : '去集市逛逛，把想买的商品收藏起来吧。'}
@@ -89,79 +81,78 @@ function WishlistView({
 
           <button
             onClick={onBack}
-            className="mt-6 rounded-xl bg-neutral-950 text-white px-5 py-3 text-sm font-bold hover:bg-neutral-800 transition"
+            className="press mt-6 rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)]"
           >
             去逛集市
           </button>
         </div>
       ) : (
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+        <div className="mt-10 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {filteredItems.map(product => (
             <article
               key={product.id}
-              className="rounded-3xl overflow-hidden border border-neutral-200 bg-white"
+              className="card-product reveal group"
             >
               <button
                 onClick={() => onOpenProduct(product)}
-                className="w-full aspect-[4/3] bg-neutral-100 overflow-hidden"
+                className="block aspect-[4/3] w-full overflow-hidden bg-[var(--surface)]"
               >
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async" />
               </button>
 
               <div className="p-5">
                 <div className="flex items-start justify-between gap-3">
                   <button
                     onClick={() => onOpenProduct(product)}
-                    className="text-left"
+                    className="min-w-0 text-left"
                   >
-                    <h2 className="text-xl font-bold font-display text-neutral-950 hover:underline">
+                    <h2 className="font-display text-xl font-bold leading-snug text-[var(--fg)] transition-colors group-hover:text-[var(--accent)]">
                       {product.title}
                     </h2>
                   </button>
 
                   <button
                     onClick={() => onRemove(product.id)}
-                    className="text-red-500 text-xl"
+                    className="press shrink-0 text-xl text-[var(--danger)] transition-transform hover:scale-110"
                     aria-label="从心愿单移除"
                   >
                     ♥
                   </button>
                 </div>
 
-                <p className="mt-2 text-2xl font-black text-neutral-950">
+                <p className="price mt-2 text-2xl text-[var(--fg)]">
                   ₹{Number(product.price).toFixed(2)}
                 </p>
 
-                <p className="mt-2 text-sm text-neutral-500">
+                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
                   {product.description}
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-bold">
+                  <span className="rounded-full bg-[var(--surface)] px-3 py-1 text-xs font-bold text-[var(--fg-2)]">
                     {product.mode}
                   </span>
 
-                  <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-bold">
+                  <span className="rounded-full bg-[var(--surface)] px-3 py-1 text-xs font-bold text-[var(--fg-2)]">
                     {product.category}
                   </span>
 
                   {product.neededByMe && (
-                    <span className="rounded-full bg-amber-100 text-amber-800 px-3 py-1 text-xs font-bold">
-                  我正在求购
+                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800">
+                      我正在求购
                     </span>
                   )}
                 </div>
 
                 <button
                   onClick={() => onToggleNeeded(product.id)}
-                  className={`mt-5 w-full rounded-xl py-3 text-sm font-bold transition ${
+                  className={`press mt-5 w-full rounded-full py-3 text-sm font-bold transition-colors ${
                     product.neededByMe
                       ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
-                      : 'bg-neutral-950 text-white hover:bg-neutral-800'
+                      : 'bg-ink-950 text-white hover:bg-[var(--fg-2)]'
                   }`}
                 >
                   {product.neededByMe

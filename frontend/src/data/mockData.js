@@ -1,5 +1,14 @@
 // 河南大学校园二手交易平台第一版演示数据。
-// 后续接入 FastAPI + MongoDB 后，这些数据会被远端商品数据替换。
+// 演示图片已本地化到 src/assets（离线也能显示）；后续接入 FastAPI + MongoDB 后会被远端数据替换。
+import henuBook1 from "../assets/products/henu-book-1.webp";
+import henuBook2 from "../assets/products/henu-book-2.webp";
+import henuBook3 from "../assets/products/henu-book-3.webp";
+import henuItem1 from "../assets/products/henu-item-1.webp";
+import henuItem2 from "../assets/products/henu-item-2.webp";
+import henuItem3 from "../assets/products/henu-item-3.webp";
+import henuItem4 from "../assets/products/henu-item-4.webp";
+import henuCampus from "../assets/course/henu-campus.webp";
+
 export const CAMPUS_DATA = {
   products: [
     {
@@ -13,7 +22,7 @@ export const CAMPUS_DATA = {
       condition: "九成新，少量笔记",
       stock: 1,
       campus: "金明校区",
-      image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=900&auto=format&fit=crop&q=80",
+      image: henuBook1,
       description: "适合大一高数课程使用，重点章节有少量荧光笔标注，书页完整。",
       pickupLocation: "金明校区图书馆门口",
       seller: { name: "李同学", email: "li@henu.edu.cn", avatar: "https://i.pravatar.cc/160?img=12", trustScore: 98, verified: true, department: "数学与统计学院 · 2024级", reviews: 16, rating: 4.9 }
@@ -29,7 +38,7 @@ export const CAMPUS_DATA = {
       condition: "八成新，含学长整理资料",
       stock: 1,
       campus: "明伦校区",
-      image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=900&auto=format&fit=crop&q=80",
+      image: henuBook2,
       description: "教育学专业学长整理的章节笔记和真题索引，适合备考或课程复习。",
       pickupLocation: "明伦校区大礼堂东门",
       seller: { name: "王同学", email: "wang@henu.edu.cn", avatar: "https://i.pravatar.cc/160?img=32", trustScore: 97, verified: true, department: "教育学部 · 2023级", reviews: 23, rating: 4.8 }
@@ -45,7 +54,7 @@ export const CAMPUS_DATA = {
       condition: "全新未拆",
       stock: 3,
       campus: "金明校区",
-      image: "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=900&auto=format&fit=crop&q=80",
+      image: henuBook3,
       description: "历年真题、听力音频和作文模板，适合近期准备四级考试的同学。",
       pickupLocation: "金明校区生活服务中心",
       seller: { name: "赵同学", email: "zhao@henu.edu.cn", avatar: "https://i.pravatar.cc/160?img=47", trustScore: 99, verified: true, department: "外语学院 · 2024级", reviews: 8, rating: 5 }
@@ -61,7 +70,7 @@ export const CAMPUS_DATA = {
       condition: "正常使用，续航良好",
       stock: 1,
       campus: "金明校区",
-      image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=900&auto=format&fit=crop&q=80",
+      image: henuItem1,
       description: "适合上课、跑步使用，支持现场试听和当面验货。",
       pickupLocation: "金明校区北门快递点",
       seller: { name: "陈同学", email: "chen@henu.edu.cn", avatar: "https://i.pravatar.cc/160?img=68", trustScore: 96, verified: true, department: "软件学院 · 2023级", reviews: 11, rating: 4.7 }
@@ -77,7 +86,7 @@ export const CAMPUS_DATA = {
       condition: "九成新，无明显划痕",
       stock: 1,
       campus: "明伦校区",
-      image: "https://images.unsplash.com/photo-1558997519-83ea9252edf8?w=900&auto=format&fit=crop&q=80",
+      image: henuItem2,
       description: "桌面多层收纳架，毕业清理低价转让。",
       pickupLocation: "明伦校区南苑宿舍区",
       seller: { name: "刘同学", email: "liu@henu.edu.cn", avatar: "https://i.pravatar.cc/160?img=49", trustScore: 95, verified: true, department: "历史文化学院 · 2022级", reviews: 6, rating: 4.8 }
@@ -93,7 +102,7 @@ export const CAMPUS_DATA = {
       condition: "可正常骑行，已调试",
       stock: 1,
       campus: "金明校区",
-      image: "https://images.unsplash.com/photo-1502744688674-c619d1586c9e?w=900&auto=format&fit=crop&q=80",
+      image: henuItem3,
       description: "适合校内通勤，车锁和前后灯齐全，支持金明校区当面试骑。",
       pickupLocation: "金明校区东门",
       seller: { name: "孙同学", email: "sun@henu.edu.cn", avatar: "https://i.pravatar.cc/160?img=11", trustScore: 98, verified: true, department: "土木建筑学院 · 2023级", reviews: 14, rating: 4.9 }
@@ -109,7 +118,7 @@ export const CAMPUS_DATA = {
       condition: "使用半年，功能正常",
       stock: 1,
       campus: "明伦校区",
-      image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=900&auto=format&fit=crop&q=80",
+      image: henuItem4,
       description: "希望交换一套考研英语资料或同等价值的书籍。",
       exchangeWish: "优先交换英语、政治复习资料",
       pickupLocation: "明伦校区北苑宿舍区",
@@ -124,7 +133,7 @@ export const CAMPUS_DATA = {
   course: {
     title: "河南大学校园交易与跑腿指南",
     subtitle: "了解如何发布商品、沟通交易、选择安全交接点，并使用书籍推荐和跑腿服务。",
-    heroImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1400&auto=format&fit=crop&q=80",
+    heroImage: henuCampus,
     instructor: { name: "河大同享项目组", role: "金明与明伦校区运营团队", bio: "平台第一版围绕书籍交易展开，同时支持数码、宿舍用品、出行工具和跑腿任务。", image: "https://i.pravatar.cc/500?img=12", backpackImage: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80" },
     faqs: []
   },

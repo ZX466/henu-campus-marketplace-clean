@@ -11,10 +11,11 @@ class LoginRequest(BaseModel):
         description="河南大学学生邮箱",
     )
 
+    # 无默认值：调用方必须显式提供密码，避免后端静默填充共享口令
     password: Optional[str] = Field(
-        default="student123",
-        examples=["student123"],
-        description="学生密码",
+        default=None,
+        examples=None,
+        description="学生密码（必填，不提供时返回 400）",
     )
 
 
@@ -23,7 +24,7 @@ class RegisterRequest(BaseModel):
 
     email: str = Field(..., examples=["2024xxxx@henu.edu.cn"])
 
-    password: str = Field(default="student123", examples=["student123"])
+    password: str = Field(..., examples=["Ch00seAStrongPass"], description="用户自选密码（必填）")
 
     name: Optional[str] = Field(default="张同学", examples=["张同学"])
 

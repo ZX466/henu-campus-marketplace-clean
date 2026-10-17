@@ -17,6 +17,9 @@ const INITIAL_FORM = {
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&auto=format&fit=crop&q=80';
 
+const FIELD_CLASS =
+  'w-full rounded-field border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--meta)] focus:border-[var(--accent)] focus-visible:border-[var(--accent)] focus-visible:ring-4 focus-visible:ring-[rgba(229,71,42,0.35)]';
+
 function SellItemView({ onBack, onPublish, currentUser }) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [imagePreview, setImagePreview] = useState('');
@@ -181,9 +184,9 @@ if (!currentUser) {
       if (fileInput) {
         fileInput.value = '';
       }
-    } catch {
+    } catch (publishError) {
       setError(
-        '发布失败，请稍后重试。'
+        publishError?.message || '发布失败，请稍后重试。'
       );
     } finally {
       setIsPublishing(false);
@@ -195,77 +198,55 @@ if (!currentUser) {
       <button
         type="button"
         onClick={onBack}
-        className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-neutral-500 transition hover:text-neutral-950"
+        className="mb-8 inline-flex items-center gap-2 rounded-full px-2 py-1 text-sm font-bold text-[var(--muted)] transition-colors hover:text-[var(--fg)] active:text-[var(--accent-active)]"
       >
         <span aria-hidden="true">←</span>
         返回集市
       </button>
 
       <div className="mb-8">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-400">
-          河大同享 · 发布商品
-        </p>
-
-        <h1 className="mt-2 text-4xl font-black text-neutral-950 sm:text-5xl">
-          发布校园闲置
-        </h1>
-
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-500">
-          填写商品信息，发布给金明、明伦校区的同学。
-        </p>
+        <p className="eyebrow text-[var(--meta)]">河大同享 · 发布商品</p>
+        <h1 className="mt-3 display-2 text-[var(--fg)]">发布校园闲置</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">填写商品信息，发布给金明、明伦校区的同学。</p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-7 rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-8"
+        className="reveal space-y-7 rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] p-5 shadow-card sm:p-8"
       >
         {error && (
           <div
             role="alert"
-            className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
+            className="rounded-field border border-danger-200 bg-danger-50 px-4 py-3 text-sm font-semibold text-[var(--danger)]"
           >
             {error}
           </div>
         )}
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          {/* Item Title */}
           <div className="md:col-span-2">
-            <label
-              htmlFor="item-title"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="item-title" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               商品名称 *
             </label>
-
             <input
               id="item-title"
               value={form.title}
-              onChange={(event) =>
-                updateField('title', event.target.value)
-              }
+              onChange={(event) => updateField('title', event.target.value)}
               placeholder="例如：高等数学教材"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+              className={FIELD_CLASS}
               required
             />
           </div>
 
-          {/* Category */}
           <div>
-            <label
-              htmlFor="item-category"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="item-category" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               商品分类 *
             </label>
-
             <select
               id="item-category"
               value={form.category}
-              onChange={(event) =>
-                updateField('category', event.target.value)
-              }
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+              onChange={(event) => updateField('category', event.target.value)}
+              className={FIELD_CLASS}
             >
               <option>书籍</option>
               <option>数码产品</option>
@@ -277,22 +258,15 @@ if (!currentUser) {
             </select>
           </div>
 
-          {/* Listing Type */}
           <div>
-            <label
-              htmlFor="listing-type"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="listing-type" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               交易方式 *
             </label>
-
             <select
               id="listing-type"
               value={form.mode}
-              onChange={(event) =>
-                updateField('mode', event.target.value)
-              }
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+              onChange={(event) => updateField('mode', event.target.value)}
+              className={FIELD_CLASS}
             >
               <option value="BUY">出售</option>
               <option value="RENT">租用</option>
@@ -300,70 +274,49 @@ if (!currentUser) {
             </select>
           </div>
 
-          {/* Price */}
           <div>
-            <label
-              htmlFor="item-price"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="item-price" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               价格（元）*
             </label>
-
             <input
               id="item-price"
               type="number"
               min="1"
               step="0.01"
               value={form.price}
-              onChange={(event) =>
-                updateField('price', event.target.value)
-              }
+              onChange={(event) => updateField('price', event.target.value)}
               placeholder="例如：18"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+              className={FIELD_CLASS}
               required
             />
           </div>
 
-          {/* Stock */}
           <div>
-            <label
-              htmlFor="item-stock"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="item-stock" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               数量 *
             </label>
-
             <input
               id="item-stock"
               type="number"
               min="1"
               step="1"
               value={form.stock}
-              onChange={(event) =>
-                updateField('stock', event.target.value)
-              }
+              onChange={(event) => updateField('stock', event.target.value)}
               placeholder="填写可售数量"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+              className={FIELD_CLASS}
               required
             />
           </div>
 
-          {/* Condition */}
           <div>
-            <label
-              htmlFor="item-condition"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="item-condition" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               成色 *
             </label>
-
             <select
               id="item-condition"
               value={form.condition}
-              onChange={(event) =>
-                updateField('condition', event.target.value)
-              }
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+              onChange={(event) => updateField('condition', event.target.value)}
+              className={FIELD_CLASS}
             >
               <option>全新</option>
               <option>几乎全新</option>
@@ -373,161 +326,115 @@ if (!currentUser) {
             </select>
           </div>
 
-          {/* Rental Rate */}
           {form.mode === 'RENT' && (
             <div className="md:col-span-2">
-              <label
-                htmlFor="rental-rate"
-                className="mb-2 block text-sm font-bold text-neutral-800"
-              >
+              <label htmlFor="rental-rate" className="mb-2 block text-sm font-bold text-[var(--fg)]">
                 租金（元/天）*
               </label>
-
               <input
                 id="rental-rate"
                 value={form.rentalRate}
-                onChange={(event) =>
-                  updateField('rentalRate', event.target.value)
-                }
+                onChange={(event) => updateField('rentalRate', event.target.value)}
                 placeholder="例如：每天 ¥5"
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+                className={FIELD_CLASS}
                 required
               />
             </div>
           )}
 
-          {/* Exchange Wish */}
           {form.mode === 'EXCHANGE' && (
             <div className="md:col-span-2">
-              <label
-                htmlFor="exchange-wish"
-                className="mb-2 block text-sm font-bold text-neutral-800"
-              >
+              <label htmlFor="exchange-wish" className="mb-2 block text-sm font-bold text-[var(--fg)]">
                 你想交换什么？*
               </label>
-
               <input
                 id="exchange-wish"
                 value={form.exchangeWish}
-                onChange={(event) =>
-                  updateField('exchangeWish', event.target.value)
-                }
+                onChange={(event) => updateField('exchangeWish', event.target.value)}
                 placeholder="例如：想换一个科学计算器"
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+                className={FIELD_CLASS}
                 required
               />
             </div>
           )}
 
-          {/* Description */}
           <div className="md:col-span-2">
-            <label
-              htmlFor="item-description"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="item-description" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               商品描述 *
             </label>
-
             <textarea
               id="item-description"
               value={form.description}
-              onChange={(event) =>
-                updateField('description', event.target.value)
-              }
+              onChange={(event) => updateField('description', event.target.value)}
               placeholder="描述商品的成色、瑕疵、配件和其他细节…"
               rows={5}
-              className="w-full resize-y rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+              className={`${FIELD_CLASS} resize-y`}
               required
             />
           </div>
 
-          {/* Pickup Location */}
           <div className="md:col-span-2">
-            <label
-              htmlFor="pickup-location"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="pickup-location" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               自提地点 *
             </label>
-
             <input
               id="pickup-location"
               value={form.pickupLocation}
-              onChange={(event) =>
-                updateField('pickupLocation', event.target.value)
-              }
+              onChange={(event) => updateField('pickupLocation', event.target.value)}
               placeholder="例如：图书馆正门"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-neutral-950 focus:ring-2 focus:ring-neutral-200"
+              className={FIELD_CLASS}
               required
             />
           </div>
 
-          {/* Image Upload */}
           <div className="md:col-span-2">
-            <label
-              htmlFor="item-image"
-              className="mb-2 block text-sm font-bold text-neutral-800"
-            >
+            <label htmlFor="item-image" className="mb-2 block text-sm font-bold text-[var(--fg)]">
               上传商品图片
             </label>
-
             <input
               id="item-image"
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
-              className="block w-full cursor-pointer rounded-xl border border-neutral-200 bg-neutral-50 text-sm text-neutral-600 file:mr-4 file:border-0 file:bg-neutral-950 file:px-4 file:py-3 file:font-bold file:text-white hover:file:bg-neutral-800"
+              className="block w-full cursor-pointer rounded-field border border-dashed border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--fg-2)] transition-colors file:mr-4 file:cursor-pointer file:rounded-l-field file:border-0 file:bg-[var(--accent)] file:px-4 file:py-3 file:font-bold file:text-white hover:file:bg-[var(--accent-hover)]"
             />
-
-            <p className="mt-2 text-xs text-neutral-400">
-              仅支持图片文件，大小不超过 5 MB。
-            </p>
+            <p className="mt-2 text-xs text-[var(--meta)]">仅支持图片文件，大小不超过 5 MB。</p>
           </div>
 
-          {/* Image Preview */}
           <div className="md:col-span-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-neutral-800">
-                图片预览
-              </span>
+              <span className="text-sm font-bold text-[var(--fg)]">图片预览</span>
 
               {imagePreview && (
                 <button
                   type="button"
                   onClick={removeImage}
-                  className="text-xs font-bold text-red-600 hover:underline"
+                  className="rounded-full px-2 py-1 text-xs font-bold text-[var(--danger)] transition-colors hover:text-danger-700 hover:underline active:text-danger-800"
                 >
                   移除图片
                 </button>
               )}
             </div>
 
-            <div className="mt-2 flex aspect-[16/9] items-center justify-center overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100">
+            <div className="mt-2 flex aspect-[16/9] items-center justify-center overflow-hidden rounded-panel border border-[var(--border-soft)] bg-[var(--surface)]">
               {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="上传商品的预览"
-                  className="h-full w-full object-cover"
-                />
+                <img src={imagePreview} alt="上传商品的预览" className="h-full w-full object-cover" loading="lazy" decoding="async" />
               ) : (
-                <p className="px-5 text-center text-sm font-semibold text-neutral-400">
-                  你上传的图片会显示在这里。
-                </p>
+                <p className="px-5 text-center text-sm font-semibold text-[var(--meta)]">你上传的图片会显示在这里。</p>
               )}
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-800">
-          <strong>演示说明：</strong> 图片目前以浏览器本地数据保存，
-          后续会改为上传到后端存储。
+        <div className="rounded-field border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-800">
+          <strong>演示说明：</strong> 图片目前以浏览器本地数据保存，后续会改为上传到后端存储。
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
             onClick={onBack}
-            className="flex-1 rounded-xl border border-neutral-200 px-5 py-3 font-bold text-neutral-700 transition hover:bg-neutral-100"
+            className="press flex-1 rounded-full border border-[var(--border)] px-5 py-3 font-bold text-[var(--fg-2)] transition-colors hover:bg-[var(--surface)] active:bg-[var(--border-soft)]"
           >
             取消
           </button>
@@ -535,7 +442,7 @@ if (!currentUser) {
           <button
             type="submit"
             disabled={isPublishing}
-            className="flex-1 rounded-xl bg-neutral-950 px-5 py-3 font-bold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="press flex-1 rounded-full bg-[var(--accent)] px-5 py-3 font-bold text-white transition-colors hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isPublishing ? '正在发布…' : '发布商品'}
           </button>

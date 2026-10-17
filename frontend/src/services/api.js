@@ -146,7 +146,9 @@ export async function loginUser(email, password) {
   } catch (error) {
     return {
       success: false,
-      error: error.message,
+      error: error.status === 401
+        ? "邮箱或密码不正确，请重试。"
+        : error.message,
     };
   }
 }
@@ -564,13 +566,6 @@ export async function cancelOrderOnBackend(
       error: error.message,
     };
   }
-}
-
-/**
- * Authenticate student login with backend & MongoDB Atlas (alias for loginUser)
- */
-export async function loginUserOnBackend(email, password = "student123") {
-  return loginUser(email, password);
 }
 
 /* =========================================================================

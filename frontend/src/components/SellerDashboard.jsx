@@ -42,25 +42,21 @@ function SellerDashboard({
   const unreadSoldNotifs = notifications.filter((n) => !n.read);
 
   return (
-    <div className="min-h-screen bg-neutral-50 px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 pb-8 pt-28 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
 
         {/* Header */}
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="section-head mb-8">
           <div>
-            <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-              卖家工作台
-            </h1>
-
-            <p className="mt-2 text-sm text-neutral-500">
-              管理你在河大同享上发布的商品、库存和销售通知。
-            </p>
+            <p className="eyebrow text-[var(--meta)]">河大同享 · 卖家</p>
+            <h1 className="mt-3 display-2 text-[var(--fg)]">卖家工作台</h1>
+            <p className="mt-2 text-sm text-[var(--muted)]">管理你在河大同享上发布的商品、库存和销售通知。</p>
           </div>
 
           {notifications.length > 0 && (
             <div className="flex items-center gap-2">
-              <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1.5 rounded-full border border-emerald-200 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-success-200 bg-success-50 px-3 py-1.5 text-xs font-bold text-success-800">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--success)] pulse-ring" />
                 {notifications.length} 条销售提醒
               </span>
             </div>
@@ -68,53 +64,29 @@ function SellerDashboard({
         </div>
 
         {/* Stats */}
-        <div className="mb-8 grid gap-4 sm:grid-cols-4">
+        <div className="reveal mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-          {/* Total Listings */}
-          <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-neutral-500">
-              商品总数
-            </p>
-
-            <p className="mt-2 text-3xl font-black text-neutral-900">
-              {totalProducts}
-            </p>
+          <div className="rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] p-5 shadow-card transition-shadow duration-200 hover:shadow-card-hover">
+            <p className="text-sm font-semibold text-[var(--muted)]">商品总数</p>
+            <p className="mt-2 price text-3xl text-[var(--fg)]">{totalProducts}</p>
           </div>
 
-          {/* Total Stock */}
-          <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-neutral-500">
-              库存总数
-            </p>
-
-            <p className="mt-2 text-3xl font-black text-neutral-900">
-              {totalStock}
-            </p>
+          <div className="rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] p-5 shadow-card transition-shadow duration-200 hover:shadow-card-hover">
+            <p className="text-sm font-semibold text-[var(--muted)]">库存总数</p>
+            <p className="mt-2 price text-3xl text-[var(--fg)]">{totalStock}</p>
           </div>
 
-          {/* Out of Stock */}
-          <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-neutral-500">
-              已售罄
-            </p>
-
-            <p className="mt-2 text-3xl font-black text-red-600">
-              {outOfStock}
-            </p>
+          <div className="rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] p-5 shadow-card transition-shadow duration-200 hover:shadow-card-hover">
+            <p className="text-sm font-semibold text-[var(--muted)]">已售罄</p>
+            <p className="mt-2 price text-3xl text-[var(--danger)]">{outOfStock}</p>
           </div>
 
-          {/* Sold Alerts */}
-          <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-neutral-500">
-              待自提
-            </p>
-
-            <p className="mt-2 text-3xl font-black text-amber-600 flex items-center gap-2">
+          <div className="rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] p-5 shadow-card transition-shadow duration-200 hover:shadow-card-hover">
+            <p className="text-sm font-semibold text-[var(--muted)]">待自提</p>
+            <p className="mt-2 price flex items-center gap-2 text-3xl text-amber-600">
               {unreadSoldNotifs.length}
               {unreadSoldNotifs.length > 0 && (
-                <span className="text-xs font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
-                  需要处理
-                </span>
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">需要处理</span>
               )}
             </p>
           </div>
@@ -122,15 +94,13 @@ function SellerDashboard({
 
         {/* Recent Buyer Orders & Sales Alerts */}
         {notifications.length > 0 && (
-          <div className="mb-8 rounded-2xl border border-neutral-200 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-neutral-200 px-5 py-4 flex items-center justify-between bg-neutral-50/50">
+          <div className="reveal mb-8 overflow-hidden rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] shadow-card">
+            <div className="flex items-center justify-between gap-4 border-b border-[var(--border-soft)] bg-[var(--surface)] px-5 py-4">
               <div className="flex items-center gap-2">
                 <span className="text-lg">🎉</span>
-                <h2 className="text-base font-bold text-neutral-900">
-                  最近售出与买家订单
-                </h2>
+                <h2 className="display-3 text-[var(--fg)]">最近售出与买家订单</h2>
                 {unreadSoldNotifs.length > 0 && (
-                  <span className="bg-red-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
+                  <span className="rounded-full bg-[var(--danger)] px-2 py-0.5 text-[11px] font-bold text-white">
                     {unreadSoldNotifs.length} 条未读
                   </span>
                 )}
@@ -140,45 +110,39 @@ function SellerDashboard({
                 <button
                   type="button"
                   onClick={onMarkAllRead}
-                  className="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition"
+                  className="rounded-full px-2 py-1 text-xs font-semibold text-[var(--muted)] transition-colors hover:text-[var(--fg)] active:text-[var(--accent-active)]"
                 >
                   全部标为已读
                 </button>
               )}
             </div>
 
-            <div className="divide-y divide-neutral-100">
+            <div className="divide-y divide-[var(--border-soft)]">
               {notifications.map((notif) => (
                 <div
                   key={notif.id}
                   onClick={() => onMarkRead && onMarkRead(notif.id)}
-                  className={`p-4 transition flex items-start gap-4 cursor-pointer ${
-                    !notif.read ? "bg-amber-50/50 hover:bg-amber-50" : "hover:bg-neutral-50"
+                  className={`flex cursor-pointer items-start gap-4 p-4 transition-colors ${
+                    !notif.read ? "bg-amber-50/60 hover:bg-amber-50" : "hover:bg-[var(--surface)]"
                   }`}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg flex-shrink-0">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-field bg-amber-100 text-lg text-amber-800">
                     🛍️
                   </div>
 
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <h3 className="text-sm font-bold text-neutral-900">
-                        {notif.title}
-                      </h3>
+                      <h3 className="text-sm font-bold text-[var(--fg)]">{notif.title}</h3>
                       {!notif.read && (
-                        <span className="text-[10px] bg-amber-200 text-amber-900 font-extrabold px-2 py-0.5 rounded-full">
-                          新成交
-                        </span>
+                        <span className="rounded-full bg-amber-200 px-2 py-0.5 text-[11px] font-extrabold text-amber-900">新成交</span>
                       )}
                     </div>
 
-                    <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
-                      {notif.message}
-                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-[var(--fg-2)]">{notif.message}</p>
 
-                    <div className="flex items-center gap-3 mt-2 text-[11px] text-neutral-400">
+                    <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-[var(--meta)]">
                       {notif.pickup_token && (
-                        <span className="font-mono bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded font-bold">
+                        <span className="rounded bg-[var(--surface)] px-2 py-0.5 font-mono font-bold text-[var(--fg-2)]">
                           安全交接凭证：{notif.pickup_token}
                         </span>
                       )}
@@ -201,120 +165,91 @@ function SellerDashboard({
         )}
 
         {/* Listings */}
-        <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+        <div className="reveal overflow-hidden rounded-panel border border-[var(--border-soft)] bg-[var(--bg)] shadow-card">
 
-          <div className="border-b border-neutral-200 px-5 py-4">
-            <h2 className="text-lg font-bold text-neutral-900">
-              我的商品
-            </h2>
+          <div className="border-b border-[var(--border-soft)] px-5 py-4">
+            <h2 className="display-3 text-[var(--fg)]">我的商品</h2>
           </div>
 
           {myProducts.length === 0 ? (
-            <div className="px-5 py-16 text-center">
-              <p className="text-lg font-semibold text-neutral-700">
-                你还没有发布任何商品。
-              </p>
-
-              <p className="mt-2 text-sm text-neutral-500">
-                开始发布后，你的商品会显示在这里。
-              </p>
+            <div className="flex flex-col items-center px-5 py-16 text-center before:mb-4 before:flex before:h-14 before:w-14 before:items-center before:justify-center before:rounded-hero before:bg-[var(--surface)] before:text-2xl before:content-['📦']">
+              <p className="font-display text-lg font-semibold text-[var(--fg)]">你还没有发布任何商品。</p>
+              <p className="mt-2 text-sm text-[var(--muted)]">开始发布后，你的商品会显示在这里。</p>
             </div>
           ) : (
-            <div className="divide-y divide-neutral-100">
+            <div className="grid gap-4 p-5">
 
               {myProducts.map((product) => {
-                const stock = Math.max(
-                  0,
-                  Number(product.stock) || 0
-                );
+                const stock = Math.max(0, Number(product.stock) || 0);
 
                 return (
                   <div
                     key={product.id}
-                    className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between"
+                    className="card-product reveal flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between"
                   >
 
                     {/* Product */}
                     <div className="flex min-w-0 items-center gap-4">
 
                       <img
-                        src={
-                          product.image ||
-                          "https://via.placeholder.com/100"
-                        }
+                        src={product.image || "https://via.placeholder.com/100"}
                         alt={product.title}
-                        className="h-16 w-16 rounded-xl object-cover"
-                      />
+                        className="h-16 w-16 rounded-field object-cover" loading="lazy" decoding="async" />
 
                       <div className="min-w-0">
 
-                        <h3 className="truncate font-bold text-neutral-900">
-                          {product.title}
-                        </h3>
+                        <h3 className="truncate font-bold text-[var(--fg)]">{product.title}</h3>
 
-                        <p className="mt-1 text-sm text-neutral-500">
-                          ¥
-                          {Number(
-                            product.price || 0
-                          ).toLocaleString("zh-CN")}
+                        <p className="mt-1 price text-sm text-[var(--fg-2)]">
+                          ¥{Number(product.price || 0).toLocaleString("zh-CN")}
                         </p>
 
                         <div className="mt-2 flex flex-wrap gap-2 text-xs">
-
-                          <span className="rounded-full bg-neutral-100 px-2.5 py-1 font-semibold text-neutral-600">
+                          <span className="rounded-full bg-[var(--surface)] px-2.5 py-1 font-semibold text-[var(--muted)]">
                             {product.category || "其他"}
                           </span>
 
-                          <span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-blue-700">
+                          <span className="rounded-full border border-[var(--border-soft)] bg-[var(--bg)] px-2.5 py-1 font-semibold text-[var(--fg-2)]">
                             {MODE_LABELS[product.mode] || "出售"}
                           </span>
-
                         </div>
                       </div>
                     </div>
 
                     {/* Stock + Actions */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
 
                       <span
-                        className={`rounded-full px-3 py-1.5 text-xs font-bold ${
+                        className={`tnum rounded-full px-3 py-1.5 text-xs font-bold ${
                           stock === 0
-                            ? "bg-red-50 text-red-700"
+                            ? "bg-danger-50 text-[var(--danger)]"
                             : stock <= 3
-                              ? "bg-amber-50 text-amber-700"
-                              : "bg-emerald-50 text-emerald-700"
+                              ? "bg-amber-50 text-amber-800"
+                              : "bg-success-50 text-success-700"
                         }`}
                       >
-                        {stock === 0
-                          ? "已售罄"
-                          : `库存 ${stock}`}
+                        {stock === 0 ? "已售罄" : `库存 ${stock}`}
                       </span>
 
                       <button
                         type="button"
-                        onClick={() =>
-                          setEditingProduct(product)
-                        }
-                        className="rounded-xl border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
+                        onClick={() => setEditingProduct(product)}
+                        className="press rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--fg-2)] transition-colors hover:bg-[var(--surface)] active:bg-[var(--border-soft)]"
                       >
                         编辑
                       </button>
 
                       <button
                         type="button"
-                        onClick={() =>
-                          onDeleteProduct?.(product.id)
-                        }
-                        className="rounded-xl bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+                        onClick={() => onDeleteProduct?.(product.id)}
+                        className="press rounded-full bg-danger-50 px-4 py-2 text-sm font-semibold text-[var(--danger)] transition-colors hover:bg-danger-100 active:bg-danger-100"
                       >
                         删除
                       </button>
-
                     </div>
                   </div>
                 );
               })}
-
             </div>
           )}
         </div>
@@ -339,11 +274,7 @@ function SellerDashboard({
    EDIT PRODUCT MODAL
    ========================================================================= */
 
-function EditProductModal({
-  product,
-  onClose,
-  onSave,
-}) {
+function EditProductModal({ product, onClose, onSave }) {
   const [form, setForm] = useState({
     title: product.title || "",
     description: product.description || "",
@@ -415,290 +346,187 @@ function EditProductModal({
 
       pickupLocation: form.pickupLocation.trim(),
 
-      stock: Math.max(
-        0,
-        Number(form.stock) || 0
-      ),
+      stock: Math.max(0, Number(form.stock) || 0),
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+  const inputClass =
+    "w-full rounded-field border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm text-[var(--fg)] outline-none transition-colors placeholder:text-[var(--meta)] hover:border-[var(--meta)] focus:border-[var(--accent)] focus-visible:border-[var(--accent)] focus-visible:ring-4 focus-visible:ring-[rgba(229,71,42,0.35)]";
 
-      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white shadow-2xl">
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ink-950/70 p-4 backdrop-blur-sm">
+
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-panel bg-[var(--bg)] shadow-float animate-scale-in">
 
         {/* Modal Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-5">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--border-soft)] bg-[var(--bg)] px-6 py-5">
 
           <div>
-            <h2 className="text-xl font-black text-neutral-900">
-              编辑商品
-            </h2>
-
-            <p className="mt-1 text-xs text-neutral-500">
-              更新商品信息和库存。
-            </p>
+            <h2 className="display-3 text-[var(--fg)]">编辑商品</h2>
+            <p className="mt-1 text-xs text-[var(--muted)]">更新商品信息和库存。</p>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-lg text-neutral-600 transition hover:bg-neutral-200"
+            className="press flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface)] text-lg text-[var(--fg-2)] transition-colors hover:bg-[var(--border-soft)] active:bg-[var(--border)]"
             aria-label="关闭编辑窗口"
           >
             ×
           </button>
-
         </div>
 
         {/* Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5 p-6"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5 p-6">
 
-          {/* Product Title */}
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-              商品名称
-            </label>
-
+            <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">商品名称</label>
             <input
               type="text"
               value={form.title}
-              onChange={(event) =>
-                updateField(
-                  "title",
-                  event.target.value
-                )
-              }
+              onChange={(event) => updateField("title", event.target.value)}
               required
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+              className={inputClass}
             />
           </div>
 
-          {/* Description */}
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-              商品描述
-            </label>
-
+            <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">商品描述</label>
             <textarea
               value={form.description}
-              onChange={(event) =>
-                updateField(
-                  "description",
-                  event.target.value
-                )
-              }
+              onChange={(event) => updateField("description", event.target.value)}
               rows={4}
               required
-              className="w-full resize-none rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+              className={`${inputClass} resize-none`}
             />
           </div>
 
-          {/* Price + Stock */}
           <div className="grid gap-4 sm:grid-cols-2">
 
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                价格（元）
-              </label>
-
+              <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">价格（元）</label>
               <input
                 type="number"
                 min="0.01"
                 step="0.01"
                 value={form.price}
-                onChange={(event) =>
-                  updateField(
-                    "price",
-                    event.target.value
-                  )
-                }
+                onChange={(event) => updateField("price", event.target.value)}
                 required
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+                className={inputClass}
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                库存
-              </label>
-
+              <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">库存</label>
               <input
                 type="number"
                 min="0"
                 step="1"
                 value={form.stock}
-                onChange={(event) =>
-                  updateField(
-                    "stock",
-                    event.target.value
-                  )
-                }
+                onChange={(event) => updateField("stock", event.target.value)}
                 required
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+                className={inputClass}
               />
             </div>
-
           </div>
 
-          {/* Category + Condition */}
           <div className="grid gap-4 sm:grid-cols-2">
 
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                分类
-              </label>
-
+              <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">分类</label>
               <input
                 type="text"
                 value={form.category}
-                onChange={(event) =>
-                  updateField(
-                    "category",
-                    event.target.value
-                  )
-                }
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+                onChange={(event) => updateField("category", event.target.value)}
+                className={inputClass}
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                成色
-              </label>
-
+              <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">成色</label>
               <input
                 type="text"
                 value={form.condition}
-                onChange={(event) =>
-                  updateField(
-                    "condition",
-                    event.target.value
-                  )
-                }
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+                onChange={(event) => updateField("condition", event.target.value)}
+                className={inputClass}
               />
             </div>
-
           </div>
 
-          {/* Listing Mode */}
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-              交易方式
-            </label>
+            <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">交易方式</label>
 
             <div className="grid grid-cols-3 gap-2">
-
-              {[["BUY", "出售"], ["RENT", "租用"], ["EXCHANGE", "交换"]].map(
-                ([mode, label]) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    onClick={() =>
-                      updateField("mode", mode)
-                    }
-                    className={`rounded-xl px-3 py-3 text-xs font-bold transition ${
-                      form.mode === mode
-                        ? "bg-neutral-950 text-white"
-                        : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                )
-              )}
-
+              {[["BUY", "出售"], ["RENT", "租用"], ["EXCHANGE", "交换"]].map(([mode, label]) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => updateField("mode", mode)}
+                  className={`press rounded-field px-3 py-3 text-xs font-bold transition-colors ${
+                    form.mode === mode
+                      ? "bg-ink-950 text-white"
+                      : "bg-[var(--surface)] text-[var(--fg-2)] hover:bg-[var(--border-soft)] active:bg-[var(--border)]"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Rental Rate */}
           {form.mode === "RENT" && (
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                租金（元/天）
-              </label>
-
+              <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">租金（元/天）</label>
               <input
                 type="text"
                 value={form.rentalRate}
-                onChange={(event) =>
-                  updateField(
-                    "rentalRate",
-                    event.target.value
-                  )
-                }
+                onChange={(event) => updateField("rentalRate", event.target.value)}
                 placeholder="例如：每天 ¥5"
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+                className={inputClass}
               />
             </div>
           )}
 
-          {/* Exchange Wish */}
           {form.mode === "EXCHANGE" && (
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-                你想交换什么？
-              </label>
-
+              <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">你想交换什么？</label>
               <input
                 type="text"
                 value={form.exchangeWish}
-                onChange={(event) =>
-                  updateField(
-                    "exchangeWish",
-                    event.target.value
-                  )
-                }
+                onChange={(event) => updateField("exchangeWish", event.target.value)}
                 placeholder="例如：工程类教材"
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+                className={inputClass}
               />
             </div>
           )}
 
-          {/* Pickup Location */}
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">
-              自提地点
-            </label>
-
+            <label className="mb-1.5 block text-sm font-semibold text-[var(--fg-2)]">自提地点</label>
             <input
               type="text"
               value={form.pickupLocation}
-              onChange={(event) =>
-                updateField(
-                  "pickupLocation",
-                  event.target.value
-                )
-              }
+              onChange={(event) => updateField("pickupLocation", event.target.value)}
               required
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200"
+              className={inputClass}
             />
           </div>
 
-          {/* Actions */}
-          <div className="flex justify-end gap-3 border-t border-neutral-200 pt-5">
-
+          <div className="flex justify-end gap-3 border-t border-[var(--border-soft)] pt-5">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
+              className="press rounded-full border border-[var(--border)] px-5 py-2.5 text-sm font-semibold text-[var(--fg-2)] transition-colors hover:bg-[var(--surface)] active:bg-[var(--border-soft)]"
             >
               取消
             </button>
 
             <button
               type="submit"
-              className="rounded-xl bg-neutral-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-neutral-800"
+              className="press rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)]"
             >
               保存修改
             </button>
-
           </div>
-
         </form>
       </div>
     </div>
