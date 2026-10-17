@@ -96,16 +96,10 @@ export async function getCurrentUser() {
       user: normalizedUser,
     };
   } catch (error) {
-    if (error.status === 401) {
-      return {
-        success: false,
-        user: null,
-      };
-    }
-
     return {
       success: false,
       user: null,
+      status: error.status || 0,
       error: error.message,
     };
   }
@@ -146,6 +140,7 @@ export async function loginUser(email, password) {
   } catch (error) {
     return {
       success: false,
+      status: error.status || 0,
       error: error.message,
     };
   }

@@ -11,10 +11,10 @@ class LoginRequest(BaseModel):
         description="河南大学学生邮箱",
     )
 
-    password: Optional[str] = Field(
-        default="student123",
-        examples=["student123"],
-        description="学生密码",
+    password: str = Field(
+        ...,
+        examples=["********"],
+        description="登录密码（必填）",
     )
 
 
@@ -23,7 +23,7 @@ class RegisterRequest(BaseModel):
 
     email: str = Field(..., examples=["2024xxxx@henu.edu.cn"])
 
-    password: str = Field(default="student123", examples=["student123"])
+    password: str = Field(..., examples=["********"])
 
     name: Optional[str] = Field(default="张同学", examples=["张同学"])
 
@@ -62,6 +62,9 @@ class UserProfile(BaseModel):
     verified: bool = True
 
     trustScore: int = 98
+
+    # True 表示该账号是历史自动创建、密码待认领重设
+    legacy_password_pending: bool = False
 
     created_at: Optional[str] = None
 

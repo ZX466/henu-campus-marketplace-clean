@@ -50,6 +50,26 @@ import {
   createConversation,
 } from "./services/api";
 
+// 只保留展示所需的用户摘要字段，绝不写入密码等敏感信息
+function buildUserSummary(user) {
+  if (!user) return null;
+
+  return {
+    id: user.id || user._id || user.userId || user.sub || null,
+    email: user.email || "",
+    name: user.name || "",
+    roll: user.roll || "",
+    department: user.department || user.dept || "",
+    campus: user.campus || "",
+    hostel: user.hostel || "",
+    verified: user.verified !== false,
+    trustScore: user.trustScore ?? null,
+    legacyPasswordPending:
+      user.legacyPasswordPending === true ||
+      user.legacy_password_pending === true,
+  };
+}
+
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -64,6 +84,7 @@ function App() {
   const [selectedCampusHub, setSelectedCampusHub] = useState(null);
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   // Auth modal tab: "login" | "register"
   const [authTab, setAuthTab] = useState("login");
   // Register form fields (all schema fields)
@@ -107,17 +128,19 @@ function App() {
         const result = await getCurrentUser();
 
         if (result?.success && result?.user) {
-          const user = result.user;
-          setCurrentUser({
-            ...user,
-            id: user.id || user._id || user.userId || user.sub,
-          });
+          setCurrentUser(buildUserSummary(result.user));
           setIsLoggedIn(true);
+        } else if (result?.status === 401) {
+          // 服务端判定会话失效（账号不存在或已注销）：立即清除本地凭据
+          setStoredToken(null);
+          try { localStorage.removeItem("campuscart-user"); } catch {}
+          setCurrentUser(null);
+          setIsLoggedIn(false);
         } else {
-          // Token exists but backend down — restore from localStorage cache
+          // 仅在网络/服务异常时，才用本地缓存摘要做离线恢复
           const cached = (() => { try { return JSON.parse(localStorage.getItem("campuscart-user")); } catch { return null; } })();
           if (cached) {
-            setCurrentUser(cached);
+            setCurrentUser(buildUserSummary(cached));
             setIsLoggedIn(true);
           } else {
             setCurrentUser(null);
@@ -210,30 +233,39 @@ function App() {
   };
 
   const handleLogin = async (customEmail) => {
-    const email = customEmail || loginEmail;
+    const email = (customEmail || loginEmail || "").trim().toLowerCase();
+
+    // 前端先做基本校验，避免用空值去请求后端
+    if (!email) {
+      showToast("❌ 请输入河南大学邮箱。");
+      return;
+    }
+
+    if (!loginPassword) {
+      showToast("❌ 请输入密码。");
+      return;
+    }
+
+    setLoginLoading(true);
 
     try {
-      const result = await loginUser(
-        email,
-        loginPassword || "campuscart-demo-password"
-      );
+      const result = await loginUser(email, loginPassword);
 
+      // 登录失败：保留已输入的账号与密码，方便直接修改后重试
       if (!result?.success || !result?.user) {
-        showToast(result?.error || "登录失败。");
+        showToast(result?.error || "邮箱或密码错误。");
         return;
       }
 
-      const user = result.user;
-      const userObj = {
-        ...user,
-        id: user.id || user._id || user.userId || user.sub,
-      };
+      const userObj = buildUserSummary(result.user);
 
       setCurrentUser(userObj);
       setIsLoggedIn(true);
       setIsLoginOpen(false);
+      // 登录成功后立即清空密码输入框
+      setLoginPassword("");
 
-      // Cache user in localStorage for session restore on page refresh
+      // 只缓存用户摘要，密码等敏感信息不写入本地存储
       try { localStorage.setItem("campuscart-user", JSON.stringify(userObj)); } catch {}
 
       if (window.confetti) {
@@ -242,19 +274,31 @@ function App() {
 
       navigate("/home");
 
-      showToast(
-        `🎉 Authenticated as ${
-          user.roll || user.email
-        }！欢迎来到河大同享。`
-      );
+      if (userObj.legacyPasswordPending) {
+        showToast(
+          "⚠️ 这是历史自动创建的账号，密码尚未认领。请切换到「注册」页用同一邮箱重设密码。"
+        );
+      } else {
+        showToast(`🎉 欢迎回来，${userObj.roll || userObj.email}！`);
+      }
     } catch (error) {
       console.error("Login error:", error);
-      showToast(error.message || "登录失败。");
+      showToast(error.message || "登录失败，请稍后重试。");
+    } finally {
+      setLoginLoading(false);
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!regPassword) {
+      showToast("❌ 请设置登录密码。");
+      return;
+    }
+    if (regPassword.length < 6) {
+      showToast("❌ 密码至少需要 6 位。");
+      return;
+    }
     if (regPassword !== regConfirmPassword) {
       showToast("❌ 两次输入的密码不一致。");
       return;
@@ -280,19 +324,25 @@ function App() {
         return;
       }
 
-      const user = result.user;
-      const userObj = { ...user, id: user.id || user._id || user.userId || user.sub };
+      const userObj = buildUserSummary(result.user);
 
       setCurrentUser(userObj);
       setIsLoggedIn(true);
       setIsLoginOpen(false);
+      // 只缓存用户摘要，密码等敏感信息不写入本地存储
       try { localStorage.setItem("campuscart-user", JSON.stringify(userObj)); } catch {}
+      // 注册成功后清空密码字段，避免敏感信息留在内存中
+      setRegPassword("");
+      setRegConfirmPassword("");
 
       if (window.confetti) {
         window.confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
       }
       navigate("/home");
-      showToast(`🎉 欢迎加入河大同享，${user.name || user.roll}！账号已创建。`);
+      showToast(
+        result.message ||
+          `🎉 欢迎加入河大同享，${userObj.name || userObj.roll}！账号已创建。`
+      );
     } catch (error) {
       showToast(error.message || "注册失败。");
     } finally {
@@ -322,6 +372,11 @@ function App() {
     setOrders([]);
     setNotifications([]);
     setMongoProducts([]);
+    // 退出时清空输入框中的密码，避免残留
+    setLoginPassword("");
+    setRegPassword("");
+    setRegConfirmPassword("");
+    setLoginLoading(false);
     navigate("/");
     showToast("👋 已退出登录。");
   };
@@ -1157,11 +1212,18 @@ function App() {
                         />
                       </div>
                     ))}
-                    <button type="submit" className="w-full py-3.5 rounded-2xl text-sm font-bold text-white transition-all duration-200 mt-2 cursor-pointer"
+                    <button type="submit" disabled={loginLoading} className="w-full py-3.5 rounded-2xl text-sm font-bold text-white transition-all duration-200 mt-2 flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
                       style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0.1) 100%)",border:"1px solid rgba(255,255,255,0.25)",boxShadow:"0 4px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.25)" }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background="linear-gradient(135deg,rgba(255,255,255,0.3) 0%,rgba(255,255,255,0.16) 100%)"; }}
+                      onMouseEnter={(e) => { if (!loginLoading) e.currentTarget.style.background="linear-gradient(135deg,rgba(255,255,255,0.3) 0%,rgba(255,255,255,0.16) 100%)"; }}
                       onMouseLeave={(e) => { e.currentTarget.style.background="linear-gradient(135deg,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0.1) 100%)"; }}>
-                      登录 →
+                      {loginLoading ? (
+                        <>
+                          <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                          正在验证…
+                        </>
+                      ) : (
+                        "登录 →"
+                      )}
                     </button>
                   </form>
                   <p className="text-center text-xs text-white/35 mt-5">
@@ -1174,6 +1236,11 @@ function App() {
               {authTab === "register" && (
                 <div className="px-8 pb-8 max-h-[62vh] overflow-y-auto" style={{ scrollbarWidth:"thin",scrollbarColor:"rgba(255,255,255,0.15) transparent" }}>
                   <form onSubmit={handleRegister} className="space-y-4">
+
+                    {/* 历史账号提示 */}
+                    <p className="rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-xs leading-5 text-amber-200">
+                      如果你是早期自动创建的历史账号，忘记原密码也没关系：在这里用同一个邮箱重新设置密码即可完成认领，原有商品和订单都会保留。
+                    </p>
 
                     {/* Simple text/email fields */}
                     {[

@@ -69,6 +69,7 @@ def serialize_user(doc: dict) -> UserProfile:
 
     verified = doc.get("verified", True)
     trust_score = doc.get("trustScore", 98)
+    legacy_password_pending = doc.get("legacy_password_pending", False)
 
     created_at = doc.get("created_at")
     last_login = doc.get("last_login")
@@ -84,6 +85,7 @@ def serialize_user(doc: dict) -> UserProfile:
         hostel=hostel,
         verified=verified,
         trustScore=trust_score,
+        legacy_password_pending=legacy_password_pending,
         created_at=created_at,
         last_login=last_login,
     )
@@ -102,8 +104,8 @@ async def login(
     """
     Authenticate a student user.
 
-    First-time users are automatically created in MongoDB.
-    A session cookie is created for authentication.
+    Only accounts that already exist in MongoDB can log in.
+    Unregistered emails and wrong passwords are rejected.
     """
 
     email = payload.email.strip().lower()
@@ -111,161 +113,80 @@ async def login(
     if not email:
         raise HTTPException(
             status_code=400,
-            detail="Email is required",
+            detail="邮箱不能为空。",
         )
 
-    roll, default_name, default_dept, default_campus, default_hostel = (
-        derive_student_details(email)
-    )
+    if not payload.password:
+        raise HTTPException(
+            status_code=400,
+            detail="密码不能为空。",
+        )
+
+    roll, *_ = derive_student_details(email)
 
     now = datetime.utcnow().isoformat()
 
     try:
         db = get_database()
-
-        user_doc = await db["users"].find_one(
-            {"email": email}
+        user_doc = await db["users"].find_one({"email": email})
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="用户服务暂时不可用，请稍后再试。",
         )
 
-        # -----------------------------
-        # First-time login
-        # -----------------------------
-        if not user_doc:
-            new_user = {
-                "email": email,
-                "roll": roll,
-                "name": default_name,
-                "department": default_dept,
-                "dept": default_dept,
-                "campus": default_campus,
-                "hostel": default_hostel,
-                "password_hash": hash_password(
-                    payload.password or "student123"
-                ),
-                "verified": True,
-                "trustScore": 99,
-                "created_at": now,
-                "last_login": now,
-                "updated_at": now,
-            }
-
-            result = await db["users"].insert_one(new_user)
-
-            new_user["_id"] = result.inserted_id
-
-            user_profile = serialize_user(new_user)
-
-        # -----------------------------
-        # Existing user
-        # -----------------------------
-        else:
-            stored_hash = user_doc.get("password_hash")
-
-            if (
-                stored_hash
-                and payload.password
-                and payload.password != "campuscart-demo-password"
-            ):
-                if not verify_password(
-                    payload.password,
-                    stored_hash,
-                ):
-                    raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Invalid email or password",
-                    )
-
-            await db["users"].update_one(
-                {"_id": user_doc["_id"]},
-                {
-                    "$set": {
-                        "last_login": now,
-                        "updated_at": now,
-                    }
-                },
-            )
-
-            user_doc["last_login"] = now
-
-            user_profile = serialize_user(user_doc)
-
-        # -----------------------------
-        # Create session token
-        # -----------------------------
-        token = create_session_token(
-            str(user_profile.id),
-            user_profile.email,
-            user_profile.name,
+    # 未注册的账号不允许登录（不再自动创建账号）
+    if not user_doc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="该邮箱尚未注册，请先注册后再登录。",
         )
 
-        # -----------------------------
-        # Session cookie
-        # -----------------------------
-        is_https = request.url.scheme == "https"
+    stored_hash = user_doc.get("password_hash")
 
-        response.set_cookie(
-            key="campuscart_session",
-            value=token,
-            max_age=60 * 60 * 24 * 7,
-            httponly=True,
-            secure=is_https,
-            samesite="none" if is_https else "lax",
-            path="/",
+    # 强制校验密码，任何不匹配都拒绝登录
+    if not stored_hash or not verify_password(payload.password, stored_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="邮箱或密码错误。",
         )
 
-        return LoginResponse(
-            success=True,
-            token=token,
-            message=f"Successfully authenticated as {roll}",
-            user=user_profile,
+    try:
+        await db["users"].update_one(
+            {"_id": user_doc["_id"]},
+            {"$set": {"last_login": now, "updated_at": now}},
         )
+    except Exception:
+        pass
 
-    except HTTPException:
-        raise
+    user_doc["last_login"] = now
 
-    except Exception as e:
-        # Fallback if MongoDB temporarily fails.
-        # NOTE: This does not create a MongoDB user.
-        user_profile = UserProfile(
-            id="local-student",
-            email=email,
-            roll=roll,
-            name=default_name,
-            department=default_dept,
-            dept=default_dept,
-            campus=default_campus,
-            hostel=default_hostel,
-            verified=True,
-            trustScore=98,
-            last_login=now,
-        )
+    user_profile = serialize_user(user_doc)
 
-        token = create_session_token(
-            "local-student",
-            email,
-            default_name,
-        )
+    token = create_session_token(
+        str(user_profile.id),
+        user_profile.email,
+        user_profile.name,
+    )
 
-        response.set_cookie(
-            key="campuscart_session",
-            value=token,
-            max_age=60 * 60 * 24 * 7,
-            httponly=True,
-            secure=request.url.scheme == "https",
-            samesite=(
-                "none"
-                if request.url.scheme == "https"
-                else "lax"
-            ),
-            path="/",
-        )
+    is_https = request.url.scheme == "https"
 
-        return LoginResponse(
-            success=True,
-            token=token,
-            message=f"Authenticated (Local Fallback): {roll}",
-            user=user_profile,
-        )
+    response.set_cookie(
+        key="campuscart_session",
+        value=token,
+        max_age=60 * 60 * 24 * 7,
+        httponly=True,
+        secure=is_https,
+        samesite="none" if is_https else "lax",
+        path="/",
+    )
+
+    return LoginResponse(
+        success=True,
+        token=token,
+        message=f"Successfully authenticated as {roll}",
+        user=user_profile,
+    )
 
 
 @router.post(
@@ -278,13 +199,28 @@ async def register(
     response: Response,
     request: Request,
 ):
-    """Register a new student account in MongoDB Atlas."""
+    """Register a new student account in MongoDB Atlas.
+
+    If the email belongs to a legacy auto-created account (flagged by
+    migrate_legacy_accounts.py), this doubles as account recovery:
+    the password is reset and the legacy flag is cleared.
+    """
 
     email = req.email.strip().lower()
 
-    roll, name, dept, campus, hostel = derive_student_details(
-        email
-    )
+    if not email:
+        raise HTTPException(
+            status_code=400,
+            detail="邮箱不能为空。",
+        )
+
+    if not req.password:
+        raise HTTPException(
+            status_code=400,
+            detail="注册密码不能为空。",
+        )
+
+    roll, name, dept, campus, hostel = derive_student_details(email)
 
     now = datetime.utcnow().isoformat()
 
@@ -295,35 +231,70 @@ async def register(
             {"email": email}
         )
 
-        if existing:
-            raise HTTPException(
-                status_code=400,
-                detail="Student email already registered. Please login.",
+        # 历史遗留账号（早期自动创建、密码无人知道）：
+        # 允许在注册页用同一个邮箱重设密码完成"认领"
+        if existing and existing.get("legacy_password_pending"):
+            existing.update(
+                {
+                    "password_hash": hash_password(req.password),
+                    "name": req.name or existing.get("name") or name,
+                    "roll": req.roll or existing.get("roll") or roll,
+                    "department": (
+                        req.department or existing.get("department") or dept
+                    ),
+                    "dept": req.department or existing.get("department") or dept,
+                    "campus": req.campus or existing.get("campus") or campus,
+                    "legacy_password_pending": False,
+                    "last_login": now,
+                    "updated_at": now,
+                }
             )
 
-        user_data = {
-            "email": email,
-            "roll": req.roll or roll,
-            "name": req.name or name,
-            "department": req.department or dept,
-            "dept": req.department or dept,
-            "campus": req.campus or campus,
-            "hostel": hostel,
-            "password_hash": hash_password(
-                req.password or "student123"
-            ),
-            "verified": True,
-            "trustScore": 99,
-            "created_at": now,
-            "last_login": now,
-            "updated_at": now,
-        }
+            update_fields = {
+                key: value
+                for key, value in existing.items()
+                if key != "_id"
+            }
 
-        result = await db["users"].insert_one(user_data)
+            await db["users"].update_one(
+                {"_id": existing["_id"]},
+                {"$set": update_fields},
+            )
 
-        user_data["_id"] = result.inserted_id
+            user_doc = existing
+            message = "账号认领成功，新密码已生效。"
 
-        user_profile = serialize_user(user_data)
+        elif existing:
+            raise HTTPException(
+                status_code=400,
+                detail="该邮箱已注册，请直接登录。",
+            )
+
+        else:
+            user_data = {
+                "email": email,
+                "roll": req.roll or roll,
+                "name": req.name or name,
+                "department": req.department or dept,
+                "dept": req.department or dept,
+                "campus": req.campus or campus,
+                "hostel": hostel,
+                "password_hash": hash_password(req.password),
+                "verified": True,
+                "trustScore": 99,
+                "created_at": now,
+                "last_login": now,
+                "updated_at": now,
+            }
+
+            result = await db["users"].insert_one(user_data)
+
+            user_data["_id"] = result.inserted_id
+
+            user_doc = user_data
+            message = "注册成功，欢迎加入河大同享！"
+
+        user_profile = serialize_user(user_doc)
 
         token = create_session_token(
             str(user_profile.id),
@@ -346,7 +317,7 @@ async def register(
         return LoginResponse(
             success=True,
             token=token,
-            message="Student profile created successfully in MongoDB Atlas",
+            message=message,
             user=user_profile,
         )
 
@@ -367,9 +338,9 @@ async def register(
 async def me(
     current=Depends(get_current_user),
 ):
-    db = get_database()
-
     try:
+        db = get_database()
+
         user_id = current.get("sub", "")
 
         if ObjectId.is_valid(user_id):
@@ -385,34 +356,10 @@ async def me(
         user = None
 
     if not user:
-        # Return token information if the user
-        # was created through the fallback flow.
-        user_profile = UserProfile(
-            id=current.get(
-                "sub",
-                "local-student",
-            ),
-            email=current.get(
-                "email",
-                "student@campus.edu",
-            ),
-            roll=(
-                current.get(
-                    "email",
-                    "STUDENT",
-                )
-                .split("@")[0]
-                .upper()
-            ),
-            name=current.get(
-                "name",
-                "Verified Student",
-            ),
-        )
-
-        return AuthResponse(
-            success=True,
-            user=user_profile,
+        # 账号不存在（未注册或已注销）→ 会话失效，必须重新登录
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="账号不存在或会话已失效，请重新登录。",
         )
 
     return AuthResponse(
