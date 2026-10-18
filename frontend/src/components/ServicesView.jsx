@@ -45,19 +45,6 @@ const starterTasks = [
   }
 ];
 
-function loadLocalTasks() {
-  try {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch {
-    // 本地存储不可用时退回演示数据
-  }
-  return starterTasks;
-}
-
 function formatDeadline(value) {
   if (!value) return "沟通确认";
   return value.replace("T", " ");
@@ -89,8 +76,8 @@ const STATUS_META = {
 const CAMPUS_OPTIONS = ["全部校区", "金明校区", "明伦校区"];
 
 export default function ServicesSection({ onNotify, isLoggedIn = false, onRequireLogin }) {
-  const [tasks, setTasks] = useState(loadLocalTasks);
-  const [dataSource, setDataSource] = useState("local");
+  const [tasks, setTasks] = useState([]);
+  const [dataSource, setDataSource] = useState("server");
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [campusFilter, setCampusFilter] = useState("全部校区");
@@ -122,13 +109,17 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
         setDataSource("server");
         setMessage("");
       } else {
+        setTasks([]);
+        setDataSource("offline");
         setLoadError(result.error || "后端跑腿接口暂不可用。");
-        setMessage("后端跑腿接口暂不可用，当前显示本地演示数据。");
+        setMessage("后端跑腿接口暂不可用，无法读取已保存任务。");
       }
     } catch (error) {
       if (isCancelled()) return;
+      setTasks([]);
+      setDataSource("offline");
       setLoadError(error?.message || "后端跑腿接口暂不可用。");
-      setMessage("后端跑腿接口暂不可用，当前显示本地演示数据。");
+      setMessage("后端跑腿接口暂不可用，无法读取已保存任务。");
     } finally {
       if (!isCancelled()) setIsLoading(false);
     }
@@ -139,15 +130,6 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
     loadTasks(() => cancelled);
     return () => { cancelled = true; };
   }, []);
-
-  useEffect(() => {
-    if (dataSource !== "local") return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-    } catch {
-      // 忽略本地存储写入失败，页面仍然可用
-    }
-  }, [tasks, dataSource]);
 
   const filteredTasks = useMemo(
     () =>
@@ -182,6 +164,10 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
       note: draft.note.trim(),
       status: "待接单"
     };
+    if (dataSource !== "server") {
+      onNotify?.("后端暂不可用，无法发布任务。请先启动后端并重试。");
+      return;
+    }
     if (dataSource === "server") {
       const result = await createErrand({
         campus: task.campus,
@@ -198,8 +184,6 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
       }
       // 周期二：发布成功后重新拉服务端数据，避免本地和库里的列表不一致
       await loadTasks();
-    } else {
-      setTasks((current) => [task, ...current]);
     }
     setCampusFilter("全部校区");
     setIsFormOpen(false);
@@ -212,8 +196,8 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
       reward: "",
       note: ""
     });
-    setMessage(dataSource === "server" ? "任务已发布到后端。" : "任务已发布并保存到本机。");
-    onNotify?.(dataSource === "server" ? "跑腿任务已发布。" : "跑腿任务已保存到本机。");
+    setMessage("任务已发布到后端。");
+    onNotify?.("跑腿任务已发布。");
     window.setTimeout(() => setMessage(""), 4200);
   };
 
@@ -233,12 +217,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
       onNotify?.(`已接单：「${task.title}」`);
       return;
     }
-    setTasks((current) =>
-      current.map((item) =>
-        item.id === task.id ? { ...item, status: "已接单" } : item
-      )
-    );
-    onNotify?.(`已接单：「${task.title}」`);
+    onNotify?.("后端暂不可用，无法接单。");
   };
 
   const completeTask = async (task) => {
@@ -257,12 +236,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
       onNotify?.(`任务已完成：「${task.title}」`);
       return;
     }
-    setTasks((current) =>
-      current.map((item) =>
-        item.id === task.id ? { ...item, status: "已完成" } : item
-      )
-    );
-    onNotify?.(`任务已完成：「${task.title}」`);
+    onNotify?.("后端暂不可用，无法标记完成。");
   };
 
   return (
@@ -277,7 +251,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
               校园跑腿任务广场
             </h1>
             <p className="mt-4 leading-8 text-[var(--on-ink)]">
-              发布代取快递、代送物品、打印资料等需求。后端可用时任务会同步保存，离线时保留本地演示流程。
+              发布代取快递、代送物品、打印资料等需求。任务列表和状态都通过后端保存。
             </p>
           </div>
           <button
@@ -332,7 +306,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
             {filteredTasks.length} 条
           </span>
         </h2>
-        <span className="text-xs text-[var(--meta)] tnum">{dataSource === "server" ? "数据来自后端" : "本地演示数据"}</span>
+        <span className="text-xs text-[var(--meta)] tnum">{dataSource === "server" ? "数据来自后端" : "后端未连接"}</span>
       </div>
 
       {filteredTasks.length ? (
@@ -519,7 +493,7 @@ export default function ServicesSection({ onNotify, isLoggedIn = false, onRequir
               </label>
             </div>
             <p className="mt-4 text-xs leading-5 text-[var(--meta)]">
-              {dataSource === "server" ? "任务会保存到后端，其他登录用户可以看到并接单。" : "后端不可用时使用本地演示数据，启动后端并登录即可同步。"}
+              {dataSource === "server" ? "任务会保存到后端，其他登录用户可以看到并接单。" : "请启动后端后重试，当前不会使用本地演示数据。"}
             </p>
             <button
               type="submit"

@@ -87,7 +87,7 @@ export default function MarketplaceFullView({
       <p className="text-sm text-[var(--muted)]">找到 <strong className="font-display tnum text-base text-[var(--fg)]">{filtered.length}</strong> 件商品</p>
       {dbStatus === "offline" ? (
         <span className="rounded-full bg-warn-50 px-3 py-1 text-xs font-bold text-warn-600 ring-1 ring-warn-200">
-          后端未连接 · 显示本地演示数据
+          后端未连接 · 暂无可读取的商品
         </span>
       ) : dbStatus === "connected" ? (
         <span className="rounded-full bg-success-50 px-3 py-1 text-xs font-bold text-success-600 ring-1 ring-success-200">
@@ -106,7 +106,7 @@ export default function MarketplaceFullView({
     ) : dbStatus === "offline" ? (
       <div role="alert" className="mt-6 rounded-panel border border-warn-200 bg-warn-50 p-6">
         <p className="text-sm font-bold text-warn-900">暂时连不上后端，无法读取已保存的商品。</p>
-        <p className="mt-1 text-xs text-warn-700">下面显示的是本地演示数据，不会保存到服务器。</p>
+        <p className="mt-1 text-xs text-warn-700">请启动后端并重试；页面不会把未保存的本地数据当作真实商品。</p>
         <button
           onClick={() => onRetryLoad?.()}
           className="press mt-4 rounded-full bg-warn-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-warn-800"

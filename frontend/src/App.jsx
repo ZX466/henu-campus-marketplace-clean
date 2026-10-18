@@ -147,12 +147,14 @@ function App() {
       : "day";
   });
   const [productToOpen, setProductToOpen] = useState(null);
-  const [mongoProducts, setMongoProducts] = useState(CAMPUS_DATA.products);
+  const [mongoProducts, setMongoProducts] = useState([]);
   const [dbStatus, setDbStatus] = useState("connecting"); // 'connected', 'offline', 'connecting'
   const [productsLoading, setProductsLoading] = useState(true);
 
-  // MongoDB is the single source of truth for products.
-  const allProducts = mongoProducts.length ? mongoProducts : CAMPUS_DATA.products;
+  // MongoDB/API is the source of truth for the marketplace.  Keep the
+  // static showcase data confined to the home gateway so an offline API
+  // cannot be mistaken for saved marketplace data.
+  const allProducts = mongoProducts;
 
   const getProductStock = (product) =>
     Math.max(0, Number(product?.stock) || 0);
@@ -218,27 +220,33 @@ function App() {
 
   const [notifications, setNotifications] = useState([]);
 
-  // 登录后拉取一次远端状态；此后按需刷新，不再每 5 秒全量轮询，
-  // 避免定时覆盖本地乐观更新、造成闪烁与无谓请求。
+  // 公开页面也要读取后端商品；登录后再补充购物车、收藏和订单。
+  // 这样未连接后端时会明确显示离线状态，不会伪造“已保存”的商品。
   useEffect(() => {
-    if (!isLoggedIn) return undefined;
     let active = true;
     async function loadRemoteState() {
+      setProductsLoading(true);
       const [health, products, remoteCart, remoteWishlist, remoteOrders] = await Promise.all([
         checkBackendHealth(),
         fetchProductsFromBackend(),
-        fetchCart(),
-        fetchWishlist(),
-        fetchOrders(),
+        isLoggedIn ? fetchCart() : Promise.resolve({ success: false }),
+        isLoggedIn ? fetchWishlist() : Promise.resolve({ success: false }),
+        isLoggedIn ? fetchOrders() : Promise.resolve({ success: false }),
       ]);
       if (!active) return;
       setDbStatus(health.connected ? "connected" : "offline");
-      if (products.success) setMongoProducts(products.products.length ? products.products : CAMPUS_DATA.products);
+      setMongoProducts(products.success ? products.products : []);
       if (remoteCart.success) setCart(remoteCart.items || []);
       if (remoteWishlist.success) setWishlistItems(remoteWishlist.items || []);
       if (remoteOrders.success) setOrders(remoteOrders.orders || []);
+      setProductsLoading(false);
     }
-    loadRemoteState();
+    loadRemoteState().catch(() => {
+      if (!active) return;
+      setDbStatus("offline");
+      setMongoProducts([]);
+      setProductsLoading(false);
+    });
     return () => { active = false; };
   }, [isLoggedIn, location.pathname]);
 
