@@ -61,7 +61,10 @@ function findPython() {
   const candidates = [];
   if (process.env.PYTHON) candidates.push([process.env.PYTHON, []]);
   if (isWin) {
-    candidates.push(["py", ["-3.12"]], ["py", ["-3"]], ["python", []], ...uvPythons());
+    // uv 装的 Python 排在 PATH 里的 python 之前：Windows 上 python.exe 可能是
+    // Microsoft Store 的应用执行别名（未装 Python 时会拉起商店），uv 用户更希望
+    // 用自己 %APPDATA%\uv\python 下的解释器。
+    candidates.push(["py", ["-3.12"]], ["py", ["-3"]], ...uvPythons(), ["python", []]);
   } else {
     candidates.push(["python3.12", []], ["python3", []], ["python", []]);
   }
