@@ -23,6 +23,7 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from pymongo.errors import PyMongoError
 from pydantic import BaseModel, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -203,6 +204,16 @@ def register_error_handlers(app: FastAPI) -> None:
             status_code=VALIDATION_STATUS,
             content=body,
         )
+
+    @app.exception_handler(PyMongoError)
+    async def _mongodb_exception_handler(request: Request, exc: PyMongoError):
+        """Expose a clear dependency failure instead of masking it as a 500."""
+        body = build_error_body(
+            503,
+            "MongoDB 当前不可用，请先启动数据库后重试",
+            code="DATABASE_UNAVAILABLE",
+        )
+        return JSONResponse(status_code=503, content=body)
 
     @app.exception_handler(Exception)
     async def _unhandled_exception_handler(request: Request, exc: Exception):
