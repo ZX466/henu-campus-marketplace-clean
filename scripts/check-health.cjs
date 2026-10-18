@@ -74,5 +74,8 @@ function line(mark, name, detail) {
   console.log(JSON.stringify(mongo.body ?? { error: mongo.error }, null, 2));
 
   console.log(failed ? "\n结果：有未通过的检查，按上面的提示处理。" : "\n结果：前端、后端、MongoDB 全部正常。");
-  process.exit(failed ? 1 : 0);
+  // Let fetch/undici close its sockets cleanly before Node exits. Calling
+  // process.exit() here can trigger a libuv assertion on Windows with Node 24
+  // even though all checks have passed.
+  process.exitCode = failed ? 1 : 0;
 })();
