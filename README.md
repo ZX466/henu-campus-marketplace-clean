@@ -53,10 +53,16 @@ py -3.12 -m venv backend\.venv
 .\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 ```
 
-> 本机没有安装 Python Launcher（`py` 命令）时，改用：
+> 本机没有安装 Python Launcher（`py` 命令）时，改用本机 Python：
 > `python -m venv backend\.venv`
-> （确认 `python --version` 为 3.12.x；若不是，改用上面的 uv 版，
-> uv 可用 `--python 3.12` 自动取得对应解释器）
+> （确认 `python --version` 为 3.12.x）
+
+本机没有 Python 3.12 时，用 uv 自动安装并创建虚拟环境（uv 建的虚拟环境不带 pip，装依赖也用 uv）：
+
+```powershell
+uv venv backend\.venv --python 3.12
+uv pip install -r backend\requirements.txt --python backend\.venv\Scripts\python.exe
+```
 
 macOS/Linux：
 
@@ -83,7 +89,7 @@ python3.12 -m venv backend/.venv
 | 页面能打开但登录/同步失败 | 运行 `npm run check:health`，按提示处理；`connected: false` 时检查 MongoDB 服务和 `.env` 的 `MONGO_URI`。无 MongoDB 时登录会走本地临时回退，重启即失效；注册和数据写入需恢复数据库 |
 | 下单失败，提示 Transaction numbers… | MongoDB 是单机模式，需要副本集：用 `npm run db:start`，或按 docs/dev-environment.md 第 4 节配置 |
 | 找不到后端虚拟环境 / 找不到 fastapi | 在仓库根目录运行 `npm run setup:backend` |
-| `npm run setup:backend` 找不到 Python | 安装 Python 3.12 或 uv；或指定解释器：`$env:PYTHON="C:\路径\python.exe"; npm run setup:backend`。本机没有 `py` 命令时，也可用 `python -m venv backend\.venv`（确认 `python --version` 为 3.12.x），或直接用 uv 版（`uv venv backend\.venv --python 3.12`） |
+| `npm run setup:backend` 找不到 Python | 安装 Python 3.12 或 uv；或指定解释器：`$env:PYTHON="C:\路径\python.exe"; npm run setup:backend`。本机没有 `py` 命令时，也可用 `python -m venv backend\.venv`（确认 `python --version` 为 3.12.x），或直接用 uv 版（`uv venv backend\.venv --python 3.12` 建环境，再用 `uv pip install -r backend\requirements.txt --python backend\.venv\Scripts\python.exe` 装依赖） |
 | `npm` 报 `ENOENT` 找不到 `package.json` | 当前目录错误：回到仓库根目录再执行 |
 | `npm error code EALLOWSCRIPTS` | npm 12 会把用户 `.npmrc` 的 `allow-scripts` 条目经环境变量带入嵌套安装并拒绝。项目已内置修复（`install:frontend` 走 `scripts/install-frontend.cjs` 清理环境变量）；若直接在 `frontend/` 里安装仍报错，检查用户级 `.npmrc` 的 `allow-scripts` 行 |
 | `npm error Exit handler never called!` | npm 11 兼容性问题：优先换 Node 20 LTS（npm 10）；或清理后用官方源重装（不要删 `package-lock.json`） |
